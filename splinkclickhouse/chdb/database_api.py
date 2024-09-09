@@ -4,8 +4,8 @@ import chdb.dbapi as chdb_dbapi
 import pandas as pd
 from splink.internals.database_api import DatabaseAPI
 
+from ..dialect import ClickhouseDialect
 from .dataframe import ChDBDataFrame
-from .dialect import ClickhouseDialect
 
 logger = logging.getLogger(__name__)
 

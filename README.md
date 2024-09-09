@@ -7,10 +7,10 @@ Currently only support for in-process [chDB](https://clickhouse.com/docs/en/chdb
 ## Using
 
 ```sh
-poetry run python scripts/getting_started.py
+poetry run python scripts/getting_started_chdb.py
 ```
 
-See [getting started script](./scripts/getting_started.py) for example of use.
+See [getting started script](./scripts/getting_started_chdb.py) for example of use.
 
 ## Dev setup
 
@@ -35,7 +35,7 @@ Check package
 Run test script
 
 ```sh
-poetry run python scripts/getting_started.py
+poetry run python scripts/getting_started_chdb.py
 ```
 ## Known issues
 

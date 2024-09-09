@@ -1,4 +1,4 @@
-from .database_api import ChDBAPI
+from .chdb.database_api import ChDBAPI
 
 __version__ = "0.1.1"
 
