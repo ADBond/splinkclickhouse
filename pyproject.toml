@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "splinkclickhouse"
+version = "0.1.0"
+description = "Clickhouse backend support for Splink"
+authors = ["Andrew Bond"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.8.0,<4.0.0"
+splink = ">=4.0.0"
+chdb = ">=2.0.1"
+
+[tool.poetry.group.linting]
+[tool.poetry.group.linting.dependencies]
+ruff = "^0.6.3"
+
+[tool.poetry.group.typechecking]
+[tool.poetry.group.typechecking.dependencies]
+mypy = "1.11.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.8"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+lint.select = [
+    # Pyflakes
+    "F",
+    # Pycodestyle
+    "E",
+    "W",
+    # isort
+    "I001",
+    # bugbear
+    "B",
+    # flake8-print
+    "T20"
+]
+
+[tool.mypy]
+packages = "splinkclickhouse"
+
+implicit_optional = true
+ignore_missing_imports = true
