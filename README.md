@@ -43,6 +43,12 @@ poetry run python scripts/getting_started_chdb.py
 docker-compose -f scripts/docker-compose.yaml up
 ```
 
+Run test script
+
+```sh
+poetry run python scripts/getting_started_clickhouse.py
+```
+
 ## Known issues
 
 ### Datetime parsing
