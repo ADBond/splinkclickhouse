@@ -80,13 +80,14 @@ class ClickhouseDialect(SplinkDialect):
             return ""
         if seed:
             raise NotImplementedError(
-                "Clickhouse sampling is deterministic in general. "
+                "Clickhouse sampling does not support a random seed. "
                 "Please remove the `seed` parameter."
             )
 
         sample_size = int(sample_size)
 
-        return f"SAMPLE {sample_size}"
+        # SAMPLE n only works when we have specified the method in table creation
+        return f"WHERE randCanonical() < {proportion}"
 
     @property
     def infinity_expression(self):
