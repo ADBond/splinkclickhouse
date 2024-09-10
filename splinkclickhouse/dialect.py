@@ -37,23 +37,23 @@ class ClickhouseDialect(SplinkDialect):
     ) -> str:
         return f"regexpExtract({name}, '{pattern}', {capture_group})"
 
-    @property
-    def default_date_format(self):
-        return "%Y-%m-%d"
-
-    @property
-    def default_timestamp_format(self):
-        return "%Y-%m-%d %H:%i:%s"
-
     def try_parse_date(self, name: str, date_format: str = None) -> str:
-        if date_format is None:
-            date_format = self.default_date_format
-        return f"""parseDateTimeOrNull({name}, '{date_format}')"""
+        if date_format is not None:
+            raise ValueError(
+                "Clickhouse dialect does not support custom `date_format`. "
+                "To use a custom format you must manually construct "
+                "the relevant expression."
+            )
+        return f"""parseDateTime64BestEffortOrNull({name})"""
 
     def try_parse_timestamp(self, name: str, timestamp_format: str = None) -> str:
-        if timestamp_format is None:
-            timestamp_format = self.default_timestamp_format
-        return f"""parseDateTimeOrNull({name}, '{timestamp_format}')"""
+        if timestamp_format is not None:
+            raise ValueError(
+                "Clickhouse dialect does not support custom `date_format`. "
+                "To use a custom format you must manually construct "
+                "the relevant expression."
+            )
+        return f"""parseDateTime64BestEffortOrNull({name})"""
 
     def absolute_time_difference(self, clc: AbsoluteTimeDifferenceLevel) -> str:
         # need custom solution as sqlglot keeps TIME_TO_UNIX which is not available
