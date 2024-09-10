@@ -25,26 +25,7 @@ client.insert_df(tn, df)
 
 db_api = ClickhouseAPI(client)
 
-settings = SettingsCreator(
-    link_type="dedupe_only",
-    comparisons=[
-        cl.NameComparison("first_name"),
-        cl.JaroAtThresholds("surname"),
-        cl.DateOfBirthComparison(
-            "dob",
-            input_is_string=True,
-        ),
-        cl.DamerauLevenshteinAtThresholds("city").configure(
-            term_frequency_adjustments=True
-        ),
-        cl.EmailComparison("email"),
-    ],
-    blocking_rules_to_generate_predictions=[
-        block_on("first_name", "dob"),
-        block_on("surname"),
-    ],
-)
-# TODO: tf adjustments need deep work
+# TODO: tf adjustments need deep work (can have _one_ but not more)
 settings = SettingsCreator(
     link_type="dedupe_only",
     comparisons=[
@@ -54,7 +35,9 @@ settings = SettingsCreator(
             "dob",
             input_is_string=True,
         ),
-        cl.DamerauLevenshteinAtThresholds("city"),
+        cl.DamerauLevenshteinAtThresholds("city").configure(
+            term_frequency_adjustments=True
+        ),
         cl.JaccardAtThresholds("email"),
     ],
     blocking_rules_to_generate_predictions=[
@@ -71,7 +54,7 @@ linker.training.estimate_probability_two_random_records_match(
     [block_on("first_name", "surname")],
     recall=0.7,
 )
-linker.training.estimate_u_using_random_sampling(max_pairs=1e6)
+linker.training.estimate_u_using_random_sampling(max_pairs=1e5)
 linker.training.estimate_parameters_using_expectation_maximisation(
     block_on("first_name", "surname")
 )
