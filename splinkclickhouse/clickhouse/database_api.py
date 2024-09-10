@@ -1,6 +1,5 @@
 import logging
 
-import pandas as pd
 from clickhouse_connect.driver.client import Client
 from splink.internals.database_api import DatabaseAPI
 
@@ -22,15 +21,16 @@ class ClickhouseAPI(DatabaseAPI[None]):
         self.client = client
 
     def _table_registration(self, input, table_name):
-        if isinstance(input, dict):
-            input = pd.DataFrame(input)
-        elif isinstance(input, list):
-            input = pd.DataFrame.from_records(input)
+        if not isinstance(input, str):
+            raise TypeError(
+                "ClickhouseAPI currently only accepts table names (str) "
+                "as inputs for table registration"
+            )
 
         sql = (
-            f"CREATE OR REPLACE TABLE {self._db_schema}.{table_name} "
+            f"CREATE OR REPLACE TABLE {table_name} "
             "ORDER BY tuple() "
-            f"AS SELECT * FROM Python(input);"
+            f"AS SELECT * FROM {input}"
         )
         self.client.query(sql)
 
