@@ -19,6 +19,7 @@ class ClickhouseAPI(DatabaseAPI[None]):
         super().__init__()
 
         self.client = client
+        client.command("SET union_default_mode = 'DISTINCT'")
 
     def _table_registration(self, input, table_name):
         if not isinstance(input, str):
@@ -50,13 +51,6 @@ class ClickhouseAPI(DatabaseAPI[None]):
     def _setup_for_execute_sql(self, sql: str, physical_name: str) -> str:
         self.delete_table_from_database(physical_name)
         sql = sql.replace("float8", "Float64")
-        # TODO: horrible hack
-        # can't seem to set union_default_mode for some reason
-        sql = sql.replace("UNION ALL", "__tmp__ua__")
-        sql = sql.replace("UNION", "UNION DISTINCT")
-        sql = sql.replace("__tmp__ua__", "UNION ALL")
-        # TODO: I'm not serious with this:
-        sql = sql.replace(", count_l, count_r,", ",")
 
         sql = f"CREATE TABLE {physical_name} ORDER BY tuple() AS {sql}"
         return sql
