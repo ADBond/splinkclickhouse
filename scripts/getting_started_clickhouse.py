@@ -6,12 +6,23 @@ from splinkclickhouse import ClickhouseAPI
 
 df = splink_datasets.fake_1000
 
+conn_atts = {
+    "host": "localhost",
+    "port": 8123,
+    "username": "splinkognito",
+    "password": "splink123!",
+}
+
+db_name = "__temp_splink_db"
+
 tn = "fake_1000"
+default_client = clickhouse_connect.get_client(**conn_atts)
+default_client.command(
+    f"CREATE DATABASE IF NOT EXISTS {db_name}"
+)
 client = clickhouse_connect.get_client(
-    host="localhost",
-    port=8123,
-    username="splinkognito",
-    password="splink123!",
+    **conn_atts,
+    database=db_name,
 )
 client.command(
     f"CREATE OR REPLACE TABLE {tn} "
