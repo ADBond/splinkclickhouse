@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.1.1] - 2024-09-10
+
 ### Fixed
 
 - Fix `random_sample_sql` so that u-training works when we don't sample the entire dataset [#1](https://github.com/ADBond/splinkclickhouse/pull/1)
@@ -21,5 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Basic working version of package
 
-[unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/ADBond/splinkclickhouse/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/ADBond/splinkclickhouse/releases/tag/v0.1.0
