@@ -19,13 +19,15 @@ class ClickhouseDataFrame(SplinkDataFrame):
 
     @property
     def columns(self) -> list[InputColumn]:
+        client = self.db_api.client
+
         sql = f"""
         SELECT column_name
         FROM information_schema.columns
         WHERE table_name = '{self.physical_name}'
+        AND table_schema = '{client.database}'
         """
 
-        client = self.db_api.client
         res = client.query(sql).named_results()
         cols = [r["column_name"] for r in res]
 

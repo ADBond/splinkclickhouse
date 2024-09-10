@@ -43,6 +43,7 @@ class ClickhouseAPI(DatabaseAPI[None]):
         SELECT table_name
         FROM information_schema.tables
         WHERE table_name = '{table_name}'
+        AND table_schema = '{self.client.database}'
         """
 
         res = self.client.query(sql).result_set
