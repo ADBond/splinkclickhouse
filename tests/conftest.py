@@ -23,7 +23,7 @@ def fake_1000_settings():
     return SettingsCreator(
         link_type="dedupe_only",
         comparisons=[
-            cl.NameComparison("first_name"),
+            cl.JaroWinklerAtThresholds("first_name"),
             cl.JaroAtThresholds("surname"),
             cl.DateOfBirthComparison(
                 "dob",
@@ -32,7 +32,7 @@ def fake_1000_settings():
             cl.DamerauLevenshteinAtThresholds("city").configure(
                 term_frequency_adjustments=True
             ),
-            cl.EmailComparison("email"),
+            cl.JaccardAtThresholds("email"),
         ],
         blocking_rules_to_generate_predictions=[
             block_on("first_name", "dob"),
