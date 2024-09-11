@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.2.0] - 2024-09-11
+
 ### Added
 
 - `ClickhouseAPI` and dataframe added to support running calculations in a Clickhouse instance [#4](https://github.com/ADBond/splinkclickhouse/pull/4)
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Basic working version of package with api for `chdb`
 
-[unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/ADBond/splinkclickhouse/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/ADBond/splinkclickhouse/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/ADBond/splinkclickhouse/releases/tag/v0.1.0
