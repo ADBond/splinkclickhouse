@@ -1,14 +1,10 @@
+import clickhouse_connect
 import splink.comparison_library as cl
 from chdb import dbapi
 from pytest import fixture
-from splink import SettingsCreator, block_on
+from splink import SettingsCreator, block_on, splink_datasets
 
-from splinkclickhouse import ChDBAPI
-import clickhouse_connect
-import splink.comparison_library as cl
-from splink import Linker, SettingsCreator, block_on, splink_datasets
-
-from splinkclickhouse import ClickhouseAPI
+from splinkclickhouse import ChDBAPI, ClickhouseAPI
 
 df = splink_datasets.fake_1000
 
