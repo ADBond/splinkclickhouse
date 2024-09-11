@@ -1,17 +1,20 @@
-from splink import Linker, block_on, splink_datasets
+from splink import Linker, block_on
 
 
-def test_make_linker(db_api, fake_1000_settings):
-    df = splink_datasets.fake_1000
+def test_make_linker(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
     Linker(df, fake_1000_settings, db_api)
 
-def test_train_u(db_api, fake_1000_settings):
-    df = splink_datasets.fake_1000
+def test_train_u(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
     linker.training.estimate_u_using_random_sampling(max_pairs=3e4)
 
-def test_train_lambda(db_api, fake_1000_settings):
-    df = splink_datasets.fake_1000
+def test_train_lambda(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
     linker.training.estimate_probability_two_random_records_match(
         [
@@ -21,8 +24,9 @@ def test_train_lambda(db_api, fake_1000_settings):
         recall=0.8
     )
 
-def test_em_training(db_api, fake_1000_settings):
-    df = splink_datasets.fake_1000
+def test_em_training(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
     linker.training.estimate_parameters_using_expectation_maximisation(
         block_on("dob"),
@@ -31,13 +35,15 @@ def test_em_training(db_api, fake_1000_settings):
         block_on("first_name", "surname"),
     )
 
-def test_predict(db_api, fake_1000_settings):
-    df = splink_datasets.fake_1000
+def test_predict(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
     linker.inference.predict()
 
-def test_clustering(db_api, fake_1000_settings):
-    df = splink_datasets.fake_1000
+def test_clustering(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
     df_predict = linker.inference.predict()
     linker.clustering.cluster_pairwise_predictions_at_threshold(
