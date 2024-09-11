@@ -13,6 +13,10 @@ splink = ">=4.0.0"
 chdb = ">=2.0.1"
 clickhouse_connect = ">=0.7.0"
 
+[tool.poetry.group.testing]
+[tool.poetry.group.testing.dependencies]
+pytest = "^8.3.3"
+
 [tool.poetry.group.linting]
 [tool.poetry.group.linting.dependencies]
 ruff = "^0.6.3"
