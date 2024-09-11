@@ -43,7 +43,7 @@ class ClickhouseAPI(DatabaseAPI[None]):
         SELECT table_name
         FROM information_schema.tables
         WHERE table_name = '{table_name}'
-        AND table_schema = '{self.client.database}'
+        AND table_schema = '{self.database}'
         """
 
         res = self.client.query(sql).result_set
@@ -60,3 +60,7 @@ class ClickhouseAPI(DatabaseAPI[None]):
         self, final_sql: str, templated_name: str = None, physical_name: str = None
     ):
         return self.client.query(final_sql)
+
+    @property
+    def database(self):
+        return self.client.database or "default"

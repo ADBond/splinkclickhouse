@@ -25,7 +25,7 @@ class ClickhouseDataFrame(SplinkDataFrame):
         SELECT column_name
         FROM information_schema.columns
         WHERE table_name = '{self.physical_name}'
-        AND table_schema = '{client.database}'
+        AND table_schema = '{self.db_api.database}'
         """
 
         res = client.query(sql).named_results()
