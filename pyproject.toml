@@ -9,7 +9,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.8.0,<4.0.0"
 splink = ">=4.0.0"
+
 chdb = ">=2.0.1"
+clickhouse_connect = ">=0.7.0"
 
 [tool.poetry.group.linting]
 [tool.poetry.group.linting.dependencies]

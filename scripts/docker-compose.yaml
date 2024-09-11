@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+
+  clickhouse-splink:
+    image: clickhouse/clickhouse-server:24.8
+    container_name: splink-db-clickhouse
+    restart: always
+    environment:
+      - CLICKHOUSE_USER=splinkognito
+      - CLICKHOUSE_PASSWORD=splink123!
+    ports:
+      - 8123:8123

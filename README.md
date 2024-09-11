@@ -2,15 +2,43 @@
 
 Basic [Clickhouse](https://clickhouse.com/docs/en/intro) support for use as a backend with the data-linkage and deduplication package [Splink](https://moj-analytical-services.github.io/splink/).
 
-Currently only support for in-process [chDB](https://clickhouse.com/docs/en/chdb) version.
+Supports in-process [chDB](https://clickhouse.com/docs/en/chdb) version or a clickhouse instance connected via [clickhouse connect](https://clickhouse.com/docs/en/integrations/python).
 
 ## Using
 
-```sh
-poetry run python scripts/getting_started.py
+### ChDB
+
+Import the relevant api:
+
+```python
+from splinkclickhouse import ChDBAPI
 ```
 
-See [getting started script](./scripts/getting_started.py) for example of use.
+See [getting started script](./scripts/getting_started_chdb.py) for example of use:
+
+```sh
+poetry run python scripts/getting_started_chdb.py
+```
+
+### Clickhouse instance
+
+Import the relevant api:
+
+```python
+from splinkclickhouse import ClickhouseAPI
+```
+
+You can run a local instance in docker with provided docker-compose file:
+
+```sh
+docker-compose -f scripts/docker-compose.yaml up
+```
+
+See [getting started script](./scripts/getting_started_clickhouse.py) for example of use:
+
+```sh
+poetry run python scripts/getting_started_clickhouse.py
+```
 
 ## Dev setup
 
@@ -35,8 +63,9 @@ Check package
 Run test script
 
 ```sh
-poetry run python scripts/getting_started.py
+poetry run python scripts/getting_started_chdb.py
 ```
+
 ## Known issues
 
 ### Datetime parsing
@@ -50,3 +79,9 @@ In `splinkclickhouse` we use the function `parseDateTime64BestEffortOrNull` so t
 If you require different behaviour (for instance if you have an unusual date format and know that you do not need dates outside of the `DateTime` range) you will either need to derive a new column manually, or construct the relevant SQL expression manually.
 
 There is not currently a way in Clickhouse to deal directly with date values before 1900 - if you require such values you will have to manually process these to a different type, and construct the relevant SQL logic.
+
+### Term-frequency adjustments
+
+Currently at most one term frequency adjustment can be used with `ClickhouseAPI`.
+
+This also applies to `ChDBAPI` but _only in `debug_mode`_. With `debug_mode` off there is no limit on term frequency adjustments.
