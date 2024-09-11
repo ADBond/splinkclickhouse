@@ -2,15 +2,43 @@
 
 Basic [Clickhouse](https://clickhouse.com/docs/en/intro) support for use as a backend with the data-linkage and deduplication package [Splink](https://moj-analytical-services.github.io/splink/).
 
-Currently only support for in-process [chDB](https://clickhouse.com/docs/en/chdb) version.
+Supports in-process [chDB](https://clickhouse.com/docs/en/chdb) version or a clickhouse instance connected via [clickhouse connect](https://clickhouse.com/docs/en/integrations/python).
 
 ## Using
+
+### ChDB
+
+Import the relevant api:
+
+```python
+from splinkclickhouse import ChDBAPI
+```
+
+See [getting started script](./scripts/getting_started_chdb.py) for example of use:
 
 ```sh
 poetry run python scripts/getting_started_chdb.py
 ```
 
-See [getting started script](./scripts/getting_started_chdb.py) for example of use.
+### Clickhouse instance
+
+Import the relevant api:
+
+```python
+from splinkclickhouse import ClickhouseAPI
+```
+
+You can run a local instance in docker with provided docker-compose file:
+
+```sh
+docker-compose -f scripts/docker-compose.yaml up
+```
+
+See [getting started script](./scripts/getting_started_clickhouse.py) for example of use:
+
+```sh
+poetry run python scripts/getting_started_clickhouse.py
+```
 
 ## Dev setup
 
@@ -36,17 +64,6 @@ Run test script
 
 ```sh
 poetry run python scripts/getting_started_chdb.py
-```
-### Clickhouse local
-
-```sh
-docker-compose -f scripts/docker-compose.yaml up
-```
-
-Run test script
-
-```sh
-poetry run python scripts/getting_started_clickhouse.py
 ```
 
 ## Known issues
