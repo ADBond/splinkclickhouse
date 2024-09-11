@@ -30,3 +30,17 @@ def test_em_training(db_api, fake_1000_settings):
     linker.training.estimate_parameters_using_expectation_maximisation(
         block_on("first_name", "surname"),
     )
+
+def test_predict(db_api, fake_1000_settings):
+    df = splink_datasets.fake_1000
+    linker = Linker(df, fake_1000_settings, db_api)
+    linker.inference.predict()
+
+def test_clustering(db_api, fake_1000_settings):
+    df = splink_datasets.fake_1000
+    linker = Linker(df, fake_1000_settings, db_api)
+    df_predict = linker.inference.predict()
+    linker.clustering.cluster_pairwise_predictions_at_threshold(
+        df_predict,
+        threshold_match_probability=0.8,
+    )
