@@ -54,16 +54,23 @@ Update dev dependencies
 poetry lock
 ```
 
-Check package
+Check package (with `ruff` and `mypy`)
 
 ```sh
 ./scripts/check_package.sh
 ```
 
-Run test script
+Run pytest tests (you will need to have docker container running, currently all tests require this as chdb + clickhouse tests not isolated)
+
+```sh
+poetry run python -m pytest -vx tests
+```
+
+Run test scripts
 
 ```sh
 poetry run python scripts/getting_started_chdb.py
+poetry run python scripts/getting_started_clickhouse.py
 ```
 
 ## Known issues
