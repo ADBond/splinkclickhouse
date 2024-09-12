@@ -24,6 +24,7 @@ class ChDBAPI(DatabaseAPI[None]):
         self._db_schema = schema
 
         self._create_splink_schema()
+        self._create_random_function()
 
     def _table_registration(self, input, table_name):
         if isinstance(input, dict):
@@ -95,3 +96,13 @@ class ChDBAPI(DatabaseAPI[None]):
         USE {self._db_schema};
         """
         self._execute_sql_against_backend(sql)
+
+    # alias random -> rand. Need this function for comparison viewer
+    def _create_random_function(self) -> None:
+        sql = "CREATE FUNCTION IF NOT EXISTS random AS () -> rand()"
+
+        cursor = self._get_cursor()
+        try:
+            cursor.execute(sql)
+        finally:
+            self._reset_cursor(cursor)

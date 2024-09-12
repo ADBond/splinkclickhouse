@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Create an alias for `rand`, `random` so that `Linker.visualisations.comparison_viewer_dashboard` runs without error [#14](https://github.com/ADBond/splinkclickhouse/pull/14).
+
 ## [0.2.1] - 2024-09-12
 
 ### Changed

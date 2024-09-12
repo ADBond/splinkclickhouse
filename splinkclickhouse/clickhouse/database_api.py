@@ -20,6 +20,7 @@ class ClickhouseAPI(DatabaseAPI[None]):
 
         self.client = client
         client.command("SET union_default_mode = 'DISTINCT'")
+        self._create_random_function()
 
     def _table_registration(self, input, table_name):
         if not isinstance(input, str):
@@ -62,5 +63,9 @@ class ClickhouseAPI(DatabaseAPI[None]):
         return self.client.query(final_sql)
 
     @property
-    def database(self):
+    def database(self) -> str:
         return self.client.database or "default"
+
+    # alias random -> rand. Need this function for comparison viewer
+    def _create_random_function(self) -> None:
+        self.client.command("CREATE FUNCTION IF NOT EXISTS random AS () -> rand()")
