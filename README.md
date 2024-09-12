@@ -114,3 +114,9 @@ fn_comparison = cl.DamerauLevenshteinAtThresholds("NULLIF(first_name, '')")
 Currently at most one term frequency adjustment can be used with `ClickhouseAPI`.
 
 This also applies to `ChDBAPI` but _only in `debug_mode`_. With `debug_mode` off there is no limit on term frequency adjustments.
+
+### `ClickhouseAPI` pandas registration
+
+`ClickhouseAPI` will allow registration of pandas dataframes, by inferring the types of columns. It currently only does this for string and integer columns, and will always make them `Nullable`.
+
+If you require other data types, or more fine-grained control, it is recommended to import the data into Clickhouse yourself, and then pass the table name (as a string) instead.

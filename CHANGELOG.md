@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- `ClickhouseAPI` now allows for registering tables directly from pandas `DataFrame`s, if they contain only integer and string columns [#18](https://github.com/ADBond/splinkclickhouse/pull/18).
+
 ### Fixed
 
 - Create an alias for `rand`, `random` so that `Linker.visualisations.comparison_viewer_dashboard` runs without error [#14](https://github.com/ADBond/splinkclickhouse/pull/14).
+- Workaround for Clickhouse `count(*) filter ...` parsing issue so that `linker.clustering.compute_graph_metrics(...)` now runs [#18](https://github.com/ADBond/splinkclickhouse/pull/18).
 
 ## [0.2.1] - 2024-09-12
 

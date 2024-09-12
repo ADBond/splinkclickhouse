@@ -70,6 +70,9 @@ class ChDBAPI(DatabaseAPI[None]):
         sql = sql.replace("UNION ALL", "__tmp__ua__")
         sql = sql.replace("UNION", "UNION DISTINCT")
         sql = sql.replace("__tmp__ua__", "UNION ALL")
+        # workaround for https://github.com/ClickHouse/ClickHouse/issues/61004
+        sql = sql.replace("count(*)", "count()")
+        sql = sql.replace("COUNT(*)", "COUNT()")
 
         sql = f"CREATE TABLE {physical_name} ORDER BY tuple() AS {sql}"
         return sql

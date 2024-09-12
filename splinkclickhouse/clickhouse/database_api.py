@@ -1,5 +1,6 @@
 import logging
 
+import pandas as pd
 from clickhouse_connect.driver.client import Client
 from splink.internals.database_api import DatabaseAPI
 
@@ -22,19 +23,23 @@ class ClickhouseAPI(DatabaseAPI[None]):
         client.command("SET union_default_mode = 'DISTINCT'")
         self._create_random_function()
 
-    def _table_registration(self, input, table_name):
-        if not isinstance(input, str):
+    def _table_registration(self, input, table_name) -> None:
+        if isinstance(input, pd.DataFrame):
+            sql = self._create_table_from_pandas_frame(input, table_name)
+            self.client.query(sql)
+            self.client.insert_df(table_name, input)
+        elif isinstance(input, str):
+            sql = (
+                f"CREATE OR REPLACE TABLE {table_name} "
+                "ORDER BY tuple() "
+                f"AS SELECT * FROM {input}"
+            )
+            self.client.query(sql)
+        else:
             raise TypeError(
                 "ClickhouseAPI currently only accepts table names (str) "
-                "as inputs for table registration"
+                "or pandas DataFrames as inputs for table registration"
             )
-
-        sql = (
-            f"CREATE OR REPLACE TABLE {table_name} "
-            "ORDER BY tuple() "
-            f"AS SELECT * FROM {input}"
-        )
-        self.client.query(sql)
 
     def table_to_splink_dataframe(self, templated_name, physical_name):
         return ClickhouseDataFrame(templated_name, physical_name, self)
@@ -53,6 +58,9 @@ class ClickhouseAPI(DatabaseAPI[None]):
     def _setup_for_execute_sql(self, sql: str, physical_name: str) -> str:
         self.delete_table_from_database(physical_name)
         sql = sql.replace("float8", "Float64")
+        # workaround for https://github.com/ClickHouse/ClickHouse/issues/61004
+        sql = sql.replace("count(*)", "count()")
+        sql = sql.replace("COUNT(*)", "COUNT()")
 
         sql = f"CREATE TABLE {physical_name} ORDER BY tuple() AS {sql}"
         return sql
@@ -69,3 +77,23 @@ class ClickhouseAPI(DatabaseAPI[None]):
     # alias random -> rand. Need this function for comparison viewer
     def _create_random_function(self) -> None:
         self.client.command("CREATE FUNCTION IF NOT EXISTS random AS () -> rand()")
+
+    def _create_table_from_pandas_frame(self, df: pd.DataFrame, table_name: str) -> str:
+        sql = f"CREATE OR REPLACE TABLE {table_name} ("
+
+        first_col = True
+        for column in df.columns:
+            if not first_col:
+                sql += ", "
+            col_type = df[column].dtype
+            first_col = False
+
+            if pd.api.types.is_integer_dtype(col_type):
+                sql += f"{column} Nullable(UInt32)"
+            elif pd.api.types.is_string_dtype(col_type):
+                sql += f"{column} Nullable(String)"
+            else:
+                raise ValueError(f"Unknown data type {col_type}")
+
+        sql += ") ENGINE MergeTree ORDER BY tuple()"
+        return sql
