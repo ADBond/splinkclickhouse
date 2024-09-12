@@ -11,11 +11,7 @@ def test_full_basic_run(api_info, fake_1000_factory, fake_1000_settings):
     # training
     linker.training.estimate_u_using_random_sampling(max_pairs=6e5)
     linker.training.estimate_probability_two_random_records_match(
-        [
-            block_on("dob"),
-            block_on("first_name", "surname")
-        ],
-        recall=0.8
+        [block_on("dob"), block_on("first_name", "surname")], recall=0.8
     )
     linker.training.estimate_parameters_using_expectation_maximisation(
         block_on("dob"),
