@@ -15,22 +15,12 @@ conn_atts = {
 
 db_name = "__temp_splink_db"
 
-tn = "fake_1000"
 default_client = clickhouse_connect.get_client(**conn_atts)
 default_client.command(f"CREATE DATABASE IF NOT EXISTS {db_name}")
 client = clickhouse_connect.get_client(
     **conn_atts,
     database=db_name,
 )
-client.command(
-    f"CREATE OR REPLACE TABLE {tn} "
-    "(unique_id UInt32, first_name Nullable(String), surname Nullable(String), "
-    "dob Nullable(String), city Nullable(String), email Nullable(String), "
-    "cluster UInt8) "
-    "ENGINE MergeTree "
-    "ORDER BY unique_id"
-)
-client.insert_df(tn, df)
 
 db_api = ClickhouseAPI(client)
 
@@ -57,7 +47,7 @@ settings = SettingsCreator(
 
 db_api.delete_tables_created_by_splink_from_db()
 
-linker = Linker(tn, settings, db_api)
+linker = Linker(df, settings, db_api)
 
 linker.training.estimate_probability_two_random_records_match(
     [block_on("first_name", "surname")],
