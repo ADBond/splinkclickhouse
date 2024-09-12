@@ -17,7 +17,7 @@ def chdb_api():
 
 
 @fixture(scope="module")
-def clickhouse_api(_fake_1000):
+def clickhouse_api():
     conn_atts = {
         "host": "localhost",
         "port": 8123,
@@ -26,7 +26,6 @@ def clickhouse_api(_fake_1000):
     }
 
     db_name = "__temp_splink_db_pytest"
-    tn = "fake_1000"
 
     try:
         default_client = clickhouse_connect.get_client(**conn_atts)
@@ -35,15 +34,6 @@ def clickhouse_api(_fake_1000):
             **conn_atts,
             database=db_name,
         )
-        client.command(
-            f"CREATE OR REPLACE TABLE {tn} "
-            "(unique_id UInt32, first_name Nullable(String), surname Nullable(String), "
-            "dob Nullable(String), city Nullable(String), email Nullable(String), "
-            "cluster UInt8) "
-            "ENGINE MergeTree "
-            "ORDER BY unique_id"
-        )
-        client.insert_df(tn, _fake_1000)
 
         yield ClickhouseAPI(client)
         client.close()
@@ -69,18 +59,8 @@ def api_info(request, chdb_api, clickhouse_api):
 
 
 @fixture(scope="module")
-def _fake_1000():
+def fake_1000():
     return splink_datasets.fake_1000
-
-
-@fixture
-def fake_1000_factory(_fake_1000):
-    def fake_1000(version):
-        if version == "chdb":
-            return _fake_1000
-        return "fake_1000"
-
-    return fake_1000
 
 
 @fixture
