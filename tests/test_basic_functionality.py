@@ -2,6 +2,7 @@ from splink import Linker, block_on
 from splink.blocking_analysis import (
     cumulative_comparisons_to_be_scored_from_blocking_rules_chart,
 )
+from splink.exploratory import profile_columns
 
 
 def test_make_linker(api_info, fake_1000_factory, fake_1000_settings):
@@ -55,6 +56,7 @@ def test_clustering(api_info, fake_1000_factory, fake_1000_settings):
         threshold_match_probability=0.8,
     )
 
+
 def test_cumulative_comparisons(api_info, fake_1000_factory, fake_1000_settings):
     db_api = api_info["db_api"]
     df = fake_1000_factory(api_info["version"])
@@ -66,4 +68,15 @@ def test_cumulative_comparisons(api_info, fake_1000_factory, fake_1000_settings)
         blocking_rules=blocking_rules,
         db_api=db_api,
         link_type="dedupe_only",
+    )
+
+
+def test_profiling(api_info, fake_1000_factory):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
+
+    profile_columns(
+        df,
+        db_api=db_api,
+        column_expressions=["first_name", "surname", "city", "first_name || surname"],
     )
