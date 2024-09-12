@@ -87,3 +87,31 @@ def test_completeness(api_info, fake_1000_factory):
     df = fake_1000_factory(api_info["version"])
 
     completeness_chart(df, db_api=db_api)
+
+
+def test_match_weights_chart(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
+    linker = Linker(df, fake_1000_settings, db_api)
+    linker.visualisations.match_weights_chart()
+
+
+def test_parameter_estimates_chart(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
+    linker = Linker(df, fake_1000_settings, db_api)
+    linker.training.estimate_parameters_using_expectation_maximisation(
+        block_on("dob"),
+    )
+    linker.training.estimate_parameters_using_expectation_maximisation(
+        block_on("first_name", "surname"),
+    )
+    linker.visualisations.parameter_estimate_comparisons_chart()
+
+
+def test_m_u_chart(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
+    linker = Linker(df, fake_1000_settings, db_api)
+
+    linker.visualisations.m_u_parameters_chart()
