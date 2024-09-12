@@ -3,9 +3,10 @@ from splink import Linker, block_on
 
 # this tests similar steps to test_basic_functionality.py, but alltogether
 # this should catch issues we may have in building up cache/other state
-def test_full_basic_run(api_info, fake_1000_factory, fake_1000_settings):
+def test_full_basic_run(api_info, fake_1000_factory, fake_1000_settings_factory):
     db_api = api_info["db_api"]
     df = fake_1000_factory(api_info["version"])
+    fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
 
     # training

@@ -97,6 +97,18 @@ If you require different behaviour (for instance if you have an unusual date for
 
 There is not currently a way in Clickhouse to deal directly with date values before 1900 - if you require such values you will have to manually process these to a different type, and construct the relevant SQL logic.
 
+### `NULL` values in `chDB`
+
+When passing data into `chdb` from pandas or pyarrow tables, `NULL` values in `String` columns are converted into empty strings, instead of remaining `NULL`.
+
+For now this is not handled within the package. You can workaround the issue by wrapping column names in `NULLIF`:
+
+```python
+import splink.comparison_level as cl
+
+fn_comparison = cl.DamerauLevenshteinAtThresholds("NULLIF(first_name, '')")
+```
+
 ### Term-frequency adjustments
 
 Currently at most one term frequency adjustment can be used with `ClickhouseAPI`.
