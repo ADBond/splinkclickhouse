@@ -2,7 +2,7 @@ import clickhouse_connect
 import splink.comparison_library as cl
 from chdb import dbapi
 from pytest import fixture, mark, param
-from splink import SettingsCreator, block_on, splink_datasets
+from splink import ColumnExpression, SettingsCreator, block_on, splink_datasets
 
 from splinkclickhouse import ChDBAPI, ClickhouseAPI
 
@@ -84,23 +84,51 @@ def fake_1000_factory(_fake_1000):
 
 
 @fixture
-def fake_1000_settings():
-    return SettingsCreator(
-        link_type="dedupe_only",
-        comparisons=[
-            cl.JaroWinklerAtThresholds("first_name"),
-            cl.JaroAtThresholds("surname"),
-            cl.DateOfBirthComparison(
-                "dob",
-                input_is_string=True,
-            ),
-            cl.DamerauLevenshteinAtThresholds("city").configure(
-                term_frequency_adjustments=True
-            ),
-            cl.JaccardAtThresholds("email"),
-        ],
-        blocking_rules_to_generate_predictions=[
-            block_on("first_name", "dob"),
-            block_on("surname"),
-        ],
-    )
+def fake_1000_settings_factory():
+    def fake_1000_settings(version):
+        if version == "clickhouse":
+            return SettingsCreator(
+                link_type="dedupe_only",
+                comparisons=[
+                    cl.JaroWinklerAtThresholds("first_name"),
+                    cl.JaroAtThresholds("surname"),
+                    cl.DateOfBirthComparison(
+                        "dob",
+                        input_is_string=True,
+                    ),
+                    cl.DamerauLevenshteinAtThresholds("city").configure(
+                        term_frequency_adjustments=True
+                    ),
+                    cl.JaccardAtThresholds("email"),
+                ],
+                blocking_rules_to_generate_predictions=[
+                    block_on("first_name", "dob"),
+                    block_on("surname"),
+                ],
+            )
+        # for chdb we wrap all columns in regex_extract, which also includes a nullif
+        # this circumvents issue where string column NULL values are parsed as empty
+        # string instead of NULL when we import them into chdb
+        return SettingsCreator(
+            link_type="dedupe_only",
+            comparisons=[
+                cl.JaroWinklerAtThresholds(
+                    ColumnExpression("first_name").regex_extract(".*")
+                ),
+                cl.JaroAtThresholds(ColumnExpression("surname").regex_extract(".*")),
+                cl.DateOfBirthComparison(
+                    ColumnExpression("dob").regex_extract(".*"),
+                    input_is_string=True,
+                ),
+                cl.DamerauLevenshteinAtThresholds(
+                    ColumnExpression("city").regex_extract(".*")
+                ).configure(term_frequency_adjustments=True),
+                cl.JaccardAtThresholds(ColumnExpression("email").regex_extract(".*")),
+            ],
+            blocking_rules_to_generate_predictions=[
+                block_on("first_name", "dob"),
+                block_on("surname"),
+            ],
+        )
+
+    return fake_1000_settings
