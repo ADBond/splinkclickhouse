@@ -31,6 +31,8 @@ jobs:
         run: |
           poetry config virtualenvs.in-project true
           poetry install --no-interaction --no-root
+      - name: Install library
+        run: poetry install --no-interaction
 
       - name: Run chdb tests
         run: |
