@@ -7,17 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Updated `numpy` dependency requirements to allow compatible versions for all supported python versions [#9](https://github.com/ADBond/splinkclickhouse/pull/9).
+
 ## [0.2.0] - 2024-09-11
 
 ### Added
 
-- `ClickhouseAPI` and dataframe added to support running calculations in a Clickhouse instance [#4](https://github.com/ADBond/splinkclickhouse/pull/4)
+- `ClickhouseAPI` and dataframe added to support running calculations in a Clickhouse instance [#4](https://github.com/ADBond/splinkclickhouse/pull/4).
 
 ## [0.1.1] - 2024-09-10
 
 ### Fixed
 
-- Fix `random_sample_sql` so that u-training works when we don't sample the entire dataset [#1](https://github.com/ADBond/splinkclickhouse/pull/1)
+- Fix `random_sample_sql` so that u-training works when we don't sample the entire dataset [#1](https://github.com/ADBond/splinkclickhouse/pull/1).
 
 ### Changed
 
