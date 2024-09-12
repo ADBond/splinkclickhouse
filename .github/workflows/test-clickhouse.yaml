@@ -1,0 +1,47 @@
+name: chDB tests
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "splink/**"
+      - "tests/**"
+      - "pyproject.toml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      clickhouse_splink_ci:
+        image: clickhouse/clickhouse-server:24.8
+        env:
+          CLICKHOUSE_USER: splinkognito
+          CLICKHOUSE_PASSWORD: splink123!
+        ports:
+          - 8123:8123
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+    name: Run tests with Python ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry using pipx
+        run: pipx install poetry
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "poetry"
+
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry install --no-interaction --no-root
+      - name: Install library
+        run: poetry install --no-interaction
+
+      - name: Run chdb tests
+        run: |
+          poetry run pytest -vm clickhouse tests/
