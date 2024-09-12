@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "splinkclickhouse"
-version = "0.2.1"
+version = "0.2.2"
 description = "Clickhouse backend support for Splink"
 authors = ["Andrew Bond"]
 license = "MIT"

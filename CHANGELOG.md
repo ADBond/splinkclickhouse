@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.2.2] - 2024-09-12
+
 ### Added
 
 - `ClickhouseAPI` now allows for registering tables directly from pandas `DataFrame`s, if they contain only integer and string columns [#18](https://github.com/ADBond/splinkclickhouse/pull/18).
@@ -44,7 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Basic working version of package with api for `chdb`
 
-[unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.2.1...HEAD
+[unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/ADBond/splinkclickhouse/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/ADBond/splinkclickhouse/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/ADBond/splinkclickhouse/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/ADBond/splinkclickhouse/compare/v0.1.0...v0.1.1
