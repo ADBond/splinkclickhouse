@@ -115,3 +115,15 @@ def test_m_u_chart(api_info, fake_1000_factory, fake_1000_settings):
     linker = Linker(df, fake_1000_settings, db_api)
 
     linker.visualisations.m_u_parameters_chart()
+
+
+def test_comparison_viewer_dashboard(
+    api_info, fake_1000_factory, fake_1000_settings, tmp_path
+):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
+    fake_1000_settings.retain_intermediate_calculation_columns = True
+    linker = Linker(df, fake_1000_settings, db_api)
+
+    df_predict = linker.inference.predict()
+    linker.visualisations.comparison_viewer_dashboard(df_predict, tmp_path / "cvd.html")
