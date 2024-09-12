@@ -117,6 +117,14 @@ def test_m_u_chart(api_info, fake_1000_factory, fake_1000_settings):
     linker.visualisations.m_u_parameters_chart()
 
 
+def test_unlinkables_chart(api_info, fake_1000_factory, fake_1000_settings):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
+    linker = Linker(df, fake_1000_settings, db_api)
+
+    linker.evaluation.unlinkables_chart()
+
+
 def test_comparison_viewer_dashboard(
     api_info, fake_1000_factory, fake_1000_settings, tmp_path
 ):
