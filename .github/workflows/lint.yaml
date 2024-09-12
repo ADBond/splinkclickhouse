@@ -10,7 +10,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Lint with Ruff using Python 3.12.1
+    name: Lint with Ruff using Python 3.11.10
     steps:
       - uses: actions/checkout@v4
 
@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12.1"
+          python-version: "3.11.10"
           cache: "poetry"
 
       - name: Install dependencies
