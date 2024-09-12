@@ -1,7 +1,7 @@
 import clickhouse_connect
 import splink.comparison_library as cl
 from chdb import dbapi
-from pytest import fixture
+from pytest import fixture, mark, param
 from splink import SettingsCreator, block_on, splink_datasets
 
 from splinkclickhouse import ChDBAPI, ClickhouseAPI
@@ -15,6 +15,7 @@ def chdb_api():
     yield ChDBAPI(con)
     con.close()
 
+
 @fixture(scope="module")
 def clickhouse_api(_fake_1000):
     conn_atts = {
@@ -27,32 +28,37 @@ def clickhouse_api(_fake_1000):
     db_name = "__temp_splink_db_pytest"
     tn = "fake_1000"
 
-    default_client = clickhouse_connect.get_client(**conn_atts)
-    default_client.command(
-        f"CREATE DATABASE IF NOT EXISTS {db_name}"
-    )
-    client = clickhouse_connect.get_client(
-        **conn_atts,
-        database=db_name,
-    )
-    client.command(
-        f"CREATE OR REPLACE TABLE {tn} "
-        "(unique_id UInt32, first_name Nullable(String), surname Nullable(String), "
-        "dob Nullable(String), city Nullable(String), email Nullable(String), "
-        "cluster UInt8) "
-        "ENGINE MergeTree "
-        "ORDER BY unique_id"
-    )
-    client.insert_df(tn, _fake_1000)
+    try:
+        default_client = clickhouse_connect.get_client(**conn_atts)
+        default_client.command(f"CREATE DATABASE IF NOT EXISTS {db_name}")
+        client = clickhouse_connect.get_client(
+            **conn_atts,
+            database=db_name,
+        )
+        client.command(
+            f"CREATE OR REPLACE TABLE {tn} "
+            "(unique_id UInt32, first_name Nullable(String), surname Nullable(String), "
+            "dob Nullable(String), city Nullable(String), email Nullable(String), "
+            "cluster UInt8) "
+            "ENGINE MergeTree "
+            "ORDER BY unique_id"
+        )
+        client.insert_df(tn, _fake_1000)
 
-    yield ClickhouseAPI(client)
-    client.close()
-    default_client.command(
-        f"DROP DATABASE {db_name}"
-    )
-    default_client.close()
+        yield ClickhouseAPI(client)
+        client.close()
+        default_client.command(f"DROP DATABASE {db_name}")
+        default_client.close()
+    except clickhouse_connect.driver.exceptions.OperationalError:
+        yield None
 
-@fixture(params=["chdb", "clickhouse"])
+
+@fixture(
+    params=[
+        param("chdb", marks=[mark.chdb]),
+        param("clickhouse", marks=[mark.clickhouse]),
+    ]
+)
 def api_info(request, chdb_api, clickhouse_api):
     version = request.param
     if version == "chdb":
@@ -61,9 +67,11 @@ def api_info(request, chdb_api, clickhouse_api):
         return {"db_api": clickhouse_api, "version": version}
     raise ValueError(f"Unknown param: {version}")
 
+
 @fixture(scope="module")
 def _fake_1000():
     return splink_datasets.fake_1000
+
 
 @fixture
 def fake_1000_factory(_fake_1000):
@@ -71,7 +79,9 @@ def fake_1000_factory(_fake_1000):
         if version == "chdb":
             return _fake_1000
         return "fake_1000"
+
     return fake_1000
+
 
 @fixture
 def fake_1000_settings():

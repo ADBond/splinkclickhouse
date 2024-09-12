@@ -60,11 +60,21 @@ Check package (with `ruff` and `mypy`)
 ./scripts/check_package.sh
 ```
 
-Run pytest tests (you will need to have docker container running, currently all tests require this as chdb + clickhouse tests not isolated)
+Run all pytest tests
 
 ```sh
 poetry run python -m pytest -vx tests
 ```
+
+You can run just the tests with `chdb` (for instance if you do not have clickhouse), or just `clickhouse`, by passing the `-m` flag
+
+```sh
+poetry run python -m pytest -vxm chdb tests
+# or the clickhouse tests:
+poetry run python -m pytest -vxm clickhouse tests
+```
+
+For clickhouse tests you will need to have docker container running.
 
 Run test scripts
 
