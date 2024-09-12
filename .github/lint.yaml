@@ -1,0 +1,34 @@
+name: Check code with ruff
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**/*.py"
+      - "pyproject.toml"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint with Ruff using Python 3.12.1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry using pipx
+        run: pipx install poetry && pipx ensurepath
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.1"
+          cache: "poetry"
+
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry install --no-interaction --no-root
+
+      - name: Run Ruff linting
+        run: poetry run ruff check . --output-format=full
+
+      - name: Run Ruff formatting check
+        run: poetry run ruff format --check .
