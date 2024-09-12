@@ -53,6 +53,9 @@ class ClickhouseAPI(DatabaseAPI[None]):
     def _setup_for_execute_sql(self, sql: str, physical_name: str) -> str:
         self.delete_table_from_database(physical_name)
         sql = sql.replace("float8", "Float64")
+        # workaround for https://github.com/ClickHouse/ClickHouse/issues/61004
+        sql = sql.replace("count(*)", "count()")
+        sql = sql.replace("COUNT(*)", "COUNT()")
 
         sql = f"CREATE TABLE {physical_name} ORDER BY tuple() AS {sql}"
         return sql
