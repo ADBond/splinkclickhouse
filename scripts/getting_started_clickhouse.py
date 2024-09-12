@@ -17,9 +17,7 @@ db_name = "__temp_splink_db"
 
 tn = "fake_1000"
 default_client = clickhouse_connect.get_client(**conn_atts)
-default_client.command(
-    f"CREATE DATABASE IF NOT EXISTS {db_name}"
-)
+default_client.command(f"CREATE DATABASE IF NOT EXISTS {db_name}")
 client = clickhouse_connect.get_client(
     **conn_atts,
     database=db_name,
