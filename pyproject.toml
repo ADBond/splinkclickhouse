@@ -9,6 +9,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.8.0,<4.0.0"
 splink = ">=4.0.0"
+# get weird clash between pandas and numpy for newer pythons
+# not sure why it manifests heree and not in Splink
+numpy = {"version" = "<2.0.0", python = ">=3.10"}
 
 chdb = ">=2.0.1"
 clickhouse_connect = ">=0.7.0"
