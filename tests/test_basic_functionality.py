@@ -167,3 +167,21 @@ def test_cluster_studio_dashboard(
     linker.visualisations.cluster_studio_dashboard(
         df_predict, df_clustered, tmp_path / "csd.html"
     )
+
+
+def test_compute_graph_metrics(
+    api_info, fake_1000, fake_1000_settings_factory, tmp_path
+):
+    db_api = api_info["db_api"]
+    df = fake_1000
+    fake_1000_settings = fake_1000_settings_factory(api_info["version"])
+    fake_1000_settings.retain_intermediate_calculation_columns = True
+    linker = Linker(df, fake_1000_settings, db_api)
+
+    df_predict = linker.inference.predict()
+    df_clustered = linker.clustering.cluster_pairwise_predictions_at_threshold(
+        df_predict,
+        threshold_match_probability=0.8,
+    )
+    # db_api.debug_mode = True
+    linker.clustering.compute_graph_metrics(df_predict, df_clustered)
