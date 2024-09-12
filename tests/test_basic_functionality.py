@@ -2,7 +2,7 @@ from splink import Linker, block_on
 from splink.blocking_analysis import (
     cumulative_comparisons_to_be_scored_from_blocking_rules_chart,
 )
-from splink.exploratory import profile_columns
+from splink.exploratory import completeness_chart, profile_columns
 
 
 def test_make_linker(api_info, fake_1000_factory, fake_1000_settings):
@@ -80,3 +80,10 @@ def test_profiling(api_info, fake_1000_factory):
         db_api=db_api,
         column_expressions=["first_name", "surname", "city", "first_name || surname"],
     )
+
+
+def test_completeness(api_info, fake_1000_factory):
+    db_api = api_info["db_api"]
+    df = fake_1000_factory(api_info["version"])
+
+    completeness_chart(df, db_api=db_api)
