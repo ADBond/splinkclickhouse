@@ -1,39 +1,28 @@
-[tool.poetry]
+[project]
 name = "splinkclickhouse"
 version = "0.2.2"
 description = "Clickhouse backend support for Splink"
-authors = ["Andrew Bond"]
-license = "MIT"
+authors = [{name = "Andrew Bond"}]
+license = {text = "MIT License"}
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = ">=3.8.0,<4.0.0"
-splink = ">=4.0.0"
-# get weird clash between pandas and numpy for newer pythons
-# not sure why it manifests heree and not in Splink
-numpy = [
-    {"version" = ">1.17.3", python = "<3.9"},
-    {"version" = "<2.0.0", python = ">=3.10"}
+requires-python = ">=3.9,<4.0"
+dependencies = [
+    "splink >= 4.0.0",
+    "chdb >= 2.0.1",
+    "clickhouse_connect >= 0.7.0",
 ]
 
-chdb = ">=2.0.1"
-clickhouse_connect = ">=0.7.0"
-
-[tool.poetry.group.testing]
-[tool.poetry.group.testing.dependencies]
-pytest = "^8.3.3"
-
-[tool.poetry.group.linting]
-[tool.poetry.group.linting.dependencies]
-ruff = "^0.6.3"
-
-[tool.poetry.group.typechecking]
-[tool.poetry.group.typechecking.dependencies]
-mypy = "1.11.2"
-
 [build-system]
-requires = ["poetry-core>=1.0.8"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "ruff == 0.6.4",
+    "mypy == 1.11.2",
+    "pytest == 8.3.3"
+]
+package = true
 
 [tool.ruff]
 line-length = 88
