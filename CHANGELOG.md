@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.2.3] - 2024-09-16
+
 ### Changed
 
 - Dropped support for python 3.8 [#20](https://github.com/ADBond/splinkclickhouse/pull/20)
