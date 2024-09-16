@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Dropped support for python 3.8 [#20](https://github.com/ADBond/splinkclickhouse/pull/20)
+- Removed `numpy`requirements [#20](https://github.com/ADBond/splinkclickhouse/pull/20)
+
 ## [0.2.2] - 2024-09-12
 
 ### Added

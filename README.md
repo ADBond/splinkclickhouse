@@ -4,6 +4,15 @@ Basic [Clickhouse](https://clickhouse.com/docs/en/intro) support for use as a ba
 
 Supports in-process [chDB](https://clickhouse.com/docs/en/chdb) version or a clickhouse instance connected via [clickhouse connect](https://clickhouse.com/docs/en/integrations/python).
 
+## Installation
+
+You can install the package from github:
+
+```sh
+# for v0.2.3 - replace with any version you want, or specify a branch after '@'
+pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.2.3
+```
+
 ## Using
 
 ### ChDB
@@ -17,7 +26,7 @@ from splinkclickhouse import ChDBAPI
 See [getting started script](./scripts/getting_started_chdb.py) for example of use:
 
 ```sh
-poetry run python scripts/getting_started_chdb.py
+uv run python scripts/getting_started_chdb.py
 ```
 
 ### Clickhouse instance
@@ -37,7 +46,7 @@ docker-compose -f scripts/docker-compose.yaml up
 See [getting started script](./scripts/getting_started_clickhouse.py) for example of use:
 
 ```sh
-poetry run python scripts/getting_started_clickhouse.py
+uv run python scripts/getting_started_clickhouse.py
 ```
 
 ## Dev setup
@@ -45,13 +54,13 @@ poetry run python scripts/getting_started_clickhouse.py
 Get dependencies
 
 ```sh
-poetry install
+uv sync
 ```
 
 Update dev dependencies
 
 ```sh
-poetry lock
+uv lock
 ```
 
 Check package (with `ruff` and `mypy`)
@@ -63,15 +72,15 @@ Check package (with `ruff` and `mypy`)
 Run all pytest tests
 
 ```sh
-poetry run python -m pytest -vx tests
+uv run python -m pytest -vx tests
 ```
 
 You can run just the tests with `chdb` (for instance if you do not have clickhouse), or just `clickhouse`, by passing the `-m` flag
 
 ```sh
-poetry run python -m pytest -vxm chdb tests
+uv run python -m pytest -vxm chdb tests
 # or the clickhouse tests:
-poetry run python -m pytest -vxm clickhouse tests
+uv run python -m pytest -vxm clickhouse tests
 ```
 
 For clickhouse tests you will need to have docker container running.
@@ -79,8 +88,8 @@ For clickhouse tests you will need to have docker container running.
 Run test scripts
 
 ```sh
-poetry run python scripts/getting_started_chdb.py
-poetry run python scripts/getting_started_clickhouse.py
+uv run python scripts/getting_started_chdb.py
+uv run python scripts/getting_started_clickhouse.py
 ```
 
 ## Known issues

@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-poetry run ruff check splinkclickhouse && poetry run ruff format splinkclickhouse
-poetry run mypy splinkclickhouse
+uv run python -m ruff check splinkclickhouse && uv run python -m ruff format splinkclickhouse
+uv run python -m mypy splinkclickhouse
 
-poetry run ruff check tests && poetry run ruff format tests
+uv run python -m ruff check tests && uv run python -m ruff format tests
