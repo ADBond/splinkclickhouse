@@ -4,6 +4,15 @@ Basic [Clickhouse](https://clickhouse.com/docs/en/intro) support for use as a ba
 
 Supports in-process [chDB](https://clickhouse.com/docs/en/chdb) version or a clickhouse instance connected via [clickhouse connect](https://clickhouse.com/docs/en/integrations/python).
 
+## Installation
+
+You can install the package from github:
+
+```sh
+# for v0.2.3 - replace with any version you want, or specify a branch after '@'
+pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.2.3
+```
+
 ## Using
 
 ### ChDB
