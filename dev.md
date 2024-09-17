@@ -78,3 +78,17 @@ Run test scripts
 uv run python scripts/getting_started_chdb.py
 uv run python scripts/getting_started_clickhouse.py
 ```
+
+## Build
+
+Build package to `dist/`
+
+```sh
+uv build --package splinkclickhouse
+```
+
+Inspect package contents:
+
+```sh
+mkdir -p tmp && tar -xzvf dist/splinkclickhouse-0.2.3.tar.gz -C tmp/
+```
