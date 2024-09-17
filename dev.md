@@ -44,7 +44,7 @@ Get dependencies
 uv sync
 ```
 
-Update dev dependencies
+Update dev dependencies (although this happens automatically)
 
 ```sh
 uv lock
@@ -90,5 +90,16 @@ uv build --package splinkclickhouse
 Inspect package contents:
 
 ```sh
+# replace version as appropriate
 mkdir -p tmp && tar -xzvf dist/splinkclickhouse-0.2.3.tar.gz -C tmp/
 ```
+
+### Manual publish
+
+Set `TWINE_PASSWORD` as an appropriate API token. This is to TestPyPI - remove option for the real thing.
+
+```sh
+TWINE_USERNAME=__token__ uvx twine upload -r testpypi dist/*
+```
+
+See [twine docs](https://twine.readthedocs.io/en/stable/) for more info.
