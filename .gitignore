@@ -3,3 +3,7 @@ __pycache__
 
 dist/
 *.egg-info
+
+tmp*
+
+*.html
