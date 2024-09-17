@@ -24,6 +24,16 @@ dev-dependencies = [
 ]
 package = true
 
+[tool.hatch.build.targets.sdist]
+# opt-in to build
+include = [
+    "splinkclickhouse/*",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "pyproject.toml"
+]
+
 [tool.ruff]
 line-length = 88
 lint.select = [
