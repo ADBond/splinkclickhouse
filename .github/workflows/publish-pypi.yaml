@@ -1,0 +1,30 @@
+name: Release Package on PyPI
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+jobs:
+  poetry-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+    
+      - name: Build package
+        run: uv build --package splinkclickhouse
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__ 
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: uvx twine upload dist/*
