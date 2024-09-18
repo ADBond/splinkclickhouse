@@ -6,7 +6,13 @@ Supports in-process [chDB](https://clickhouse.com/docs/en/chdb) version or a cli
 
 ## Installation
 
-You can install the package from github:
+Install from `PyPI` using `pip`:
+
+```sh
+pip install splinkclickhouse
+```
+
+Alternatively you can install the package from github:
 
 ```sh
 # for v0.2.3 - replace with any version you want, or specify a branch after '@'
