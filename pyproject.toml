@@ -55,3 +55,15 @@ packages = "splinkclickhouse"
 
 implicit_optional = true
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+markers = [
+    # tests not marked with chdb or clickhouse:
+    "core",
+    # these run backend versions of tests, and core
+    "chdb",
+    "clickhouse",
+    # these do only the backend ones, no core
+    "chdb_no_core",
+    "clickhouse_no_core",
+]

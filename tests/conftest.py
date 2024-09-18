@@ -13,6 +13,19 @@ df = splink_datasets.fake_1000
 np.random.seed(2542546873)
 
 
+def pytest_collection_modifyitems(items, config):
+    # anything marked with chdb will also have chdb_only, and vice versa
+    # so don't worry about those, and then they don't get added to core tests
+    our_marks = {"chdb", "clickhouse"}
+
+    for item in items:
+        # any test without our marks is core.
+        # Runs on e.g. -m chdb by not on -m chdb_no_core
+        if not any(marker.name in our_marks for marker in item.iter_markers()):
+            item.add_marker("core")
+            for mark in our_marks:
+                item.add_marker(mark)
+
 
 @fixture
 def chdb_api():
@@ -50,8 +63,8 @@ def clickhouse_api():
 
 @fixture(
     params=[
-        param("chdb", marks=[mark.chdb]),
-        param("clickhouse", marks=[mark.clickhouse]),
+        param("chdb", marks=[mark.chdb, mark.chdb_no_core]),
+        param("clickhouse", marks=[mark.clickhouse, mark.clickhouse_no_core]),
     ]
 )
 def api_info(request, chdb_api, clickhouse_api):
