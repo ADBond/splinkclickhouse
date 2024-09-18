@@ -1,4 +1,6 @@
 import clickhouse_connect
+import numpy as np
+import pandas as pd
 import splink.comparison_library as cl
 from chdb import dbapi
 from pytest import fixture, mark, param
@@ -7,6 +9,9 @@ from splink import ColumnExpression, SettingsCreator, block_on, splink_datasets
 from splinkclickhouse import ChDBAPI, ClickhouseAPI
 
 df = splink_datasets.fake_1000
+
+np.random.seed(2542546873)
+
 
 
 @fixture
@@ -112,3 +117,26 @@ def fake_1000_settings_factory():
         )
 
     return fake_1000_settings
+
+
+@fixture
+def input_nodes_with_lat_longs():
+    lat_low, lat_high = 49, 61
+    long_low, long_high = -8, 2
+
+    n_rows = 1_000
+    lats = np.random.uniform(low=lat_low, high=lat_high, size=n_rows)
+    longs = np.random.uniform(low=long_low, high=long_high, size=n_rows)
+    # also include some names so we have a second comparison
+    names = np.random.choice(
+        ("tom", "tim", "jen", "jan", "ken", "sam", "katherine"),
+        size=n_rows,
+    )
+    return pd.DataFrame(
+        {
+            "unique_id": range(n_rows),
+            "name": names,
+            "latitude": lats,
+            "longitude": longs,
+        }
+    )
