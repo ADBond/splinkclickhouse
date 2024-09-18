@@ -53,3 +53,17 @@ def test_cant_use_distance_in_km_level_with_other_dialect(input_nodes_with_lat_l
         # this comparison level is not compatible with DuckDB (or other dialects)
         Linker(input_nodes_with_lat_longs, settings, db_api)
 
+
+def test_exact_match_substring_at_sizes(api_info, input_nodes_with_lat_longs):
+    db_api = api_info["db_api"]
+
+    settings = SettingsCreator(
+        link_type="dedupe_only",
+        comparisons=[
+            cl.ExactMatch("name"),
+            cl_ch.ExactMatchAtSubstringSizes("geohashEncode(longitude, latitude)"),
+        ],
+    )
+
+    linker = Linker(input_nodes_with_lat_longs, settings, db_api)
+    linker.inference.predict()

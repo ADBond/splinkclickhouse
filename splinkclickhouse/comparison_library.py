@@ -76,3 +76,56 @@ class DistanceInKMAtThresholds(ComparisonCreator):
         long_col = self.col_expressions["longitude_column"]
         return f"{lat_col.output_column_name}_{long_col.output_column_name}"
 
+
+class ExactMatchAtSubstringSizes(ComparisonCreator):
+    def __init__(
+        self,
+        col_name: str,
+        substring_size_or_sizes: Iterable[int] | int = [4, 3, 2],
+        include_full_exact_match: bool = True,
+    ):
+        """
+        A comparison between columns at several sizes of substring
+
+        An example of the output with substring_size_or_sizes = [3, 1] and
+        include_full_exact_match = True would be:
+
+        - The two columns match exactly
+        - The substring of the first three characters of each column match exactly
+        - The substring of the first character of each column match exactly
+
+        This is suitable for a hierarchically structured string, such as a geohash
+        column (from e.g. the result of `geohashEncode`).
+        See https://clickhouse.com/docs/en/sql-reference/functions/geo/geohash.
+
+        Args:
+            col_name (str): The name of the column to compare.
+            long_col (str): The name of the longitude column to compare
+            substring_size_or_sizes (iterable[int] | int): The size(s) of the substrings
+                to compare, taken from the start of the string.
+                Default [4, 3, 2]
+            include_full_exact_match (bool): Whether or not to include a level for
+                an exact match on the full string.
+                Defaults to True.
+        """
+
+        sizes_as_iterable = ensure_is_iterable(substring_size_or_sizes)
+        self.substring_sizes = [*sizes_as_iterable]
+        self.include_full_exact_match = include_full_exact_match
+        super().__init__(col_name)
+
+    def create_comparison_levels(self) -> list[ComparisonLevelCreator]:
+        raw_column = self.col_expression
+
+        levels = [cll.NullLevel(raw_column)]
+        if self.include_full_exact_match:
+            levels.append(cll.ExactMatchLevel(raw_column))
+        levels.extend(
+            cll.ExactMatchLevel(raw_column.substr(1, threshold))
+            for threshold in self.substring_sizes
+        )
+        levels.append(cll.ElseLevel())
+        return levels
+
+    def create_output_column_name(self) -> str:
+        return self.col_expression.output_column_name
