@@ -15,7 +15,7 @@ pip install splinkclickhouse
 Alternatively you can install the package from github:
 
 ```sh
-pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.2.3
+pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.2.4
 # Replace with any version you want, or specify a branch after '@'
 ```
 
