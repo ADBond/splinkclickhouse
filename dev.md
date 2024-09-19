@@ -79,6 +79,14 @@ uv run python scripts/getting_started_chdb.py
 uv run python scripts/getting_started_clickhouse.py
 ```
 
+## Bump package version
+
+From root of repo:
+
+```sh
+./scripts/bump_version.sh X.X.X
+```
+
 ## Build
 
 Build package to `dist/`
