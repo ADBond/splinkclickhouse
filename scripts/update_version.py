@@ -3,8 +3,8 @@
 # run from repo root.
 
 import argparse
-from datetime import datetime
 import re
+from datetime import datetime
 from pathlib import Path
 
 parser = argparse.ArgumentParser(
@@ -14,6 +14,10 @@ parser = argparse.ArgumentParser(
 parser.add_argument("new_version", help="New version number in X.X.X format")
 args = parser.parse_args()
 new_version = args.new_version
+
+version_format = r"[0-9]+\.[0-9]+\.[0-9]+"
+if not re.search(version_format, new_version):
+    raise ValueError(f"Bad version supplied: {new_version}. Should be 'X.X.X' format")
 
 package_file = Path("splinkclickhouse") / "__init__.py"
 pyproject_file = Path(".") / "pyproject.toml"
@@ -33,7 +37,7 @@ init_version_template = '__version__ = "{version_literal}"'
 pyproject_version_template = 'version = "{version_literal}"'
 readme_version_template = "splinkclickhouse.git@v{version_literal}"
 
-version_regex_group = r"([\.0-9]*)"
+version_regex_group = f"({version_format})"
 
 init_version_regex = init_version_template.format(version_literal=version_regex_group)
 
