@@ -44,6 +44,11 @@ init_version_regex = init_version_template.format(version_literal=version_regex_
 m = re.search(init_version_regex, init_text)
 prev_version = m.group(1)
 
+if new_version == prev_version:
+    raise ValueError(
+        f"You haven't incremented version! Received current version {prev_version}"
+    )
+
 updated_init_text = re.sub(
     init_version_regex,
     init_version_template.format(version_literal=new_version),
