@@ -1,4 +1,4 @@
-name: Type hinting with mypy
+name: Check code - type hinting with mypy
 on:
   pull_request:
     branches:
