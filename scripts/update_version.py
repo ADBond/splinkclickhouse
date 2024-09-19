@@ -8,8 +8,7 @@ from datetime import datetime
 from pathlib import Path
 
 parser = argparse.ArgumentParser(
-    prog="VersionUpdater",
-    description="Update files for new package version"
+    prog="VersionUpdater", description="Update files for new package version"
 )
 parser.add_argument("new_version", help="New version number in X.X.X format")
 args = parser.parse_args()
@@ -81,12 +80,7 @@ with open(changelog_file, "r") as f:
     changelog_text = f.read()
 
 updated_changelog_text = changelog_text.replace(
-    "## Unreleased",
-    (
-        "## Unreleased\n"
-        "\n"
-        f"## [{new_version}] - {release_date}"
-    )
+    "## Unreleased", f"## Unreleased\n\n## [{new_version}] - {release_date}"
 )
 unreleased_link_template = "[unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v{version_literal}...HEAD"
 new_link = f"[{new_version}]: https://github.com/ADBond/splinkclickhouse/compare/v{prev_version}...v{new_version}"
