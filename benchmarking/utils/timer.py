@@ -51,6 +51,18 @@ class Timer:
     def labels(self):
         return {t.label for t in self.timings}
 
+    @property
+    def records(self) -> list[dict]:
+        return [
+            {
+                "label": time_point.label,
+                "time": time_point.time,
+                "name": self.name,
+                "time_index": time_point.time_index,
+            }
+            for time_point in self.time_diffs
+        ]
+
 
 class MultiTimer:
     def __init__(self, timers: list[Timer]):
@@ -60,17 +72,12 @@ class MultiTimer:
                 "Can't make a MultiTimer with Timers with different labels"
             )
 
-    def timing_frame(self):
-        records = [
-            {
-                "label": time_point.label,
-                "time": time_point.time,
-                "name": timer.name,
-                "time_index": time_point.time_index,
-            }
-            for timer in self.timers
-            for time_point in timer.time_diffs
-        ]
-        df = pd.DataFrame(records)
+    @property
+    def records(self) -> list[dict]:
+        return [r for timer in self.timers for r in timer.records]
+
+    @property
+    def timing_frame(self) -> pd.DataFrame:
+        df = pd.DataFrame(self.records)
         df.sort_values(by=["time_index", "name"], inplace=True)
         return df
