@@ -90,6 +90,8 @@ class ClickhouseAPI(DatabaseAPI[None]):
 
             if pd.api.types.is_integer_dtype(col_type):
                 sql += f"{column} Nullable(UInt32)"
+            elif pd.api.types.is_float_dtype(col_type):
+                sql += f"{column} Nullable(Float64)"
             elif pd.api.types.is_string_dtype(col_type):
                 sql += f"{column} Nullable(String)"
             else:

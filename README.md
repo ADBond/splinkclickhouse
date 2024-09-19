@@ -6,7 +6,13 @@ Supports in-process [chDB](https://clickhouse.com/docs/en/chdb) version or a cli
 
 ## Installation
 
-You can install the package from github:
+Install from `PyPI` using `pip`:
+
+```sh
+pip install splinkclickhouse
+```
+
+Alternatively you can install the package from github:
 
 ```sh
 # for v0.2.3 - replace with any version you want, or specify a branch after '@'
@@ -111,6 +117,66 @@ linker = Linker(df, settings, db_api=db_api)
 
 See [Splink documentation](https://moj-analytical-services.github.io/splink/) for use of the `Linker`.
 
+### Comparisons
+
+`splinkclickhouse` is compatible with all of the in-built `splinks` comparisons and comparison levels in `splink.comparison_library` and `splink.comparison_level_library`.
+However, `splinkclickhouse ` provides a few pre-made extras to leverage Clickhouse-specific functionality.
+These can be used in exactly the same way as the native Splink libraries, for example:
+
+```python
+import splink.comparison_library as cl
+from splink import SettingsCreator
+
+import splinkclickhouse.comparison_library as cl_ch
+
+...
+settings = SettingsCreator(
+    link_type="dedupe_only",
+    comparisons=[
+        cl.ExactMatch("name"),
+        cl_ch.DistanceInKMAtThresholds(
+            "latitude",
+            "longitude",
+            [10, 50, 100, 200, 500],
+        ),
+    ],
+)
+```
+
+or with individual comparison-levels:
+
+```python
+import splink.comparison_level_library as cll
+import splink.comparison_library as cl
+from splink import SettingsCreator
+
+import splinkclickhouse.comparison_level_library as cll_ch
+
+...
+settings = SettingsCreator(
+    link_type="dedupe_only",
+    comparisons=[
+        cl.ExactMatch("name"),
+        cl.CustomComparison(
+            comparison_levels = [
+                cll.And(
+                    cll.NullLevel("city"),
+                    cll.NullLevel("postcode"),
+                    cll.Or(cll.NullLevel("latitude"), cll.NullLevel("longitude"))
+                ),
+                cll.ExactMatch("postcode"),
+                cll_ch.DistanceInKMLevel("latitude", "longitude", 5),
+                cll_ch.DistanceInKMLevel("latitude", "longitude", 10),
+                cll.ExactMatch("city"),
+                cll_ch.DistanceInKMLevel("latitude", "longitude", 50),
+                cll.ElseLevel(),
+            ],
+            output_column_name="location",
+        ),
+    ],
+)
+```
+
 ## Known issues / caveats
 
 ### Datetime parsing
@@ -145,6 +211,6 @@ This also applies to `ChDBAPI` but _only in `debug_mode`_. With `debug_mode` off
 
 ### `ClickhouseAPI` pandas registration
 
-`ClickhouseAPI` will allow registration of pandas dataframes, by inferring the types of columns. It currently only does this for string and integer columns, and will always make them `Nullable`.
+`ClickhouseAPI` will allow registration of pandas dataframes, by inferring the types of columns. It currently only does this for string, integer, and float columns, and will always make them `Nullable`.
 
 If you require other data types, or more fine-grained control, it is recommended to import the data into Clickhouse yourself, and then pass the table name (as a string) to the `Linker` instead.

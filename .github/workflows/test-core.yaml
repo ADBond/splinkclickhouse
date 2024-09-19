@@ -1,4 +1,4 @@
-name: Clickhouse tests
+name: Core tests
 on:
   pull_request:
     branches:
@@ -11,14 +11,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      clickhouse_splink_ci:
-        image: clickhouse/clickhouse-server:24.8
-        env:
-          CLICKHOUSE_USER: splinkognito
-          CLICKHOUSE_PASSWORD: splink123!
-        ports:
-          - 8123:8123
     strategy:
       fail-fast: false
       matrix:
@@ -41,4 +33,4 @@ jobs:
         run: uv sync -p ${{ matrix.python-version }}
 
       - name: Run chdb tests
-        run: uv run pytest -vm clickhouse_no_core tests/
+        run: uv run pytest -vm core tests/
