@@ -9,7 +9,7 @@ class ClickhouseDialect(SplinkDialect):
     _dialect_name_for_factory = "clickhouse"
 
     @property
-    def name(self) -> str:
+    def sql_dialect_str(self) -> str:
         return "clickhouse"
 
     @property
