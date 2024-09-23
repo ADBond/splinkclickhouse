@@ -828,7 +828,7 @@ dev = [
 requires-dist = [
     { name = "chdb", specifier = ">=2.0.1" },
     { name = "clickhouse-connect", specifier = ">=0.7.0" },
-    { name = "splink", specifier = ">=4.0.0" },
+    { name = "splink", specifier = ">=4.0.2" },
 ]
 
 [package.metadata.requires-dev]
