@@ -7,7 +7,7 @@ license = {text = "MIT License"}
 readme = "README.md"
 requires-python = ">=3.9,<4.0"
 dependencies = [
-    "splink >= 4.0.0",
+    "splink >= 4.0.2",
     "chdb >= 2.0.1",
     "clickhouse_connect >= 0.7.0",
 ]
