@@ -31,7 +31,7 @@ class ClickhouseDataFrame(SplinkDataFrame):
         res = client.query(sql).named_results()
         cols = [r["column_name"] for r in res]
 
-        return [InputColumn(c, sql_dialect="clickhouse") for c in cols]
+        return [InputColumn(c, sqlglot_dialect_str="clickhouse") for c in cols]
 
     def validate(self):
         if not self.db_api.table_exists_in_database(self.physical_name):
