@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Added support for Splink >= 4.0.2, dropped support for 4.0.0, 4.0.1 [#26](https://github.com/ADBond/splinkclickhouse/pull/26)
+
 ## [0.2.4] - 2024-09-19
 
 ## Added
