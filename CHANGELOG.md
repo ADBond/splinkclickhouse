@@ -7,25 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- `chdb` is now an optional dependency, requiring opt-in installation for use of `ChDBAPI` [#28](https://github.com/ADBond/splinkclickhouse/pull/28).
+
 ## [0.2.5] - 2024-09-23
 
 ### Changed
 
-- Added support for Splink >= 4.0.2, dropped support for 4.0.0, 4.0.1 [#26](https://github.com/ADBond/splinkclickhouse/pull/26)
+- Added support for Splink >= 4.0.2, dropped support for 4.0.0, 4.0.1 [#26](https://github.com/ADBond/splinkclickhouse/pull/26).
 
 ## [0.2.4] - 2024-09-19
 
 ## Added
 
-- Extended `ClickhouseAPI` pandas table registration to support float columns [#24](https://github.com/ADBond/splinkclickhouse/pull/24)
-- Added Clickhouse-specific library comparisons/levels - `cll_ch.DistanceInKMLevel`, `cl_ch.DistanceInKMAtThresholds`, and `cl_ch.ExactMatchAtSubstringSizes` [#24](https://github.com/ADBond/splinkclickhouse/pull/24)
+- Extended `ClickhouseAPI` pandas table registration to support float columns [#24](https://github.com/ADBond/splinkclickhouse/pull/24).
+- Added Clickhouse-specific library comparisons/levels - `cll_ch.DistanceInKMLevel`, `cl_ch.DistanceInKMAtThresholds`, and `cl_ch.ExactMatchAtSubstringSizes` [#24](https://github.com/ADBond/splinkclickhouse/pull/24).
 
 ## [0.2.3] - 2024-09-16
 
 ### Changed
 
-- Dropped support for python 3.8 [#20](https://github.com/ADBond/splinkclickhouse/pull/20)
-- Removed `numpy`requirements [#20](https://github.com/ADBond/splinkclickhouse/pull/20)
+- Dropped support for python 3.8 [#20](https://github.com/ADBond/splinkclickhouse/pull/20).
+- Removed `numpy`requirements [#20](https://github.com/ADBond/splinkclickhouse/pull/20).
 
 ## [0.2.2] - 2024-09-12
 

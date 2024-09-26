@@ -7,3 +7,6 @@ dist/
 tmp*
 
 *.html
+
+*.csv
+*.json

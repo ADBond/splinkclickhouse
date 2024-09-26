@@ -2,64 +2,32 @@
 
 Basic [Clickhouse](https://clickhouse.com/docs/en/intro) support for use as a backend with the data-linkage and deduplication package [Splink](https://moj-analytical-services.github.io/splink/).
 
-Supports in-process [chDB](https://clickhouse.com/docs/en/chdb) version or a clickhouse server connected via [clickhouse connect](https://clickhouse.com/docs/en/integrations/python).
+Supports clickhouse server connected via [clickhouse connect](https://clickhouse.com/docs/en/integrations/python).
+
+Also supports in-process [chDB](https://clickhouse.com/docs/en/chdb) version if installed with the `chdb` extras.
 
 ## Installation
 
 Install from `PyPI` using `pip`:
 
 ```sh
+# just installs the Clickhouse server dependencies
 pip install splinkclickhouse
+# or to install with support for chdb:
+pip install splinkclickhouse[chdb]
 ```
 
 Alternatively you can install the package from github:
 
 ```sh
-pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.2.5
 # Replace with any version you want, or specify a branch after '@'
+pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.2.5
 ```
+
+While the package is in early development there will may be breaking changes in new versions without warning, although these _should_ only occur in new minor versions.
+Nevertheless if you depend on this package it is recommended to pin a version to avoid any disruption this may cause.
 
 ## Use
-
-### `chDB`
-
-Import `ChDBAPI`, which accepts a connection from `chdb.api`:
-```python
-import splink.comparison_library as cl
-from chdb import dbapi
-from splink import Linker, SettingsCreator, block_on, splink_datasets
-
-from splinkclickhouse import ChDBAPI
-
-con = dbapi.connect()
-db_api = ChDBAPI(con)
-
-df = splink_datasets.fake_1000
-
-settings = SettingsCreator(
-    link_type="dedupe_only",
-    comparisons=[
-        cl.NameComparison("first_name"),
-        cl.JaroAtThresholds("surname"),
-        cl.DateOfBirthComparison(
-            "dob",
-            input_is_string=True,
-        ),
-        cl.DamerauLevenshteinAtThresholds("city").configure(
-            term_frequency_adjustments=True
-        ),
-        cl.EmailComparison("email"),
-    ],
-    blocking_rules_to_generate_predictions=[
-        block_on("first_name", "dob"),
-        block_on("surname"),
-    ],
-)
-
-linker = Linker(df, settings, db_api=db_api)
-```
-
-See [Splink documentation](https://moj-analytical-services.github.io/splink/) for use of the `Linker`.
 
 ### Clickhouse server
 
@@ -105,6 +73,49 @@ settings = SettingsCreator(
             term_frequency_adjustments=True
         ),
         cl.JaccardAtThresholds("email"),
+    ],
+    blocking_rules_to_generate_predictions=[
+        block_on("first_name", "dob"),
+        block_on("surname"),
+    ],
+)
+
+linker = Linker(df, settings, db_api=db_api)
+```
+
+See [Splink documentation](https://moj-analytical-services.github.io/splink/) for use of the `Linker`.
+
+### `chDB`
+
+To use `chdb` as a Splink backend you must install the `chdb` package.
+This is automatically installed if you install with the `chdb` extras (`pip install splinkclickhouse[chdb]`).
+
+Import `ChDBAPI`, which accepts a connection from `chdb.api`:
+```python
+import splink.comparison_library as cl
+from chdb import dbapi
+from splink import Linker, SettingsCreator, block_on, splink_datasets
+
+from splinkclickhouse import ChDBAPI
+
+con = dbapi.connect()
+db_api = ChDBAPI(con)
+
+df = splink_datasets.fake_1000
+
+settings = SettingsCreator(
+    link_type="dedupe_only",
+    comparisons=[
+        cl.NameComparison("first_name"),
+        cl.JaroAtThresholds("surname"),
+        cl.DateOfBirthComparison(
+            "dob",
+            input_is_string=True,
+        ),
+        cl.DamerauLevenshteinAtThresholds("city").configure(
+            term_frequency_adjustments=True
+        ),
+        cl.EmailComparison("email"),
     ],
     blocking_rules_to_generate_predictions=[
         block_on("first_name", "dob"),
@@ -176,6 +187,13 @@ settings = SettingsCreator(
     ],
 )
 ```
+
+## Support
+
+If you have difficulties with the package you can [open an issue](https://github.com/ADBond/splinkclickhouse/issues).
+You may also [suggest changes by opening a PR](https://github.com/ADBond/splinkclickhouse/pulls), although it may be best to discuss in an issue beforehand.
+
+This package is 'unofficial', in that it is not directly supported by the Splink team. Maintenance / improvements will be done on a 'best effort' basis where resources allow.
 
 ## Known issues / caveats
 

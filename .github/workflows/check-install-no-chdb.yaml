@@ -1,0 +1,30 @@
+name: Check package runs without chdb
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "splink/**"
+      - "tests/**"
+      - "pyproject.toml"
+
+jobs:
+  check-install:
+    runs-on: ubuntu-latest
+    name: Check package imports without `chdb` installed
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+          cache-suffix: "chdb-less"
+
+      - name: Install Python 3.9
+        run: uv python install 3.9
+
+      - name: Check package imports if we don't have dev dependencies
+        run: uv run --no-dev --isolated python -c "import splinkclickhouse"
