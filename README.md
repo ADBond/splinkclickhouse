@@ -24,6 +24,9 @@ Alternatively you can install the package from github:
 pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.2.5
 ```
 
+While the package is in early development there will may be breaking changes in new versions without warning, although these _should_ only occur in new minor versions.
+Nevertheless if you depend on this package it is recommended to pin a version to avoid any disruption this may cause.
+
 ## Use
 
 ### Clickhouse server
@@ -184,6 +187,13 @@ settings = SettingsCreator(
     ],
 )
 ```
+
+## Support
+
+If you have difficulties with the package you can [open an issue](https://github.com/ADBond/splinkclickhouse/issues).
+You may also [suggest changes by opening a PR](https://github.com/ADBond/splinkclickhouse/pulls), although it may be best to discuss in an issue beforehand.
+
+This package is 'unofficial', in that it is not directly supported by the Splink team. Maintenance / improvements will be done on a 'best effort' basis where resources allow.
 
 ## Known issues / caveats
 
