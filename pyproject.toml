@@ -8,8 +8,12 @@ readme = "README.md"
 requires-python = ">=3.9,<4.0"
 dependencies = [
     "splink >= 4.0.2",
-    "chdb >= 2.0.1",
     "clickhouse_connect >= 0.7.0",
+]
+
+[project.optional-dependencies]
+chdb = [
+    "chdb >= 2.0.1",
 ]
 
 [build-system]
@@ -20,7 +24,10 @@ build-backend = "hatchling.build"
 dev-dependencies = [
     "ruff == 0.6.4",
     "mypy == 1.11.2",
-    "pytest == 8.3.3"
+    "pytest == 8.3.3",
+    # probably not ideal having this doubled here,
+    # but saves having to pass --all_extras for 'uv run'
+    "chdb >= 2.0.1",
 ]
 package = true
 
