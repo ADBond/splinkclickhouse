@@ -2,7 +2,7 @@ from typing import Any
 
 from .clickhouse.database_api import ClickhouseAPI
 
-__version__ = "0.2.5"
+__version__ = "0.3.0"
 
 
 # Use getarr to make the error appear at the point of use

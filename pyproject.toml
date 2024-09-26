@@ -1,6 +1,6 @@
 [project]
 name = "splinkclickhouse"
-version = "0.2.5"
+version = "0.3.0"
 description = "Clickhouse backend support for Splink"
 authors = [{name = "Andrew Bond"}]
 license = {text = "MIT License"}
