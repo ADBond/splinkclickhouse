@@ -21,7 +21,7 @@ Alternatively you can install the package from github:
 
 ```sh
 # Replace with any version you want, or specify a branch after '@'
-pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.2.5
+pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.3.0
 ```
 
 While the package is in early development there will may be breaking changes in new versions without warning, although these _should_ only occur in new minor versions.
