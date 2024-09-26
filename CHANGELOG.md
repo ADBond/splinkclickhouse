@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- `chdb` is now an optional dependency, requiring opt-in installation for use of `ChDBAPI` [#28](https://github.com/ADBond/splinkclickhouse/pull/28).
+
 ## [0.2.5] - 2024-09-23
 
 ### Changed
