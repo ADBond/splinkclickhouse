@@ -73,6 +73,9 @@ class ChDBAPI(DatabaseAPI[None]):
         # workaround for https://github.com/ClickHouse/ClickHouse/issues/61004
         sql = sql.replace("count(*)", "count()")
         sql = sql.replace("COUNT(*)", "COUNT()")
+        # TODO: very sorry for this
+        # avoids 'double selection' issue in creating __splink__block_counts
+        sql = sql.replace(", count_l, count_r,", ",")
 
         sql = f"CREATE TABLE {physical_name} ORDER BY tuple() AS {sql}"
         return sql
