@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- `ClickhouseAPI` now has a function `.set_union_default_mode()` to allow manually setting client state necessary for clustering, if session has timed out e.g. when running interactively
+
 ### Fixed
 
 - `estimate_probability_two_random_records_match` now works correctly when `debug_mode` is switched on [#34](https://github.com/ADBond/splinkclickhouse/pull/34)
