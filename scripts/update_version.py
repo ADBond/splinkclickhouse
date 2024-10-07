@@ -82,7 +82,7 @@ with open(changelog_file, "r") as f:
 updated_changelog_text = changelog_text.replace(
     "## Unreleased", f"## Unreleased\n\n## [{new_version}] - {release_date}"
 )
-unreleased_link_template = "[unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v{version_literal}...HEAD"
+unreleased_link_template = "[Unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v{version_literal}...HEAD"
 new_link = f"[{new_version}]: https://github.com/ADBond/splinkclickhouse/compare/v{prev_version}...v{new_version}"
 
 updated_changelog_text = updated_changelog_text.replace(
