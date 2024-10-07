@@ -5,11 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
+
+### Added
+
+- `ClickhouseAPI` now has a function `.set_union_default_mode()` to allow manually setting client state necessary for clustering, if session has timed out e.g. when running interactively [#36](https://github.com/ADBond/splinkclickhouse/pull/36).
 
 ### Fixed
 
-- `estimate_probability_two_random_records_match` now works correctly when `debug_mode` is switched on [#34](https://github.com/ADBond/splinkclickhouse/pull/34)
+- `estimate_probability_two_random_records_match` now works correctly when `debug_mode` is switched on [#34](https://github.com/ADBond/splinkclickhouse/pull/34).
 
 ## [0.3.0] - 2024-09-26
 
@@ -76,7 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Basic working version of package with api for `chdb`
 
-[unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.0...HEAD
 [0.3.0]: https://github.com/ADBond/splinkclickhouse/compare/v0.2.5...v0.3.0
 [0.2.5]: https://github.com/ADBond/splinkclickhouse/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/ADBond/splinkclickhouse/compare/v0.2.3...v0.2.4

@@ -20,7 +20,7 @@ class ClickhouseAPI(DatabaseAPI[None]):
         super().__init__()
 
         self.client = client
-        client.command("SET union_default_mode = 'DISTINCT'")
+        self.set_union_default_mode()
         self._create_random_function()
 
     def _table_registration(self, input, table_name) -> None:
@@ -71,11 +71,16 @@ class ClickhouseAPI(DatabaseAPI[None]):
     def _execute_sql_against_backend(
         self, final_sql: str, templated_name: str = None, physical_name: str = None
     ):
-        return self.client.query(final_sql)
+        self.client.query(final_sql)
 
     @property
     def database(self) -> str:
         return self.client.database or "default"
+
+    # Clickhouse can not handle a bare 'UNION' by default
+    # we can set desired behaviour for the session by executing this
+    def set_union_default_mode(self) -> None:
+        self.client.command("SET union_default_mode = 'DISTINCT'")
 
     # alias random -> rand. Need this function for comparison viewer
     def _create_random_function(self) -> None:

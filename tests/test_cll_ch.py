@@ -7,7 +7,7 @@ import splinkclickhouse.comparison_level_library as cll_ch
 
 
 def test_distance_in_km_level(api_info, input_nodes_with_lat_longs):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
 
     settings = SettingsCreator(
         link_type="dedupe_only",
