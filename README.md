@@ -17,15 +17,23 @@ pip install splinkclickhouse
 pip install splinkclickhouse[chdb]
 ```
 
-Alternatively you can install the package from github:
+or you can install the package directly from github:
 
 ```sh
 # Replace with any version you want, or specify a branch after '@'
 pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.3.0
 ```
 
+If instead you are using `conda`, `splinkclickhouse` is available on [conda-forge](https://conda-forge.org/):
+
+```sh
+conda install conda-forge::splinkclickhouse
+```
+
+Note that the `conda` version will only be able to use [the Clickhouse server functionality](#clickhouse-server) as `chdb` is not currently available within `conda`.
+
 While the package is in early development there will may be breaking changes in new versions without warning, although these _should_ only occur in new minor versions.
-Nevertheless if you depend on this package it is recommended to pin a version to avoid any disruption this may cause.
+Nevertheless if you depend on this package it is recommended to pin a version to avoid any disruption that this may cause.
 
 ## Use
 
