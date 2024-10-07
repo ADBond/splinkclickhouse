@@ -28,14 +28,14 @@ def pytest_collection_modifyitems(items, config):
 
 
 @fixture
-def chdb_api():
+def chdb_api_factory():
     con = dbapi.connect()
-    yield ChDBAPI(con)
+    yield lambda: ChDBAPI(con)
     con.close()
 
 
 @fixture(scope="module")
-def clickhouse_api():
+def clickhouse_api_factory():
     conn_atts = {
         "host": "localhost",
         "port": 8123,
@@ -53,7 +53,7 @@ def clickhouse_api():
             database=db_name,
         )
 
-        yield ClickhouseAPI(client)
+        yield lambda: ClickhouseAPI(client)
         client.close()
         default_client.command(f"DROP DATABASE {db_name}")
         default_client.close()
@@ -67,12 +67,12 @@ def clickhouse_api():
         param("clickhouse", marks=[mark.clickhouse, mark.clickhouse_no_core]),
     ]
 )
-def api_info(request, chdb_api, clickhouse_api):
+def api_info(request, chdb_api_factory, clickhouse_api_factory):
     version = request.param
     if version == "chdb":
-        return {"db_api": chdb_api, "version": version}
+        return {"db_api_factory": chdb_api_factory, "version": version}
     if version == "clickhouse":
-        return {"db_api": clickhouse_api, "version": version}
+        return {"db_api_factory": clickhouse_api_factory, "version": version}
     raise ValueError(f"Unknown param: {version}")
 
 

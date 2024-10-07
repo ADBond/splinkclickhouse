@@ -6,7 +6,7 @@ import splinkclickhouse.comparison_library as cl_ch
 
 
 def test_distance_in_km_level_at_thresholds(api_info, input_nodes_with_lat_longs):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
 
     settings = SettingsCreator(
         link_type="dedupe_only",
@@ -55,7 +55,7 @@ def test_cant_use_distance_in_km_level_with_other_dialect(input_nodes_with_lat_l
 
 
 def test_exact_match_substring_at_sizes(api_info, input_nodes_with_lat_longs):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
 
     settings = SettingsCreator(
         link_type="dedupe_only",

@@ -12,7 +12,7 @@ from splink import Linker, block_on
 # all-in-one workflow
 @mark.parametrize("debug_mode", [False, True])
 def test_full_basic_run(api_info, fake_1000, fake_1000_settings_factory, debug_mode):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)

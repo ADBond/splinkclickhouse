@@ -6,14 +6,14 @@ from splink.exploratory import completeness_chart, profile_columns
 
 
 def test_make_linker(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     Linker(df, fake_1000_settings, db_api)
 
 
 def test_train_u(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
@@ -21,7 +21,7 @@ def test_train_u(api_info, fake_1000, fake_1000_settings_factory):
 
 
 def test_train_lambda(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
@@ -31,7 +31,7 @@ def test_train_lambda(api_info, fake_1000, fake_1000_settings_factory):
 
 
 def test_em_training(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
@@ -44,7 +44,7 @@ def test_em_training(api_info, fake_1000, fake_1000_settings_factory):
 
 
 def test_predict(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
@@ -52,7 +52,7 @@ def test_predict(api_info, fake_1000, fake_1000_settings_factory):
 
 
 def test_clustering(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
@@ -64,7 +64,7 @@ def test_clustering(api_info, fake_1000, fake_1000_settings_factory):
 
 
 def test_cumulative_comparisons(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
 
@@ -79,7 +79,7 @@ def test_cumulative_comparisons(api_info, fake_1000, fake_1000_settings_factory)
 
 
 def test_profiling(api_info, fake_1000):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
 
     profile_columns(
@@ -90,14 +90,14 @@ def test_profiling(api_info, fake_1000):
 
 
 def test_completeness(api_info, fake_1000):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
 
     completeness_chart(df, db_api=db_api)
 
 
 def test_match_weights_chart(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
@@ -105,7 +105,7 @@ def test_match_weights_chart(api_info, fake_1000, fake_1000_settings_factory):
 
 
 def test_parameter_estimates_chart(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
@@ -119,7 +119,7 @@ def test_parameter_estimates_chart(api_info, fake_1000, fake_1000_settings_facto
 
 
 def test_m_u_chart(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     linker = Linker(df, fake_1000_settings, db_api)
@@ -128,7 +128,7 @@ def test_m_u_chart(api_info, fake_1000, fake_1000_settings_factory):
 
 
 def test_unlinkables_chart(api_info, fake_1000, fake_1000_settings_factory):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
 
@@ -140,7 +140,7 @@ def test_unlinkables_chart(api_info, fake_1000, fake_1000_settings_factory):
 def test_comparison_viewer_dashboard(
     api_info, fake_1000, fake_1000_settings_factory, tmp_path
 ):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     fake_1000_settings.retain_intermediate_calculation_columns = True
@@ -153,7 +153,7 @@ def test_comparison_viewer_dashboard(
 def test_cluster_studio_dashboard(
     api_info, fake_1000, fake_1000_settings_factory, tmp_path
 ):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     fake_1000_settings.retain_intermediate_calculation_columns = True
@@ -172,7 +172,7 @@ def test_cluster_studio_dashboard(
 def test_compute_graph_metrics(
     api_info, fake_1000, fake_1000_settings_factory, tmp_path
 ):
-    db_api = api_info["db_api"]
+    db_api = api_info["db_api_factory"]()
     df = fake_1000
     fake_1000_settings = fake_1000_settings_factory(api_info["version"])
     fake_1000_settings.retain_intermediate_calculation_columns = True
