@@ -1,3 +1,6 @@
+[![pypi](https://img.shields.io/github/v/release/adbond/splinkclickhouse?include_prereleases)](https://pypi.org/project/splinkclickhouse/#history)
+[![Downloads](https://static.pepy.tech/badge/splinkclickhouse)](https://pepy.tech/project/splinkclickhouse)
+
 # `splinkclickhouse`
 
 Basic [Clickhouse](https://clickhouse.com/docs/en/intro) support for use as a backend with the data-linkage and deduplication package [Splink](https://moj-analytical-services.github.io/splink/).
