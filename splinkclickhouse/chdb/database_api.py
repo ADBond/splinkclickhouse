@@ -79,7 +79,7 @@ class ChDBAPI(DatabaseAPI[None]):
         # some excessively brittle SQL replacements to hand Clickhouse name-resolution
         sql = sql.replace(
             "SELECT DISTINCT r.representative",
-            "SELECT DISTINCT r.representative AS representative"
+            "SELECT DISTINCT r.representative AS representative",
         )
 
         sql = f"CREATE TABLE {physical_name} ORDER BY tuple() AS {sql}"
