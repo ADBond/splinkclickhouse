@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `ClickhouseAPI` now has a function `.set_union_default_mode()` to allow manually setting client state necessary for clustering, if session has timed out e.g. when running interactively [#36](https://github.com/ADBond/splinkclickhouse/pull/36).
+- Added support for Splink 4.0.4 [#37](https://github.com/ADBond/splinkclickhouse/pull/37).
 
 ### Fixed
 
