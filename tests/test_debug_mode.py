@@ -42,6 +42,7 @@ def test_predict(api_info, fake_1000, fake_1000_settings_factory, debug_mode):
 
 
 # all-in-one workflow
+@mark.skip("Until upstream clustering+debug fix comes through")
 @mark.parametrize("debug_mode", [False, True])
 def test_full_basic_run(api_info, fake_1000, fake_1000_settings_factory, debug_mode):
     db_api = api_info["db_api_factory"]()
