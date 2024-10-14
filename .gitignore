@@ -10,3 +10,5 @@ tmp*
 
 *.csv
 *.json
+
+*.log
