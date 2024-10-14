@@ -9,6 +9,38 @@ from pytest import mark
 from splink import Linker, block_on
 
 
+@mark.parametrize("debug_mode", [False, True])
+def test_training(api_info, fake_1000, fake_1000_settings_factory, debug_mode):
+    db_api = api_info["db_api_factory"]()
+    df = fake_1000
+    fake_1000_settings = fake_1000_settings_factory(api_info["version"])
+    linker = Linker(df, fake_1000_settings, db_api)
+    db_api.debug_mode = debug_mode
+
+    # training
+    linker.training.estimate_u_using_random_sampling(max_pairs=6e5)
+    linker.training.estimate_probability_two_random_records_match(
+        [block_on("dob"), block_on("first_name", "surname")], recall=0.8
+    )
+    linker.training.estimate_parameters_using_expectation_maximisation(
+        block_on("dob"),
+    )
+    linker.training.estimate_parameters_using_expectation_maximisation(
+        block_on("first_name", "surname"),
+    )
+
+
+@mark.parametrize("debug_mode", [False, True])
+def test_predict(api_info, fake_1000, fake_1000_settings_factory, debug_mode):
+    db_api = api_info["db_api_factory"]()
+    df = fake_1000
+    fake_1000_settings = fake_1000_settings_factory(api_info["version"])
+    linker = Linker(df, fake_1000_settings, db_api)
+    db_api.debug_mode = debug_mode
+
+    linker.inference.predict()
+
+
 # all-in-one workflow
 @mark.parametrize("debug_mode", [False, True])
 def test_full_basic_run(api_info, fake_1000, fake_1000_settings_factory, debug_mode):
