@@ -4,6 +4,12 @@ from typing import Literal
 
 from splink import ColumnExpression
 from splink.internals.comparison_level_creator import ComparisonLevelCreator
+from splink.internals.comparison_level_library import (
+    AbsoluteTimeDifferenceLevel as SplinkAbsoluteTimeDifferenceLevel,
+)
+from splink.internals.comparison_level_library import (
+    DateMetricType,
+)
 
 from .dialect import ClickhouseDialect, SplinkDialect
 
@@ -97,3 +103,34 @@ class DistanceInKMLevel(ComparisonLevelCreator):
 
     def create_label_for_charts(self) -> str:
         return f"Distance less than {self.km_threshold}km"
+
+
+class AbsoluteDateDifferenceLevel(SplinkAbsoluteTimeDifferenceLevel):
+    def __init__(
+        self,
+        col_name: str | ColumnExpression,
+        *,
+        threshold: float,
+        metric: DateMetricType,
+        datetime_format: str = None,
+    ):
+        super().__init__(
+            col_name,
+            input_is_string=True,
+            threshold=threshold,
+            metric=metric,
+            datetime_format=datetime_format,
+        )
+
+    def create_sql(self, sql_dialect: SplinkDialect) -> str:
+        self.col_expression.sql_dialect = sql_dialect
+        col = self.col_expression
+
+        # work in seconds as that's what parent uses, and we want to keep that machinery
+        seconds_in_day = 86_400
+        sql = (
+            f"abs(days_since_epoch({col.name_l}) - days_since_epoch({col.name_r})) "
+            f"* {seconds_in_day} "
+            f"<= {self.time_threshold_seconds}"
+        )
+        return sql
