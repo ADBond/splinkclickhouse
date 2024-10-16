@@ -5,9 +5,17 @@ from typing import Iterable, Literal
 import splink.comparison_level_library as cll
 from splink.internals.comparison_creator import ComparisonCreator
 from splink.internals.comparison_level_creator import ComparisonLevelCreator
+from splink.internals.comparison_library import (
+    AbsoluteTimeDifferenceAtThresholds as SplinkAbsoluteTimeDifferenceAtThresholds,
+)
+from splink.internals.comparison_library import (
+    DateMetricType,
+)
 from splink.internals.misc import ensure_is_iterable
 
 import splinkclickhouse.comparison_level_library as cll_ch
+
+from .column_expression import ColumnExpression as CHColumnExpression
 
 
 class DistanceInKMAtThresholds(ComparisonCreator):
@@ -129,3 +137,35 @@ class ExactMatchAtSubstringSizes(ComparisonCreator):
 
     def create_output_column_name(self) -> str:
         return self.col_expression.output_column_name
+
+
+class AbsoluteDateDifferenceAtThresholds(SplinkAbsoluteTimeDifferenceAtThresholds):
+    def __init__(
+        self,
+        col_name: str,
+        *,
+        input_is_string: bool,
+        metrics: DateMetricType | list[DateMetricType],
+        thresholds: float | list[float],
+        term_frequency_adjustments: bool = False,
+        invalid_dates_as_null: bool = True,
+    ):
+        super().__init__(
+            col_name,
+            input_is_string=input_is_string,
+            metrics=metrics,
+            thresholds=thresholds,
+            datetime_format=None,
+            term_frequency_adjustments=term_frequency_adjustments,
+            invalid_dates_as_null=invalid_dates_as_null,
+        )
+
+    @property
+    def datetime_parse_function(self):
+        return lambda fmt: CHColumnExpression.from_base_expression(
+            self.col_expression
+        ).parse_date_to_int()
+
+    @property
+    def cll_class(self):
+        return cll_ch.AbsoluteDateDifferenceLevel
