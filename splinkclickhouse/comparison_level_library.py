@@ -11,6 +11,7 @@ from splink.internals.comparison_level_library import (
     DateMetricType,
 )
 
+from .column_expression import ColumnExpression as CHColumnExpression
 from .dialect import ClickhouseDialect, SplinkDialect
 
 
@@ -110,27 +111,40 @@ class AbsoluteDateDifferenceLevel(SplinkAbsoluteTimeDifferenceLevel):
         self,
         col_name: str | ColumnExpression,
         *,
+        input_is_string: bool,
         threshold: float,
         metric: DateMetricType,
         datetime_format: str = None,
     ):
         super().__init__(
             col_name,
-            input_is_string=True,
+            input_is_string=input_is_string,
             threshold=threshold,
             metric=metric,
             datetime_format=datetime_format,
         )
+        # need this to help mypy:
+        self.col_expression: ColumnExpression
+
+    @property
+    def datetime_parsed_column_expression(self) -> CHColumnExpression:
+        # convert existing ColumnExpression to our version,
+        # and then apply parsing operation
+        return CHColumnExpression.from_base_expression(
+            self.col_expression
+        ).parse_date_to_int()
 
     def create_sql(self, sql_dialect: SplinkDialect) -> str:
         self.col_expression.sql_dialect = sql_dialect
+        if self.input_is_string:
+            self.col_expression = self.datetime_parsed_column_expression
+
         col = self.col_expression
 
         # work in seconds as that's what parent uses, and we want to keep that machinery
         seconds_in_day = 86_400
         sql = (
-            f"abs(days_since_epoch({col.name_l}) - days_since_epoch({col.name_r})) "
-            f"* {seconds_in_day} "
+            f"abs({col.name_l} - {col.name_r}) * {seconds_in_day} "
             f"<= {self.time_threshold_seconds}"
         )
         return sql
