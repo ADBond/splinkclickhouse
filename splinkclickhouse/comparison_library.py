@@ -206,6 +206,10 @@ class DateOfBirthComparison(SplinkDateOfBirthComparison):
         ).parse_date_to_int()
 
     def create_comparison_levels(self) -> list[ComparisonLevelCreator]:
+        # pretty much a copy of the Splink version, but unlike
+        # AbsoluteDateDifferenceAtThresholds this does not allow a way
+        # to hook in a different date-difference comparison level
+        # so we duplicate, and just switch the date level
         if self.invalid_dates_as_null and self.input_is_string:
             null_col = self.datetime_parse_function(self.datetime_format)
         else:
