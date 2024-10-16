@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Iterable, Literal
 
 import splink.comparison_level_library as cll
+from splink.internals.column_expression import ColumnExpression
 from splink.internals.comparison_creator import ComparisonCreator
 from splink.internals.comparison_level_creator import ComparisonLevelCreator
 from splink.internals.comparison_library import (
@@ -10,6 +11,10 @@ from splink.internals.comparison_library import (
 )
 from splink.internals.comparison_library import (
     DateMetricType,
+    _DamerauLevenshteinIfSupportedElseLevenshteinLevel,
+)
+from splink.internals.comparison_library import (
+    DateOfBirthComparison as SplinkDateOfBirthComparison,
 )
 from splink.internals.misc import ensure_is_iterable
 
@@ -169,3 +174,78 @@ class AbsoluteDateDifferenceAtThresholds(SplinkAbsoluteTimeDifferenceAtThreshold
     @property
     def cll_class(self):
         return cll_ch.AbsoluteDateDifferenceLevel
+
+
+class DateOfBirthComparison(SplinkDateOfBirthComparison):
+    def __init__(
+        self,
+        col_name: str | ColumnExpression,
+        *,
+        input_is_string: bool,
+        datetime_thresholds: float | Iterable[float] = (1, 1, 10),
+        datetime_metrics: DateMetricType | Iterable[DateMetricType] = (
+            "month",
+            "year",
+            "year",
+        ),
+        datetime_format: str = None,
+        invalid_dates_as_null: bool = True,
+    ):
+        super().__init__(
+            col_name=col_name,
+            input_is_string=input_is_string,
+            datetime_thresholds=datetime_thresholds,
+            datetime_metrics=datetime_metrics,
+            datetime_format=None,
+        )
+
+    @property
+    def datetime_parse_function(self):
+        return lambda fmt: CHColumnExpression.from_base_expression(
+            self.col_expression
+        ).parse_date_to_int()
+
+    def create_comparison_levels(self) -> list[ComparisonLevelCreator]:
+        if self.invalid_dates_as_null and self.input_is_string:
+            null_col = self.datetime_parse_function(self.datetime_format)
+        else:
+            null_col = self.col_expression
+
+        levels: list[ComparisonLevelCreator] = [
+            cll.NullLevel(null_col),
+        ]
+
+        levels.append(
+            cll.ExactMatchLevel(self.col_expression).configure(
+                label_for_charts="Exact match on date of birth"
+            )
+        )
+
+        if self.input_is_string:
+            col_expr_as_string = self.col_expression
+        else:
+            col_expr_as_string = self.col_expression.cast_to_string()
+
+        levels.append(
+            _DamerauLevenshteinIfSupportedElseLevenshteinLevel(
+                col_expr_as_string, distance_threshold=1
+            ).configure(label_for_charts="DamerauLevenshtein distance <= 1")
+        )
+
+        if self.datetime_thresholds:
+            for threshold, metric in zip(
+                self.datetime_thresholds, self.datetime_metrics
+            ):
+                levels.append(
+                    cll_ch.AbsoluteDateDifferenceLevel(
+                        self.col_expression,
+                        threshold=threshold,
+                        metric=metric,
+                        input_is_string=self.input_is_string,
+                    ).configure(
+                        label_for_charts=f"Abs date difference <= {threshold} {metric}"
+                    )
+                )
+
+        levels.append(cll.ElseLevel())
+        return levels

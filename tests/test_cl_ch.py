@@ -87,3 +87,21 @@ def test_clickhouse_date_difference_at_thresholds(api_info, fake_1000):
 
     linker = Linker(fake_1000, settings, db_api)
     linker.inference.predict()
+
+
+def test_clickhouse_date_of_birth_comparison(api_info, fake_1000):
+    db_api = api_info["db_api_factory"]()
+
+    settings = SettingsCreator(
+        link_type="dedupe_only",
+        comparisons=[
+            cl.ExactMatch("first_name"),
+            cl_ch.DateOfBirthComparison(
+                "dob",
+                input_is_string=True,
+            ),
+        ],
+    )
+
+    linker = Linker(fake_1000, settings, db_api)
+    linker.inference.predict()
