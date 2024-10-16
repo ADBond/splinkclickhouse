@@ -61,8 +61,10 @@ END
 """
 days_since_start_of_month = f"{day} - 1"
 
-days_since_epoch_sql = f"""
+days_since_epoch_template = f"""
 {days_from_epoch_to_start_of_year}
     + {days_from_start_of_year_to_start_of_month}
     + {days_since_start_of_month}
-""".format(date_string="date_string")
+"""
+
+days_since_epoch_sql = days_since_epoch_template.format(date_string="date_string")
