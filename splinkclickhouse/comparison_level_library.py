@@ -115,6 +115,24 @@ class AbsoluteDateDifferenceLevel(SplinkAbsoluteTimeDifferenceLevel):
         threshold: float,
         metric: DateMetricType,
     ):
+        """
+        Computes the absolute time difference between two dates (total duration).
+        For more details see Splink docs.
+
+        In database this represents data as an integer counting number of days since
+        1970-01-01 (Unix epoch).
+        The input data can be either a string in YYYY-MM-DD format, or an
+        integer of the number days since the epoch.
+
+        Args:
+            col_name (str): The name of the column to compare.
+            input_is_string (bool): If True, the input dates are treated as strings
+                and parsed to integers, and must be in ISO 8601 format.
+            threshold (int): The maximum allowed difference between the two dates,
+                in units specified by `date_metric`.
+            metric (str): The unit of time to use when comparing the dates.
+                Can be 'second', 'minute', 'hour', 'day', 'month', or 'year'.
+        """
         super().__init__(
             col_name,
             input_is_string=input_is_string,

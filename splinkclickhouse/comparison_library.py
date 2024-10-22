@@ -155,6 +155,29 @@ class AbsoluteDateDifferenceAtThresholds(SplinkAbsoluteTimeDifferenceAtThreshold
         term_frequency_adjustments: bool = False,
         invalid_dates_as_null: bool = True,
     ):
+        """
+        Represents a comparison of the data in `col_name` with multiple levels based on
+        absolute time differences. For more details see Splink docs.
+
+        In database this represents data as an integer counting number of days since
+        1970-01-01 (Unix epoch).
+        The input data can be either a string in YYYY-MM-DD format, or an
+        integer of the number days since the epoch.
+
+        Args:
+            col_name (str): The name of the column to compare.
+            input_is_string (bool): If True, the input dates are treated as strings
+                and parsed to integers, and must be in ISO 8601 format.
+            metrics (Union[DateMetricType, List[DateMetricType]]): The unit(s) of time
+                to use when comparing dates. Can be 'second', 'minute', 'hour', 'day',
+                'month', or 'year'.
+            thresholds (Union[int, float, List[Union[int, float]]]): The threshold(s)
+                to use for the time difference level(s).
+            term_frequency_adjustments (bool, optional): Whether to apply term frequency
+                adjustments. Defaults to False.
+            invalid_dates_as_null (bool, optional): If True and `input_is_string` is
+                True, treat invalid dates as null. Defaults to True.
+        """
         super().__init__(
             col_name,
             input_is_string=input_is_string,
@@ -177,6 +200,7 @@ class AbsoluteDateDifferenceAtThresholds(SplinkAbsoluteTimeDifferenceAtThreshold
         # our child class doesn't accept that, so we just ditch it
         def level_factory(*args, datetime_format=None, **kwargs):
             return cll_ch.AbsoluteDateDifferenceLevel(*args, **kwargs)
+
         return level_factory
 
 
@@ -195,6 +219,30 @@ class DateOfBirthComparison(SplinkDateOfBirthComparison):
         datetime_format: str = None,
         invalid_dates_as_null: bool = True,
     ):
+        """
+        Generate an 'out of the box' comparison for a date of birth column
+        in the `col_name` provided. For more details see Splink docs.
+
+        In database this represents data as an integer counting number of days since
+        1970-01-01 (Unix epoch).
+        The input data can be either a string in YYYY-MM-DD format, or an
+        integer of the number days since the epoch.
+
+        Args:
+            col_name (str): The name of the column to compare.
+            input_is_string (bool): If True, the input dates are treated as strings
+                and parsed to integers, and must be in ISO 8601 format.
+            datetime_thresholds (Union[int, float, List[Union[int, float]]], optional):
+                Numeric thresholds for date differences. Defaults to [1, 1, 10].
+            datetime_metrics (Union[DateMetricType, List[DateMetricType]], optional):
+                Metrics for date differences. Defaults to ["month", "year", "year"].
+            term_frequency_adjustments (bool, optional): Whether to apply term frequency
+                adjustments. Defaults to False.
+            invalid_dates_as_null (bool, optional): If True, treat invalid dates as null
+                as opposed to allowing e.g. an exact or levenshtein match where one side
+                or both are an invalid date.  Only used if input is a string.  Defaults
+                to True.
+        """
         super().__init__(
             col_name=col_name,
             input_is_string=input_is_string,
