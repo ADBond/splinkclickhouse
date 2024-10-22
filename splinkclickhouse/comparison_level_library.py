@@ -114,14 +114,12 @@ class AbsoluteDateDifferenceLevel(SplinkAbsoluteTimeDifferenceLevel):
         input_is_string: bool,
         threshold: float,
         metric: DateMetricType,
-        datetime_format: str = None,
     ):
         super().__init__(
             col_name,
             input_is_string=input_is_string,
             threshold=threshold,
             metric=metric,
-            datetime_format=datetime_format,
         )
         # need this to help mypy:
         self.col_expression: ColumnExpression

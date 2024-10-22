@@ -173,7 +173,11 @@ class AbsoluteDateDifferenceAtThresholds(SplinkAbsoluteTimeDifferenceAtThreshold
 
     @property
     def cll_class(self):
-        return cll_ch.AbsoluteDateDifferenceLevel
+        # the parent class will try to pass datetime_format argument
+        # our child class doesn't accept that, so we just ditch it
+        def level_factory(*args, datetime_format=None, **kwargs):
+            return cll_ch.AbsoluteDateDifferenceLevel(*args, **kwargs)
+        return level_factory
 
 
 class DateOfBirthComparison(SplinkDateOfBirthComparison):
