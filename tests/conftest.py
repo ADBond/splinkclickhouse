@@ -132,6 +132,11 @@ def fake_1000_settings_factory():
     return fake_1000_settings
 
 
+@fixture(scope="module")
+def historical_50k():
+    return splink_datasets.historical_50k
+
+
 @fixture
 def input_nodes_with_lat_longs():
     lat_low, lat_high = 49, 61

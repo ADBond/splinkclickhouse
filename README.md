@@ -211,14 +211,20 @@ This package is 'unofficial', in that it is not directly supported by the Splink
 ### Datetime parsing
 
 Clickhouse offers several different date formats.
-The basic `Date` format cannot handle dates before the epoch (1970-01-01), which makes it unsuitable for many use-cases for holding date-of-births.
+The basic `Date` format cannot handle dates before the Unix epoch (1970-01-01), which makes it unsuitable for many use-cases for holding date-of-births.
 
 The parsing function `parseDateTime` (and variants) which support providing custom formats return a `DateTime`, which also has the above limited range.
 In `splinkclickhouse` we use the function `parseDateTime64BestEffortOrNull` so that we can use the extended-range `DateTime64` data type, which supports dates back to 1900-01-01, but does not allow custom date formats. Currently no `DateTime64` equivalent of `parseDateTime` exists.
 
 If you require different behaviour (for instance if you have an unusual date format and know that you do not need dates outside of the `DateTime` range) you will either need to derive a new column in your source data, or construct the relevant SQL expression manually.
 
-There is not currently a way in Clickhouse to deal directly with date values before 1900 - if you require such values you will have to manually process these to a different type, and construct the relevant SQL logic.
+#### Extended Dates
+
+There is not currently a way in Clickhouse to deal directly with date values before 1900. However, `splinkclickhouse` offers some tools to help with this.
+It creates a SQL UDF (which can be opted-out of) `days_since_epoch`, to convert a date string (in `YYYY-MM-DD` format) into an integer, representing the number of days since `1970-01-01` to handle dates well outside the range of `DateTime64`, based on the proleptic Gregorian calendar.
+
+This can be used with column expression extension `splinkclickhouse.column_expression.ColumnExpression` via the transform `.parse_date_to_int()`, or using custom versions of Splink library functions `cll.AbsoluteDateDifferenceLevel`, `cl.AbsoluteDateDifferenceAtThresholds`, and `cl.DateOfBirthComparison`.
+These functions can be used with string columns (which will be wrapped in the above parsing function), or integer columns if the conversion via `days_since_epoch` is already done in the data-preparation stage.
 
 ### `NULL` values in `chdb`
 

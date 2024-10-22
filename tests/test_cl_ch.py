@@ -67,3 +67,41 @@ def test_exact_match_substring_at_sizes(api_info, input_nodes_with_lat_longs):
 
     linker = Linker(input_nodes_with_lat_longs, settings, db_api)
     linker.inference.predict()
+
+
+def test_clickhouse_date_difference_at_thresholds(api_info, fake_1000):
+    db_api = api_info["db_api_factory"]()
+
+    settings = SettingsCreator(
+        link_type="dedupe_only",
+        comparisons=[
+            cl.ExactMatch("first_name"),
+            cl_ch.AbsoluteDateDifferenceAtThresholds(
+                "dob",
+                input_is_string=True,
+                metrics=["day", "day", "year", "year"],
+                thresholds=[10, 30, 1, 5],
+            ),
+        ],
+    )
+
+    linker = Linker(fake_1000, settings, db_api)
+    linker.inference.predict()
+
+
+def test_clickhouse_date_of_birth_comparison(api_info, fake_1000):
+    db_api = api_info["db_api_factory"]()
+
+    settings = SettingsCreator(
+        link_type="dedupe_only",
+        comparisons=[
+            cl.ExactMatch("first_name"),
+            cl_ch.DateOfBirthComparison(
+                "dob",
+                input_is_string=True,
+            ),
+        ],
+    )
+
+    linker = Linker(fake_1000, settings, db_api)
+    linker.inference.predict()

@@ -4,6 +4,7 @@ import pandas as pd
 from clickhouse_connect.driver.client import Client
 from splink.internals.database_api import DatabaseAPI
 
+from ..custom_sql import days_since_epoch_sql
 from ..dialect import ClickhouseDialect
 from .dataframe import ClickhouseDataFrame
 
@@ -16,12 +17,15 @@ class ClickhouseAPI(DatabaseAPI[None]):
     def __init__(
         self,
         client: Client,
+        register_custom_udfs: bool = True,
     ):
         super().__init__()
 
         self.client = client
         self.set_union_default_mode()
         self._create_random_function()
+        if register_custom_udfs:
+            self._register_custom_udfs()
 
     def _table_registration(self, input, table_name) -> None:
         if isinstance(input, pd.DataFrame):
@@ -90,6 +94,15 @@ class ClickhouseAPI(DatabaseAPI[None]):
     # alias random -> rand. Need this function for comparison viewer
     def _create_random_function(self) -> None:
         self.client.command("CREATE FUNCTION IF NOT EXISTS random AS () -> rand()")
+
+    def _register_custom_udfs(self) -> None:
+        self.client.command(
+            f"""
+            CREATE FUNCTION IF NOT EXISTS
+                days_since_epoch AS
+                (date_string) -> {days_since_epoch_sql}
+            """
+        )
 
     def _create_table_from_pandas_frame(self, df: pd.DataFrame, table_name: str) -> str:
         sql = f"CREATE OR REPLACE TABLE {table_name} ("

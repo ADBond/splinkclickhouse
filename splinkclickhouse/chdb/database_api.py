@@ -4,6 +4,7 @@ import chdb.dbapi as chdb_dbapi
 import pandas as pd
 from splink.internals.database_api import DatabaseAPI
 
+from ..custom_sql import days_since_epoch_sql
 from ..dialect import ClickhouseDialect
 from .dataframe import ChDBDataFrame
 
@@ -17,6 +18,7 @@ class ChDBAPI(DatabaseAPI[None]):
         self,
         con: chdb_dbapi.Connection,
         schema: str = "splink",
+        register_custom_udfs: bool = True,
     ):
         super().__init__()
 
@@ -25,6 +27,8 @@ class ChDBAPI(DatabaseAPI[None]):
 
         self._create_splink_schema()
         self._create_random_function()
+        if register_custom_udfs:
+            self._register_custom_udfs()
 
     def _table_registration(self, input, table_name):
         if isinstance(input, dict):
@@ -111,6 +115,19 @@ class ChDBAPI(DatabaseAPI[None]):
     # alias random -> rand. Need this function for comparison viewer
     def _create_random_function(self) -> None:
         sql = "CREATE FUNCTION IF NOT EXISTS random AS () -> rand()"
+
+        cursor = self._get_cursor()
+        try:
+            cursor.execute(sql)
+        finally:
+            self._reset_cursor(cursor)
+
+    def _register_custom_udfs(self) -> None:
+        sql = f"""
+        CREATE FUNCTION IF NOT EXISTS
+            days_since_epoch AS
+            (date_string) -> {days_since_epoch_sql}
+        """
 
         cursor = self._get_cursor()
         try:

@@ -1,9 +1,10 @@
 import splink.comparison_level_library as cll
 import splink.comparison_library as cl
-from pytest import raises
-from splink import DuckDBAPI, Linker, SettingsCreator
+from pytest import mark, raises
+from splink import DuckDBAPI, Linker, SettingsCreator, block_on
 
 import splinkclickhouse.comparison_level_library as cll_ch
+from splinkclickhouse.column_expression import ColumnExpression
 
 
 def test_distance_in_km_level(api_info, input_nodes_with_lat_longs):
@@ -62,3 +63,59 @@ def test_cant_use_distance_in_km_level_with_other_dialect(input_nodes_with_lat_l
     with raises(ValueError):
         # this comparison level is not compatible with DuckDB (or other dialects)
         Linker(input_nodes_with_lat_longs, settings, db_api)
+
+
+@mark.parametrize(
+    ("dob_column", "input_is_string"),
+    [("dob", True), (ColumnExpression("dob").parse_date_to_int(), False)],
+)
+def test_custom_date_difference_level(api_info, fake_1000, dob_column, input_is_string):
+    db_api = api_info["db_api_factory"]()
+
+    settings = SettingsCreator(
+        link_type="dedupe_only",
+        comparisons=[
+            cl.ExactMatch("first_name"),
+            cl.ExactMatch("surname"),
+            cl.ExactMatch("email"),
+            cl.CustomComparison(
+                comparison_levels=[
+                    cll.NullLevel(dob_column),
+                    cll.ExactMatchLevel(dob_column),
+                    cll_ch.AbsoluteDateDifferenceLevel(
+                        dob_column,
+                        input_is_string=input_is_string,
+                        threshold=10,
+                        metric="day",
+                    ),
+                    cll_ch.AbsoluteDateDifferenceLevel(
+                        dob_column,
+                        input_is_string=input_is_string,
+                        threshold=30,
+                        metric="day",
+                    ),
+                    cll_ch.AbsoluteDateDifferenceLevel(
+                        dob_column,
+                        input_is_string=input_is_string,
+                        threshold=1,
+                        metric="year",
+                    ),
+                    cll_ch.AbsoluteDateDifferenceLevel(
+                        dob_column,
+                        input_is_string=input_is_string,
+                        threshold=5,
+                        metric="year",
+                    ),
+                    cll.ElseLevel(),
+                ],
+                output_column_name="dob",
+            ),
+        ],
+        blocking_rules_to_generate_predictions=[
+            block_on("dob"),
+            block_on("first_name", "surname"),
+        ],
+    )
+
+    linker = Linker(fake_1000, settings, db_api)
+    linker.inference.predict()

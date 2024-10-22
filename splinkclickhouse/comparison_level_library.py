@@ -4,7 +4,14 @@ from typing import Literal
 
 from splink import ColumnExpression
 from splink.internals.comparison_level_creator import ComparisonLevelCreator
+from splink.internals.comparison_level_library import (
+    AbsoluteTimeDifferenceLevel as SplinkAbsoluteTimeDifferenceLevel,
+)
+from splink.internals.comparison_level_library import (
+    DateMetricType,
+)
 
+from .column_expression import ColumnExpression as CHColumnExpression
 from .dialect import ClickhouseDialect, SplinkDialect
 
 
@@ -97,3 +104,63 @@ class DistanceInKMLevel(ComparisonLevelCreator):
 
     def create_label_for_charts(self) -> str:
         return f"Distance less than {self.km_threshold}km"
+
+
+class AbsoluteDateDifferenceLevel(SplinkAbsoluteTimeDifferenceLevel):
+    def __init__(
+        self,
+        col_name: str | ColumnExpression,
+        *,
+        input_is_string: bool,
+        threshold: float,
+        metric: DateMetricType,
+    ):
+        """
+        Computes the absolute time difference between two dates (total duration).
+        For more details see Splink docs.
+
+        In database this represents data as an integer counting number of days since
+        1970-01-01 (Unix epoch).
+        The input data can be either a string in YYYY-MM-DD format, or an
+        integer of the number days since the epoch.
+
+        Args:
+            col_name (str): The name of the column to compare.
+            input_is_string (bool): If True, the input dates are treated as strings
+                and parsed to integers, and must be in ISO 8601 format.
+            threshold (int): The maximum allowed difference between the two dates,
+                in units specified by `date_metric`.
+            metric (str): The unit of time to use when comparing the dates.
+                Can be 'second', 'minute', 'hour', 'day', 'month', or 'year'.
+        """
+        super().__init__(
+            col_name,
+            input_is_string=input_is_string,
+            threshold=threshold,
+            metric=metric,
+        )
+        # need this to help mypy:
+        self.col_expression: ColumnExpression
+
+    @property
+    def datetime_parsed_column_expression(self) -> CHColumnExpression:
+        # convert existing ColumnExpression to our version,
+        # and then apply parsing operation
+        return CHColumnExpression.from_base_expression(
+            self.col_expression
+        ).parse_date_to_int()
+
+    def create_sql(self, sql_dialect: SplinkDialect) -> str:
+        self.col_expression.sql_dialect = sql_dialect
+        if self.input_is_string:
+            self.col_expression = self.datetime_parsed_column_expression
+
+        col = self.col_expression
+
+        # work in seconds as that's what parent uses, and we want to keep that machinery
+        seconds_in_day = 86_400
+        sql = (
+            f"abs({col.name_l} - {col.name_r}) * {seconds_in_day} "
+            f"<= {self.time_threshold_seconds}"
+        )
+        return sql
