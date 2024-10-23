@@ -25,6 +25,5 @@ jobs:
 
       - name: Publish to PyPI
         env:
-          TWINE_USERNAME: __token__ 
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: uvx twine upload dist/*
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: uv publish
