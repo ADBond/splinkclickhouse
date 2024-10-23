@@ -10,6 +10,12 @@ dependencies = [
     "splink >= 4.0.2",
     "clickhouse_connect >= 0.7.0",
 ]
+[project.urls]
+Homepage = "https://github.com/ADBond/splinkclickhouse"
+Documentation = "https://github.com/ADBond/splinkclickhouse/blob/main/README.md"
+Repository = "https://github.com/ADBond/splinkclickhouse.git"
+Issues = "https://github.com/ADBond/splinkclickhouse/issues"
+Changelog = "https://github.com/ADBond/splinkclickhouse/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 chdb = [
