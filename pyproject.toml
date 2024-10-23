@@ -5,6 +5,13 @@ description = "Clickhouse backend support for Splink"
 authors = [{name = "Andrew Bond"}]
 license = {text = "MIT License"}
 readme = "README.md"
+keywords = [
+    "data linking",
+    "record linkage",
+    "entity resolution",
+    "deduplication",
+    "fuzzy matching",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
 
