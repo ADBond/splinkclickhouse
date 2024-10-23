@@ -1,5 +1,5 @@
 version = 1
-requires-python = ">=3.9, <4.0"
+requires-python = ">=3.9"
 resolution-markers = [
     "python_full_version < '3.11'",
     "python_full_version == '3.11.*'",
@@ -917,11 +917,11 @@ dev = [
 
 [[package]]
 name = "sqlglot"
-version = "25.25.1"
+version = "25.27.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/89/42/a14757a85eb3f6386a54332037765a035b932ec3790e93625a72be62b965/sqlglot-25.25.1.tar.gz", hash = "sha256:a71097685eef491ecad778b85be7d0b09f205c4c704e188fdff9d3ac388db732", size = 19539259 }
+sdist = { url = "https://files.pythonhosted.org/packages/97/26/7d3afc7344b86f7ddfe50f90776b684bee75fe4757b96c2481708025f093/sqlglot-25.27.0.tar.gz", hash = "sha256:0a225bd0967bb1830a4fa9e9072eb1a4e74e9f80b5ff99f4bba52a60330322e9", size = 19567180 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/97/19/882b3a18eeb54ffc15538e3b98b5119a486973042bfb0e8146ac1e72f8e4/sqlglot-25.25.1-py3-none-any.whl", hash = "sha256:0f9eb40c830a478312c262b6d0aa49c6ee9ef27725764430251e8920e6480951", size = 419522 },
+    { url = "https://files.pythonhosted.org/packages/d5/9c/d691515b3653675d34c285ea05c0ca8532dd6f26245259fd45b627f7dd0b/sqlglot-25.27.0-py3-none-any.whl", hash = "sha256:6dbed60971542f1a69775f1f642359097859df4db440d4601cb75cb4cd9fe936", size = 422254 },
 ]
 
 [[package]]
