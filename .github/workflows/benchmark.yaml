@@ -5,10 +5,19 @@ on:
 jobs:
   get_benchmark_data:
     runs-on: ubuntu-latest
+    services:
+      clickhouse_splink_ci:
+        image: clickhouse/clickhouse-server:24.8
+        env:
+          CLICKHOUSE_USER: splinkognito
+          CLICKHOUSE_PASSWORD: splink123!
+        ports:
+          - 8123:8123
     strategy:
       fail-fast: true
       matrix:
-        data_choice: ["fake_1000", "fake_20000"]
+        # add in other data choices once we know things are working okay
+        data_choice: ["fake_1000"]
         backend_to_use: ["duckdb", "clickhouse"]
     name: Benchmark ${{ matrix.backend_to_use }} for data ${{ matrix.data_choice }}
     steps:
