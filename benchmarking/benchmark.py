@@ -14,29 +14,77 @@ from utils.timer import MultiTimer, Timer
 from splinkclickhouse import ChDBAPI, ClickhouseAPI
 
 # settings for something fake_1000-shaped
-blocking_rules = [
-    block_on("first_name", "dob"),
-    block_on("surname"),
-]
-settings = SettingsCreator(
-    link_type="dedupe_only",
-    comparisons=[
-        cl.JaroWinklerAtThresholds("first_name"),
-        cl.JaroAtThresholds("surname"),
-        cl.DateOfBirthComparison(
-            "dob",
-            input_is_string=True,
-        ),
-        cl.DamerauLevenshteinAtThresholds("city").configure(
-            term_frequency_adjustments=True
-        ),
-        cl.JaccardAtThresholds("email"),
+config_fake_1000 = {
+    "settings": SettingsCreator(
+        link_type="dedupe_only",
+        comparisons=[
+            cl.JaroWinklerAtThresholds("first_name"),
+            cl.JaroAtThresholds("surname"),
+            cl.DateOfBirthComparison(
+                "dob",
+                input_is_string=True,
+            ),
+            cl.DamerauLevenshteinAtThresholds("city").configure(
+                term_frequency_adjustments=True
+            ),
+            cl.JaccardAtThresholds("email"),
+        ],
+        blocking_rules_to_generate_predictions=[
+            block_on("first_name", "dob"),
+            block_on("surname"),
+        ],
+    ),
+    "deterministic_rules": [block_on("first_name", "surname")],
+    "em_cols": [
+        ("first_name", "surname"),
+        ("email",),
     ],
-    blocking_rules_to_generate_predictions=blocking_rules,
-)
+}
+config_historical_50k = {
+    "settings": SettingsCreator(
+        link_type="dedupe_only",
+        comparisons=[
+            # cl.ForenameSurnameComparison(
+            #     "first_name",
+            #     "surname",
+            #     forename_surname_concat_col_name="first_and_surname",
+            # ),
+            cl.DamerauLevenshteinAtThresholds("first_name"),
+            cl.DamerauLevenshteinAtThresholds("surname"),
+            # cl.DateOfBirthComparison("dob", input_is_string=True),
+            cl.ExactMatch("dob"),
+            cl.LevenshteinAtThresholds("postcode_fake"),
+            cl.ExactMatch("birth_place"),
+            cl.ExactMatch("occupation"),
+        ],
+        blocking_rules_to_generate_predictions=[
+            block_on("substr(first_name,1,3)", "substr(surname,1,4)"),
+            block_on("surname", "dob"),
+            block_on("first_name", "dob"),
+            block_on("postcode_fake", "first_name"),
+            block_on("postcode_fake", "surname"),
+            block_on("dob", "birth_place"),
+            block_on("substr(postcode_fake,1,3)", "dob"),
+            block_on("substr(postcode_fake,1,3)", "first_name"),
+            block_on("substr(postcode_fake,1,3)", "surname"),
+            block_on(
+                "substr(first_name,1,2)", "substr(surname,1,2)", "substr(dob,1,4)"
+            ),
+        ],
+    ),
+    "deterministic_rules": [
+        block_on("first_name", "surname", "dob"),
+        block_on("substr(first_name, 1, 2)", "surname", "substr(postcode_fake, 1, 2)"),
+        block_on("dob", "postcode_fake"),
+    ],
+    "em_cols": [
+        ("first_name", "surname"),
+        ("dob",),
+    ],
+}
 
 
-def timed_full_run(df: pd.DataFrame, backend_to_use: str) -> Timer:
+def timed_full_run(df: pd.DataFrame, config: dict, backend_to_use: str) -> Timer:
     timer = Timer(backend_to_use)
 
     timer.append_time("start")
@@ -52,15 +100,18 @@ def timed_full_run(df: pd.DataFrame, backend_to_use: str) -> Timer:
             password="splink123!",
         )
         db_api = ClickhouseAPI(client)
-    else:
+    elif backend_to_use == "duckdb":
         db_api = DuckDBAPI()
+    else:
+        raise ValueError(f"Unknown backend: {backend_to_use}")
 
     db_api.delete_tables_created_by_splink_from_db()
     timer.append_time("data_ingested")
 
+    settings = config["settings"]
     cumulative_comparisons_to_be_scored_from_blocking_rules_chart(
         table_or_tables=df,
-        blocking_rules=blocking_rules,
+        blocking_rules=settings.blocking_rules_to_generate_predictions,
         db_api=db_api,
         link_type="dedupe_only",
     )
@@ -70,24 +121,20 @@ def timed_full_run(df: pd.DataFrame, backend_to_use: str) -> Timer:
     timer.append_time("linker_instantiated")
 
     linker.training.estimate_probability_two_random_records_match(
-        [block_on("first_name", "surname")],
+        config["deterministic_rules"],
         recall=0.7,
     )
     timer.append_time("estimate_probability_two_random_records_match")
 
-    linker.training.estimate_u_using_random_sampling(max_pairs=1e8)
+    linker.training.estimate_u_using_random_sampling(max_pairs=1e7)
     timer.append_time("estimate_u")
 
-    training_blocking_rule = block_on("first_name", "dob")
-    linker.training.estimate_parameters_using_expectation_maximisation(
-        training_blocking_rule, estimate_without_term_frequencies=True
-    )
-    timer.append_time("estimate_m_block_on_first_name_dob")
-    training_blocking_rule = block_on("surname")
-    linker.training.estimate_parameters_using_expectation_maximisation(
-        training_blocking_rule, estimate_without_term_frequencies=True
-    )
-    timer.append_time("estimate_m_block_on_surname")
+    for cols in config["em_cols"]:
+        training_blocking_rule = block_on(*cols)
+        linker.training.estimate_parameters_using_expectation_maximisation(
+            training_blocking_rule, estimate_without_term_frequencies=True
+        )
+        timer.append_time(f"estimate_m_block_on_{'_'.join(cols)}")
 
     df_predict = linker.inference.predict()
     timer.append_time("predict")
@@ -105,6 +152,12 @@ data_funcs = {
     "fake_20000": lambda: pd.read_csv(
         "https://raw.githubusercontent.com/moj-analytical-services/splink_demos/refs/heads/master/data/fake_20000.csv"
     ),
+    "historical_50k": lambda: splink_datasets.historical_50k,
+}
+configs = {
+    "fake_1000": config_fake_1000,
+    "fake_20000": config_fake_1000,
+    "historical_50k": config_historical_50k,
 }
 
 parser = argparse.ArgumentParser(prog="Benchmarker", description="Rough benchmarking")
@@ -122,8 +175,9 @@ data_choice = args.data_choice
 backend_to_use = args.backend_to_use
 
 df = data_funcs[data_choice]()
+config = configs[data_choice]
 # actually run things:
-timer = timed_full_run(df, backend_to_use)
+timer = timed_full_run(df, config, backend_to_use)
 
 output_data_file = f"benchmarking/output/run_data_{data_choice}_{backend_to_use}.json"
 with open(output_data_file, "w+") as f:
