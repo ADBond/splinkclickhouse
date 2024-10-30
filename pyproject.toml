@@ -5,11 +5,42 @@ description = "Clickhouse backend support for Splink"
 authors = [{name = "Andrew Bond"}]
 license = {text = "MIT License"}
 readme = "README.md"
-requires-python = ">=3.9,<4.0"
+keywords = [
+    "data linking",
+    "record linkage",
+    "entity resolution",
+    "deduplication",
+    "fuzzy matching",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+
+    "License :: OSI Approved :: MIT License",
+
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+requires-python = ">=3.9"
 dependencies = [
     "splink >= 4.0.2",
     "clickhouse_connect >= 0.7.0",
 ]
+[project.urls]
+Homepage = "https://github.com/ADBond/splinkclickhouse"
+Documentation = "https://github.com/ADBond/splinkclickhouse/blob/main/README.md"
+Repository = "https://github.com/ADBond/splinkclickhouse.git"
+Issues = "https://github.com/ADBond/splinkclickhouse/issues"
+Changelog = "https://github.com/ADBond/splinkclickhouse/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 chdb = [
@@ -25,10 +56,10 @@ dev-dependencies = [
     "ruff == 0.6.4",
     "mypy == 1.11.2",
     "pytest == 8.3.3",
+    "pyarrow >= 17.0.0",
     # probably not ideal having this doubled here,
     # but saves having to pass --all_extras for 'uv run'
     "chdb >= 2.0.1",
-    "pyarrow>=17.0.0",
 ]
 package = true
 
