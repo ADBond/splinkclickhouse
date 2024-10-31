@@ -67,8 +67,15 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: 'benchmarking/output/run_data_*.json'
           path: './benchmarking/output'
+          pattern: 'bm_partial_*'
+          merge-multiple: true
 
       - name: Combine benchmark data
         run: uv run python combine_data.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bm_charts
+          path: benchmarking/output/*.html"
+          if-no-files-found: error
