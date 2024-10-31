@@ -41,6 +41,10 @@ version_regex_group = f"({version_format})"
 init_version_regex = init_version_template.format(version_literal=version_regex_group)
 
 m = re.search(init_version_regex, init_text)
+if m is None:
+    raise ValueError(
+        f"Couldn't find a version number of correct format in __init__.py:\n\n{init_text}"
+    )
 prev_version = m.group(1)
 
 if new_version == prev_version:
