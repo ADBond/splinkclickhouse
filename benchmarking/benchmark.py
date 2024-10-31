@@ -84,8 +84,10 @@ config_historical_50k = {
 }
 
 
-def timed_full_run(df: pd.DataFrame, config: dict, backend_to_use: str) -> Timer:
-    timer = Timer(backend_to_use)
+def timed_full_run(data: str, config: dict, backend_to_use: str) -> Timer:
+    timer = Timer(backend_to_use, data)
+
+    df = data_funcs[data_choice]()
 
     timer.append_time("start")
 
@@ -174,10 +176,9 @@ args = parser.parse_args()
 data_choice = args.data_choice
 backend_to_use = args.backend_to_use
 
-df = data_funcs[data_choice]()
 config = configs[data_choice]
 # actually run things:
-timer = timed_full_run(df, config, backend_to_use)
+timer = timed_full_run(data_choice, config, backend_to_use)
 
 output_data_file = f"benchmarking/output/run_data_{data_choice}_{backend_to_use}.json"
 with open(output_data_file, "w+") as f:

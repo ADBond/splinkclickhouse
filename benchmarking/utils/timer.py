@@ -13,8 +13,9 @@ class TimePoint:
 
 
 class Timer:
-    def __init__(self, name: str):
+    def __init__(self, name: str, data: str):
         self.name = name
+        self.data = data
         self.timings: list[TimePoint] = []
         self.append_time("timer_initialised")
 
@@ -58,6 +59,7 @@ class Timer:
                 "label": time_point.label,
                 "time": time_point.time,
                 "name": self.name,
+                "data": self.data,
                 "time_index": time_point.time_index,
             }
             for time_point in self.time_diffs
