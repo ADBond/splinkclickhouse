@@ -17,7 +17,7 @@ jobs:
       fail-fast: true
       matrix:
         # add in other data choices once we know things are working okay
-        data_choice: ["fake_1000"]
+        data_choice: ["fake_1000", "historical_50k"]
         backend_to_use: ["duckdb", "clickhouse"]
     name: Benchmark ${{ matrix.backend_to_use }} for data ${{ matrix.data_choice }}
     steps:
@@ -39,10 +39,13 @@ jobs:
       - name: Run benchmarking script
         run: uv run python benchmarking/benchmark.py ${{ matrix.data_choice }} ${{ matrix.backend_to_use }}
 
+      - name: Check directory content
+        run: ls -alhR benchmarking
+
       - uses: actions/upload-artifact@v4
         with:
           name: bm_partial_${{ matrix.data_choice }}_${{ matrix.backend_to_use }}
-          path: benchmarking/output/run_data_${{ matrix.data_choice }}_${{ matrix.backend_to_use }}.json"
+          path: benchmarking/output/run_data_${{ matrix.data_choice }}_${{ matrix.backend_to_use }}.json
           if-no-files-found: error
 
   combine_benchmark_data:
@@ -50,6 +53,7 @@ jobs:
     needs: get_benchmark_data
     name: Combine data from benchmark runs
     steps:
+      - uses: actions/checkout@v4
 
       - name: Setup uv
         id: setup-uv
@@ -71,11 +75,14 @@ jobs:
           pattern: 'bm_partial_*'
           merge-multiple: true
 
+      - name: Check directory content
+        run: ls -alhR benchmarking
+
       - name: Combine benchmark data
-        run: uv run python combine_data.py
+        run: uv run python benchmarking/combine_data.py
 
       - uses: actions/upload-artifact@v4
         with:
           name: bm_charts
-          path: benchmarking/output/*.html"
+          path: benchmarking/output/*.html
           if-no-files-found: error

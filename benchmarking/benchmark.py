@@ -181,6 +181,7 @@ config = configs[data_choice]
 timer = timed_full_run(data_choice, config, backend_to_use)
 
 output_data_file = f"benchmarking/output/run_data_{data_choice}_{backend_to_use}.json"
+print(f"Writing data to to {output_data_file}")  # noqa: T201
 with open(output_data_file, "w+") as f:
     json.dump(timer.records, f, indent=4)
 

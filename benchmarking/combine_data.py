@@ -11,9 +11,11 @@ for _root, _dirs, files in os.walk("benchmarking/output"):
             continue
         if file[0:3] != "run":
             continue
+        print(f"Adding records from file {file}")  # noqa: T201
         with open(f"{_root}/{file}", "r") as f:
             records += json.load(f)
 
+print(f"All run data: {records}")  # noqa: T201
 with open("benchmarking/output/combined_run_data.json", "w+") as f:
     json.dump(records, f, indent=4)
 
