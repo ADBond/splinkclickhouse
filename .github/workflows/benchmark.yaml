@@ -39,6 +39,9 @@ jobs:
       - name: Run benchmarking script
         run: uv run python benchmarking/benchmark.py ${{ matrix.data_choice }} ${{ matrix.backend_to_use }}
 
+      - name: Check directory content
+        run: ls -alhR benchmarking
+
       - uses: actions/upload-artifact@v4
         with:
           name: bm_partial_${{ matrix.data_choice }}_${{ matrix.backend_to_use }}
