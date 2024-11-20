@@ -76,7 +76,7 @@ jobs:
           merge-multiple: true
 
       - name: Combine benchmark data
-        run: uv run python combine_data.py
+        run: uv run python benchmarking/combine_data.py
 
       - uses: actions/upload-artifact@v4
         with:
