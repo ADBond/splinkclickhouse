@@ -1,0 +1,81 @@
+name: Benchmarking
+on:
+  workflow_dispatch
+
+jobs:
+  get_benchmark_data:
+    runs-on: ubuntu-latest
+    services:
+      clickhouse_splink_ci:
+        image: clickhouse/clickhouse-server:24.8
+        env:
+          CLICKHOUSE_USER: splinkognito
+          CLICKHOUSE_PASSWORD: splink123!
+        ports:
+          - 8123:8123
+    strategy:
+      fail-fast: true
+      matrix:
+        # add in other data choices once we know things are working okay
+        data_choice: ["fake_1000"]
+        backend_to_use: ["duckdb", "clickhouse"]
+    name: Benchmark ${{ matrix.backend_to_use }} for data ${{ matrix.data_choice }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install Python 3.10
+        run: uv python install 3.10
+
+      - name: Install dependencies
+        run: uv sync -p 3.10
+
+      - name: Run benchmarking script
+        run: uv run python benchmarking/benchmark.py ${{ matrix.data_choice }} ${{ matrix.backend_to_use }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bm_partial_${{ matrix.data_choice }}_${{ matrix.backend_to_use }}
+          path: benchmarking/output/run_data_${{ matrix.data_choice }}_${{ matrix.backend_to_use }}.json"
+          if-no-files-found: error
+
+  combine_benchmark_data:
+    runs-on: ubuntu-latest
+    needs: get_benchmark_data
+    name: Combine data from benchmark runs
+    steps:
+
+      - name: Setup uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install Python 3.10
+        run: uv python install 3.10
+
+      - name: Install dependencies
+        run: uv sync -p 3.10
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: './benchmarking/output'
+          pattern: 'bm_partial_*'
+          merge-multiple: true
+
+      - name: Combine benchmark data
+        run: uv run python combine_data.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bm_charts
+          path: benchmarking/output/*.html"
+          if-no-files-found: error

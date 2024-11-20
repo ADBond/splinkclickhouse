@@ -1,4 +1,4 @@
-name: Check code with ruff
+name: Check code - linting with ruff
 on:
   pull_request:
     branches:

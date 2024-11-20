@@ -1,4 +1,4 @@
-name: chDB tests
+name: Run tests - chdb
 on:
   pull_request:
     branches:

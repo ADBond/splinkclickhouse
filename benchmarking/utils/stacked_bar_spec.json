@@ -1,0 +1,46 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {
+        "values": []
+    },
+    "transform": [
+        {
+            "filter": "(datum.label !== '__total') && (datum.data === '__data_choice__')"
+        }
+    ],
+    "mark": "bar",
+    "encoding": {
+        "x": {
+            "field": "name",
+            "type": "nominal",
+            "title": "Backend"
+        },
+        "y": {
+            "aggregate": "sum",
+            "field": "time",
+            "type": "quantitative",
+            "title": "Time (s)"
+        },
+        "color": {
+            "field": "label",
+            "type": "nominal",
+            "title": "Step",
+            "sort": {
+                "field": "time_index",
+                "order": "descending"
+            }
+        },
+        "tooltip": [
+            {
+                "field": "label",
+                "type": "nominal",
+                "title": "Step"
+            },
+            {
+                "field": "time",
+                "type": "quantitative",
+                "title": "Time (s)"
+            }
+        ]
+    }
+}

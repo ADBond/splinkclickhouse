@@ -12,3 +12,8 @@ tmp*
 *.json
 
 *.log
+
+*.csv
+*.json
+
+.DS_Store

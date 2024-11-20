@@ -42,7 +42,8 @@ class ClickhouseAPI(DatabaseAPI[None]):
         else:
             raise TypeError(
                 "ClickhouseAPI currently only accepts table names (str) "
-                "or pandas DataFrames as inputs for table registration"
+                "or pandas DataFrames as inputs for table registration. "
+                f"Received type {type(input)}"
             )
 
     def table_to_splink_dataframe(self, templated_name, physical_name):
