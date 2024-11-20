@@ -53,6 +53,7 @@ jobs:
     needs: get_benchmark_data
     name: Combine data from benchmark runs
     steps:
+      - uses: actions/checkout@v4
 
       - name: Setup uv
         id: setup-uv
