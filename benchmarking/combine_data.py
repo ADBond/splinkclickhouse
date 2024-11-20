@@ -24,9 +24,9 @@ graph_dict["data"]["values"] = records
 
 for data_choice in ("fake_1000", "historical_50k"):
     data_graph_dict = deepcopy(graph_dict)
-    data_graph_dict["transform"][0]["filter"] = graph_dict["transform"][0]["filter"].replace(
-        "__data_choice__", data_choice
-    )
+    data_graph_dict["transform"][0]["filter"] = graph_dict["transform"][0][
+        "filter"
+    ].replace("__data_choice__", data_choice)
 
     chart = alt.Chart.from_dict(data_graph_dict)
     chart.save(f"benchmarking/output/chart_{data_choice}.html")
