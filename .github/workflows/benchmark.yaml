@@ -75,6 +75,9 @@ jobs:
           pattern: 'bm_partial_*'
           merge-multiple: true
 
+      - name: Check directory content
+        run: ls -alhR benchmarking
+
       - name: Combine benchmark data
         run: uv run python benchmarking/combine_data.py
 
