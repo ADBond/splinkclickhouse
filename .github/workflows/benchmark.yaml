@@ -45,7 +45,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: bm_partial_${{ matrix.data_choice }}_${{ matrix.backend_to_use }}
-          path: benchmarking/output/run_data_${{ matrix.data_choice }}_${{ matrix.backend_to_use }}.json"
+          path: benchmarking/output/run_data_${{ matrix.data_choice }}_${{ matrix.backend_to_use }}.json
           if-no-files-found: error
 
   combine_benchmark_data:
@@ -80,5 +80,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: bm_charts
-          path: benchmarking/output/*.html"
+          path: benchmarking/output/*.html
           if-no-files-found: error
