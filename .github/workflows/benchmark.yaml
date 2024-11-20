@@ -17,7 +17,7 @@ jobs:
       fail-fast: true
       matrix:
         # add in other data choices once we know things are working okay
-        data_choice: ["fake_1000"]
+        data_choice: ["fake_1000", "historical_50k"]
         backend_to_use: ["duckdb", "clickhouse"]
     name: Benchmark ${{ matrix.backend_to_use }} for data ${{ matrix.data_choice }}
     steps:
