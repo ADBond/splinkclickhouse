@@ -1,12 +1,8 @@
-import clickhouse_connect
 import numpy as np
 import pandas as pd
 import splink.comparison_library as cl
-from chdb import dbapi
 from pytest import fixture, mark, param
 from splink import ColumnExpression, SettingsCreator, block_on, splink_datasets
-
-from splinkclickhouse import ChDBAPI, ClickhouseServerAPI
 
 df = splink_datasets.fake_1000
 
@@ -49,37 +45,53 @@ _NAMES = (
 
 @fixture
 def chdb_api_factory():
-    con = dbapi.connect()
-    yield lambda: ChDBAPI(con)
-    con.close()
+    # only import it if we need it
+    try:
+        from chdb import dbapi
+
+        from splinkclickhouse import ChDBAPI
+
+        con = dbapi.connect()
+        yield lambda: ChDBAPI(con)
+        con.close()
+    except ModuleNotFoundError:
+        yield None
 
 
 @fixture(scope="module")
 def clickhouse_api_factory():
-    conn_atts = {
-        "host": "localhost",
-        "port": 8123,
-        "username": "splinkognito",
-        "password": "splink123!",
-    }
-
-    db_name = "__temp_splink_db_pytest"
-
+    # only import when we need
     try:
-        default_client = clickhouse_connect.get_client(**conn_atts)
-        default_client.command(f"CREATE DATABASE IF NOT EXISTS {db_name}")
-        client = clickhouse_connect.get_client(
-            **conn_atts,
-            database=db_name,
-        )
+        import clickhouse_connect
 
-        yield lambda: ClickhouseServerAPI(client)
-        client.close()
-        default_client.command(f"DROP DATABASE {db_name}")
-        default_client.close()
-    except clickhouse_connect.driver.exceptions.OperationalError:
+        from splinkclickhouse import ClickhouseServerAPI
+
+        conn_atts = {
+            "host": "localhost",
+            "port": 8123,
+            "username": "splinkognito",
+            "password": "splink123!",
+        }
+
+        db_name = "__temp_splink_db_pytest"
+
+        try:
+            default_client = clickhouse_connect.get_client(**conn_atts)
+            default_client.command(f"CREATE DATABASE IF NOT EXISTS {db_name}")
+            client = clickhouse_connect.get_client(
+                **conn_atts,
+                database=db_name,
+            )
+
+            yield lambda: ClickhouseServerAPI(client)
+            client.close()
+            default_client.command(f"DROP DATABASE {db_name}")
+            default_client.close()
+        except clickhouse_connect.driver.exceptions.OperationalError:
+            yield None
+
+    except ModuleNotFoundError:
         yield None
-
 
 @fixture(
     params=[
