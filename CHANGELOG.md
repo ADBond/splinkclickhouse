@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Term frequency adjustments are now not limited in Clickhouse server (or `chdb` when `debug_mode` is switched on).
+
+### Changed
+
+- Dropped support for Splink <= `4.0.5`.
+
 ## [0.3.2] - 2024-10-23
 
 ### Added
