@@ -19,9 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- SQL UDF `days_since_epoch` to parse a date representing a string to the number of days since `1970-01-01` [#39](https://github.com/ADBond/splinkclickhouse/pull/39)
-- Custom Clickhouse `ColumnExpression` with additional transform `parse_date_to_int` to parse string to days since epoch [#39](https://github.com/ADBond/splinkclickhouse/pull/39)
-- Custom date comparison and comparison levels working with integer type representing days since epoch [#39](https://github.com/ADBond/splinkclickhouse/pull/39)
+- SQL UDF `days_since_epoch` to parse a date representing a string to the number of days since `1970-01-01` [#39](https://github.com/ADBond/splinkclickhouse/pull/39).
+- Custom Clickhouse `ColumnExpression` with additional transform `parse_date_to_int` to parse string to days since epoch [#39](https://github.com/ADBond/splinkclickhouse/pull/39).
+- Custom date comparison and comparison levels working with integer type representing days since epoch [#39](https://github.com/ADBond/splinkclickhouse/pull/39).
 
 ## [0.3.1] - 2024-10-14
 
