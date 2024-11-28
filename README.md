@@ -238,12 +238,6 @@ import splink.comparison_level as cl
 first_name_comparison = cl.DamerauLevenshteinAtThresholds("NULLIF(first_name, '')")
 ```
 
-### Term-frequency adjustments
-
-Currently at most one term frequency adjustment can be used with `ClickhouseAPI`.
-
-This also applies to `ChDBAPI` but _only in `debug_mode`_. With `debug_mode` off there is no limit on term frequency adjustments.
-
 ### `ClickhouseAPI` pandas registration
 
 `ClickhouseAPI` will allow registration of pandas dataframes, by inferring the types of columns. It currently only does this for string, integer, and float columns, and will always make them `Nullable`.
