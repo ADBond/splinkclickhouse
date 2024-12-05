@@ -24,11 +24,10 @@ client = clickhouse_connect.get_client(
 
 db_api = ClickhouseAPI(client)
 
-# TODO: tf adjustments need deep work (can have _one_ but not more)
 settings = SettingsCreator(
     link_type="dedupe_only",
     comparisons=[
-        cl.JaroWinklerAtThresholds("first_name"),
+        cl.NameComparison("first_name"),
         cl.JaroAtThresholds("surname"),
         cl.DateOfBirthComparison(
             "dob",
@@ -37,7 +36,7 @@ settings = SettingsCreator(
         cl.DamerauLevenshteinAtThresholds("city").configure(
             term_frequency_adjustments=True
         ),
-        cl.JaccardAtThresholds("email"),
+        cl.EmailComparison("email"),
     ],
     blocking_rules_to_generate_predictions=[
         block_on("first_name", "dob"),

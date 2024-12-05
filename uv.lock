@@ -879,7 +879,7 @@ wheels = [
 
 [[package]]
 name = "splink"
-version = "4.0.5"
+version = "4.0.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "altair" },
@@ -891,9 +891,9 @@ dependencies = [
     { name = "pandas" },
     { name = "sqlglot" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9e/51/66dd1871f1ed6edaad43dc1121dd1e59d4ef0c5d3cd993b23b5c751ab94e/splink-4.0.5.tar.gz", hash = "sha256:72dbdaa7a1211733018d01a80b87f3bfecd32216a1693b1c67fe31db9034f356", size = 3654992 }
+sdist = { url = "https://files.pythonhosted.org/packages/f0/86/23c722b0742b77c0762a2bbe627227faa7ff812d740c08ac7df20c3f5961/splink-4.0.6.tar.gz", hash = "sha256:1b2c860edb5c7eae3649706c1e8e98247c9d051a3109341951ee883d424bf6ca", size = 3658160 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9b/68/bb9108f4341e41b95d203c9c8f47d7f52a7d6e96348b83dc3ba1f075e91d/splink-4.0.5-py3-none-any.whl", hash = "sha256:0afc28e12fc863030ad1add89dffa54c91a35b50f14fee64ac78bfa43f5d8866", size = 3717815 },
+    { url = "https://files.pythonhosted.org/packages/9f/5a/8b28279da9947884fc46bafbeba06f41b9f9a43126e87397668aa2527bf7/splink-4.0.6-py3-none-any.whl", hash = "sha256:697377c5a401368e58ce11e3b8d4b28cfe9452625e81d19994709cad37621830", size = 3721667 },
 ]
 
 [[package]]
@@ -923,7 +923,7 @@ dev = [
 requires-dist = [
     { name = "chdb", marker = "extra == 'chdb'", specifier = ">=2.0.1" },
     { name = "clickhouse-connect", specifier = ">=0.7.0" },
-    { name = "splink", specifier = ">=4.0.2" },
+    { name = "splink", specifier = ">=4.0.6" },
 ]
 
 [package.metadata.requires-dev]

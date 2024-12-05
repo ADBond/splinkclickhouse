@@ -88,8 +88,12 @@ def fake_1000_settings_factory():
             return SettingsCreator(
                 link_type="dedupe_only",
                 comparisons=[
-                    cl.JaroWinklerAtThresholds("first_name"),
-                    cl.JaroAtThresholds("surname"),
+                    cl.JaroWinklerAtThresholds("first_name").configure(
+                        term_frequency_adjustments=True
+                    ),
+                    cl.JaroAtThresholds("surname").configure(
+                        term_frequency_adjustments=True
+                    ),
                     cl.DateOfBirthComparison(
                         "dob",
                         input_is_string=True,
@@ -112,8 +116,10 @@ def fake_1000_settings_factory():
             comparisons=[
                 cl.JaroWinklerAtThresholds(
                     ColumnExpression("first_name").regex_extract(".*")
-                ),
-                cl.JaroAtThresholds(ColumnExpression("surname").regex_extract(".*")),
+                ).configure(term_frequency_adjustments=True),
+                cl.JaroAtThresholds(
+                    ColumnExpression("surname").regex_extract(".*")
+                ).configure(term_frequency_adjustments=True),
                 cl.DateOfBirthComparison(
                     ColumnExpression("dob").regex_extract(".*"),
                     input_is_string=True,
