@@ -116,12 +116,10 @@ def fake_1000_settings_factory():
             comparisons=[
                 cl.JaroWinklerAtThresholds(
                     ColumnExpression("first_name").regex_extract(".*")
-                ).configure(
-                    term_frequency_adjustments=True
-                ),
-                cl.JaroAtThresholds(ColumnExpression("surname").regex_extract(".*")).configure(
-                    term_frequency_adjustments=True
-                ),
+                ).configure(term_frequency_adjustments=True),
+                cl.JaroAtThresholds(
+                    ColumnExpression("surname").regex_extract(".*")
+                ).configure(term_frequency_adjustments=True),
                 cl.DateOfBirthComparison(
                     ColumnExpression("dob").regex_extract(".*"),
                     input_is_string=True,
