@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.3] - 2024-12-05
+
 ### Added
 
 - Term frequency adjustments are now not limited in Clickhouse server (or `chdb` when `debug_mode` is switched on) [#46](https://github.com/ADBond/splinkclickhouse/pull/46).
@@ -99,7 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Basic working version of package with api for `chdb`
 
-[Unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/ADBond/splinkclickhouse/compare/v0.2.5...v0.3.0
