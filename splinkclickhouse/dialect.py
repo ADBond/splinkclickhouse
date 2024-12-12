@@ -32,6 +32,22 @@ class ClickhouseDialect(SplinkDialect):
     def jaccard_function_name(self) -> str:
         return "stringJaccardIndexUTF8"
 
+    @property
+    def array_first_index(self) -> int:
+        return 1
+
+    @property
+    def array_min_function_name(self) -> str:
+        return "arrayMin"
+
+    @property
+    def array_max_function_name(self) -> str:
+        return "arrayMax"
+
+    @property
+    def array_transform_function_name(self) -> str:
+        return "arrayMap"
+
     def _regex_extract_raw(
         self, name: str, pattern: str, capture_group: int = 0
     ) -> str:
