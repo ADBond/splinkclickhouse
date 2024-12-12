@@ -27,6 +27,26 @@ def pytest_collection_modifyitems(items, config):
                 item.add_marker(mark)
 
 
+_NAMES = (
+    "tom",
+    "tim",
+    "jen",
+    "jan",
+    "ken",
+    "sam",
+    "katherine",
+    "ben",
+    "benjamin",
+    "benny",
+    "jenny",
+    "jennifer",
+    "samuel",
+    "thom",
+    "thomas",
+    "thoams",
+)
+
+
 @fixture
 def chdb_api_factory():
     con = dbapi.connect()
@@ -153,7 +173,7 @@ def input_nodes_with_lat_longs():
     longs = np.random.uniform(low=long_low, high=long_high, size=n_rows)
     # also include some names so we have a second comparison
     names = np.random.choice(
-        ("tom", "tim", "jen", "jan", "ken", "sam", "katherine"),
+        _NAMES,
         size=n_rows,
     )
     return pd.DataFrame(
@@ -162,5 +182,21 @@ def input_nodes_with_lat_longs():
             "name": names,
             "latitude": lats,
             "longitude": longs,
+        }
+    )
+
+
+@fixture
+def input_nodes_with_name_arrays():
+    n_rows = 1_000
+    sizes = np.random.randint(low=1, high=5, size=n_rows)
+    return pd.DataFrame(
+        {
+            "unique_id": range(n_rows),
+            "aliases": map(lambda s: np.random.choice(_NAMES, size=s), sizes),
+            "username": np.random.choice(
+                _NAMES,
+                size=n_rows,
+            ),
         }
     )
