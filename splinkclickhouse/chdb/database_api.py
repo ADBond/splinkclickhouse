@@ -36,6 +36,14 @@ class ChDBAPI(DatabaseAPI[None]):
         elif isinstance(input, list):
             input = pd.DataFrame.from_records(input)
 
+        # chdb currently needs pandas indices to start at 0
+        # see https://github.com/chdb-io/chdb/issues/282
+        # reset the index if not the case, but otherwise leave alone
+        # TODO: remove this workaround once chdb issue is resolved
+        try:
+            input[0]
+        except KeyError:
+            input = input.reset_index()
         cursor = self._get_cursor()
         sql = (
             f"CREATE OR REPLACE TABLE {self._db_schema}.{table_name} "
