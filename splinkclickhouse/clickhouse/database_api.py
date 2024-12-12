@@ -109,20 +109,24 @@ class ClickhouseAPI(DatabaseAPI[None]):
         sql = f"CREATE OR REPLACE TABLE {table_name} ("
 
         first_col = True
-        for column in df.columns:
+        for column_name in df.columns:
             if not first_col:
                 sql += ", "
-            col_type = df[column].dtype
+            column = df[column_name]
+            col_type = column.dtype
             first_col = False
 
             if pd.api.types.is_integer_dtype(col_type):
-                sql += f"{column} Nullable(UInt32)"
+                sql += f"{column_name} Nullable(UInt32)"
             elif pd.api.types.is_float_dtype(col_type):
-                sql += f"{column} Nullable(Float64)"
+                sql += f"{column_name} Nullable(Float64)"
+            elif pd.api.types.is_list_like(column[0]):
+                sql += f"{column_name} Array(String)"
             elif pd.api.types.is_string_dtype(col_type):
-                sql += f"{column} Nullable(String)"
+                sql += f"{column_name} Nullable(String)"
             else:
                 raise ValueError(f"Unknown data type {col_type}")
 
         sql += ") ENGINE MergeTree ORDER BY tuple()"
+
         return sql
