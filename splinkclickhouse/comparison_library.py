@@ -16,6 +16,9 @@ from splink.internals.comparison_library import (
 from splink.internals.comparison_library import (
     DateOfBirthComparison as SplinkDateOfBirthComparison,
 )
+from splink.internals.comparison_library import (
+    PairwiseStringDistanceFunctionAtThresholds as SplinkPairwiseStringDistanceFunctionAtThresholds,  # noqa: E501 (can't keep format and check happy)
+)
 from splink.internals.misc import ensure_is_iterable
 
 import splinkclickhouse.comparison_level_library as cll_ch
@@ -305,3 +308,24 @@ class DateOfBirthComparison(SplinkDateOfBirthComparison):
 
         levels.append(cll.ElseLevel())
         return levels
+
+
+class PairwiseStringDistanceFunctionAtThresholds(
+    SplinkPairwiseStringDistanceFunctionAtThresholds
+):
+    def create_comparison_levels(self) -> list[ComparisonLevelCreator]:
+        return [
+            cll.NullLevel(self.col_expression),
+            # It is assumed that any string distance treats identical
+            # arrays as the most similar
+            cll.ArrayIntersectLevel(self.col_expression, min_intersection=1),
+            *[
+                cll_ch.PairwiseStringDistanceFunctionLevel(
+                    self.col_expression,
+                    distance_threshold=threshold,
+                    distance_function_name=self.distance_function_name,
+                )
+                for threshold in self.thresholds
+            ],
+            cll.ElseLevel(),
+        ]
