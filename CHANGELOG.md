@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Table registration in `chdb` now works for pandas tables whose indexes do not have a `0` entry [#49](https://github.com/ADBond/splinkclickhouse/pull/49).
+
 ## [0.3.3] - 2024-12-05
 
 ### Added
