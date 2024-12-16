@@ -2,7 +2,7 @@ import clickhouse_connect
 import splink.comparison_library as cl
 from splink import Linker, SettingsCreator, block_on, splink_datasets
 
-from splinkclickhouse import ClickhouseAPI
+from splinkclickhouse import ClickhouseServerAPI
 
 df = splink_datasets.fake_1000
 
@@ -22,7 +22,7 @@ client = clickhouse_connect.get_client(
     database=db_name,
 )
 
-db_api = ClickhouseAPI(client)
+db_api = ClickhouseServerAPI(client)
 
 settings = SettingsCreator(
     link_type="dedupe_only",

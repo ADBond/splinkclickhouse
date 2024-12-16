@@ -21,7 +21,7 @@ uv run python scripts/getting_started_chdb.py
 Import the relevant api:
 
 ```python
-from splinkclickhouse import ClickhouseAPI
+from splinkclickhouse import ClickhouseServerAPI
 ```
 
 You can run a local instance in docker with provided docker-compose file:

@@ -11,7 +11,7 @@ from .dataframe import ClickhouseDataFrame
 logger = logging.getLogger(__name__)
 
 
-class ClickhouseAPI(DatabaseAPI[None]):
+class ClickhouseServerAPI(DatabaseAPI[None]):
     sql_dialect = ClickhouseDialect()
 
     def __init__(
@@ -41,7 +41,7 @@ class ClickhouseAPI(DatabaseAPI[None]):
             self.client.query(sql)
         else:
             raise TypeError(
-                "ClickhouseAPI currently only accepts table names (str) "
+                "ClickhouseServerAPI currently only accepts table names (str) "
                 "or pandas DataFrames as inputs for table registration. "
                 f"Received type {type(input)}"
             )

@@ -8,11 +8,11 @@ from splink.internals.splink_dataframe import SplinkDataFrame
 
 logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
-    from .database_api import ClickhouseAPI
+    from .database_api import ClickhouseServerAPI
 
 
 class ClickhouseDataFrame(SplinkDataFrame):
-    db_api: ClickhouseAPI
+    db_api: ClickhouseServerAPI
 
     def __init__(self, df_name, physical_name, db_api):
         super().__init__(df_name, physical_name, db_api)

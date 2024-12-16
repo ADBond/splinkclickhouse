@@ -1,6 +1,6 @@
 from typing import Any
 
-from .clickhouse.database_api import ClickhouseAPI
+from .clickhouse.database_api import ClickhouseServerAPI
 
 __version__ = "0.3.4"
 
@@ -22,4 +22,4 @@ def __getattr__(name: str) -> Any:
     raise ImportError(f"cannot import name '{name}' from splinkclickhouse") from None
 
 
-__all__ = ["ChDBAPI", "ClickhouseAPI"]
+__all__ = ["ChDBAPI", "ClickhouseServerAPI"]

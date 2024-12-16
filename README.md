@@ -42,13 +42,13 @@ Nevertheless if you depend on this package it is recommended to pin a version to
 
 ### Clickhouse server
 
-Import `ClickhouseAPI`, which accepts a `clickhouse_connect` client, configured with attributes relevant for your connection:
+Import `ClickhouseServerAPI`, which accepts a `clickhouse_connect` client, configured with attributes relevant for your connection:
 ```python
 import clickhouse_connect
 import splink.comparison_library as cl
 from splink import Linker, SettingsCreator, block_on, splink_datasets
 
-from splinkclickhouse import ClickhouseAPI
+from splinkclickhouse import ClickhouseServerAPI
 
 df = splink_datasets.fake_1000
 
@@ -68,7 +68,7 @@ client = clickhouse_connect.get_client(
     database=db_name,
 )
 
-db_api = ClickhouseAPI(client)
+db_api = ClickhouseServerAPI(client)
 
 # can have at most one tf-adjusted comparison, see caveats below
 settings = SettingsCreator(
@@ -238,8 +238,8 @@ import splink.comparison_level as cl
 first_name_comparison = cl.DamerauLevenshteinAtThresholds("NULLIF(first_name, '')")
 ```
 
-### `ClickhouseAPI` pandas registration
+### `ClickhouseServerAPI` pandas registration
 
-`ClickhouseAPI` will allow registration of pandas dataframes, by inferring the types of columns. It currently only does this for string, integer, and float columns, and will always make them `Nullable`.
+`ClickhouseServerAPI` will allow registration of pandas dataframes, by inferring the types of columns. It currently only does this for string, integer, and float columns, and will always make them `Nullable`.
 
 If you require other data types, or more fine-grained control, it is recommended to import the data into Clickhouse yourself, and then pass the table name (as a string) to the `Linker` instead.
