@@ -81,7 +81,7 @@ class ClickhouseServerAPI(ClickhouseAPI):
         return self.client.database or "default"
 
     def _execute_utility_sql(self, sql: str) -> None:
-        self.client.command(sql)
+        self.client.query(sql)
 
     # Clickhouse can not handle a bare 'UNION' by default
     # we can set desired behaviour for the session by executing this
