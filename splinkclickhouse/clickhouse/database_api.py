@@ -85,23 +85,13 @@ class ClickhouseServerAPI(ClickhouseAPI):
     def database(self) -> str:
         return self.client.database or "default"
 
+    def _execute_utility_sql(self, sql: str) -> None:
+        self.client.command(sql)
+
     # Clickhouse can not handle a bare 'UNION' by default
     # we can set desired behaviour for the session by executing this
     def set_union_default_mode(self) -> None:
-        self.client.command("SET union_default_mode = 'DISTINCT'")
-
-    # alias random -> rand. Need this function for comparison viewer
-    def _create_random_function(self) -> None:
-        self.client.command("CREATE FUNCTION IF NOT EXISTS random AS () -> rand()")
-
-    def _register_custom_udfs(self) -> None:
-        self.client.command(
-            f"""
-            CREATE FUNCTION IF NOT EXISTS
-                days_since_epoch AS
-                (date_string) -> {days_since_epoch_sql}
-            """
-        )
+        self._execute_utility_sql("SET union_default_mode = 'DISTINCT'")
 
     def _create_table_from_pandas_frame(self, df: pd.DataFrame, table_name: str) -> str:
         sql = f"CREATE OR REPLACE TABLE {table_name} ("

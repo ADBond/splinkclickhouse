@@ -118,23 +118,7 @@ class ChDBAPI(ClickhouseAPI):
         """
         self._execute_sql_against_backend(sql)
 
-    # alias random -> rand. Need this function for comparison viewer
-    def _create_random_function(self) -> None:
-        sql = "CREATE FUNCTION IF NOT EXISTS random AS () -> rand()"
-
-        cursor = self._get_cursor()
-        try:
-            cursor.execute(sql)
-        finally:
-            self._reset_cursor(cursor)
-
-    def _register_custom_udfs(self) -> None:
-        sql = f"""
-        CREATE FUNCTION IF NOT EXISTS
-            days_since_epoch AS
-            (date_string) -> {days_since_epoch_sql}
-        """
-
+    def _execute_utility_sql(self, sql: str) -> None:
         cursor = self._get_cursor()
         try:
             cursor.execute(sql)
