@@ -1,6 +1,6 @@
 from typing import Any
 
-from .clickhouse.database_api import ClickhouseServerAPI
+from .clickhouse_server.database_api import ClickhouseServerAPI
 
 __version__ = "0.3.4"
 
