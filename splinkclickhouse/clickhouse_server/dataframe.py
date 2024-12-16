@@ -11,15 +11,3 @@ if TYPE_CHECKING:
 
 class ClickhouseServerDataFrame(ClickhouseDataFrame):
     db_api: ClickhouseServerAPI
-
-    def as_record_dict(self, limit=None):
-        sql = f"""
-        SELECT *
-        FROM {self.physical_name}
-        """
-        if limit:
-            sql += f" LIMIT {limit}"
-        sql += ";"
-
-        res = self.db_api.client.query(sql)
-        return list(res.named_results())

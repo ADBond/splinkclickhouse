@@ -27,3 +27,13 @@ class ClickhouseDataFrame(SplinkDataFrame):
         self._check_drop_table_created_by_splink(force_non_splink_table)
         self.db_api.delete_table_from_database(self.physical_name)
 
+    def as_record_dict(self, limit=None):
+        sql = f"""
+        SELECT *
+        FROM {self.physical_name}
+        """
+        if limit:
+            sql += f" LIMIT {limit}"
+
+        res = self.db_api._get_results_from_backend(sql)
+        return list(res)
