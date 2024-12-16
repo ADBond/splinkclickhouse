@@ -12,9 +12,6 @@ if TYPE_CHECKING:
 class ClickhouseServerDataFrame(ClickhouseDataFrame):
     db_api: ClickhouseServerAPI
 
-    def __init__(self, df_name, physical_name, db_api):
-        super().__init__(df_name, physical_name, db_api)
-
     def as_record_dict(self, limit=None):
         sql = f"""
         SELECT *

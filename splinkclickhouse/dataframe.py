@@ -5,6 +5,9 @@ from splink.internals.splink_dataframe import SplinkDataFrame
 
 
 class ClickhouseDataFrame(SplinkDataFrame):
+    def __init__(self, df_name, physical_name, db_api):
+        super().__init__(df_name, physical_name, db_api)
+
     @property
     def columns(self) -> list[InputColumn]:
         sql = self.db_api._information_schema_query(
