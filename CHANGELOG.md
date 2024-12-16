@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added Clickhouse appropriate versions of comparison level `PairwiseStringDistanceFunctionLevel` and comparison `PairwiseStringDistanceFunctionAtThresholds` to the relevant libraries [#51](https://github.com/ADBond/splinkclickhouse/pull/51)
+- `ClickhouseAPI` can now properly register `pandas` tables with string array columns [#51](https://github.com/ADBond/splinkclickhouse/pull/51)
+
 ### Fixed
 
 - Table registration in `chdb` now works for pandas tables whose indexes do not have a `0` entry [#49](https://github.com/ADBond/splinkclickhouse/pull/49).

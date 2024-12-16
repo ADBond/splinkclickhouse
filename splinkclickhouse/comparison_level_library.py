@@ -10,6 +10,9 @@ from splink.internals.comparison_level_library import (
 from splink.internals.comparison_level_library import (
     DateMetricType,
 )
+from splink.internals.comparison_level_library import (
+    PairwiseStringDistanceFunctionLevel as SplinkPairwiseStringDistanceFunctionLevel,
+)
 
 from .column_expression import ColumnExpression as CHColumnExpression
 from .dialect import ClickhouseDialect, SplinkDialect
@@ -164,3 +167,44 @@ class AbsoluteDateDifferenceLevel(SplinkAbsoluteTimeDifferenceLevel):
             f"<= {self.time_threshold_seconds}"
         )
         return sql
+
+
+class PairwiseStringDistanceFunctionLevel(SplinkPairwiseStringDistanceFunctionLevel):
+    def create_sql(self, sql_dialect: SplinkDialect) -> str:
+        self.col_expression.sql_dialect = sql_dialect
+        col = self.col_expression
+        distance_function_name_transpiled = {
+            "levenshtein": sql_dialect.levenshtein_function_name,
+            "damerau_levenshtein": sql_dialect.damerau_levenshtein_function_name,
+            "jaro_winkler": sql_dialect.jaro_winkler_function_name,
+            "jaro": sql_dialect.jaro_function_name,
+        }[self.distance_function_name]
+
+        aggregator_func = {
+            "min": sql_dialect.array_min_function_name,
+            "max": sql_dialect.array_max_function_name,
+        }[self._aggregator()]
+
+        # order of the arguments is different in Clickhouse than tha expected by Splink
+        # specifically the lambda must come first in Clickhouse
+        # this is not fixable with UDF as having it in second argument in general
+        # will cause Clickhouse parser to fail
+        # also need to use a workaround to get 'flatten' equivalent for a single level
+        return f"""{aggregator_func}(
+                    {sql_dialect.array_transform_function_name}(
+                        pair -> {distance_function_name_transpiled}(
+                            pair[{sql_dialect.array_first_index}],
+                            pair[{sql_dialect.array_first_index + 1}]
+                        ),
+                        arrayReduce(
+                            'array_concat_agg',
+                            {sql_dialect.array_transform_function_name}(
+                                x -> {sql_dialect.array_transform_function_name}(
+                                    y -> [x, y],
+                                    {col.name_r}
+                                ),
+                                {col.name_l}
+                            )
+                        )
+                    )
+                ) {self._comparator()} {self.distance_threshold}"""
