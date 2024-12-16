@@ -7,6 +7,7 @@ on:
       - "splinkclickhouse/**"
       - "tests/**"
       - "pyproject.toml"
+      - "uv.lock"
 
 jobs:
   test:
