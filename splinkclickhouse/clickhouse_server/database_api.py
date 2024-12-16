@@ -42,12 +42,9 @@ class ClickhouseServerAPI(ClickhouseAPI):
         return ClickhouseServerDataFrame(templated_name, physical_name, self)
 
     def table_exists_in_database(self, table_name):
-        sql = f"""
-        SELECT table_name
-        FROM information_schema.tables
-        WHERE table_name = '{table_name}'
-        AND table_schema = '{self.database}'
-        """
+        sql = self._information_schema_query(
+            "table_name", "tables", table_name, self.database
+        )
 
         res = self.client.query(sql).result_set
         return len(res) > 0

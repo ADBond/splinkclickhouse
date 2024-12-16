@@ -21,12 +21,9 @@ class ClickhouseServerDataFrame(ClickhouseDataFrame):
     def columns(self) -> list[InputColumn]:
         client = self.db_api.client
 
-        sql = f"""
-        SELECT column_name
-        FROM information_schema.columns
-        WHERE table_name = '{self.physical_name}'
-        AND table_schema = '{self.db_api.database}'
-        """
+        sql = self.db_api._information_schema_query(
+            "column_name", "columns", self.physical_name, self.db_api.database
+        )
 
         res = client.query(sql).named_results()
         cols = [r["column_name"] for r in res]

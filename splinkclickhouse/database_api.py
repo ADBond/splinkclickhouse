@@ -1,3 +1,5 @@
+from typing import Optional
+
 from splink.internals.database_api import DatabaseAPI
 
 from .custom_sql import days_since_epoch_sql
@@ -6,6 +8,23 @@ from .dialect import ClickhouseDialect
 
 class ClickhouseAPI(DatabaseAPI[None]):
     sql_dialect = ClickhouseDialect()
+
+    def _information_schema_query(
+        self,
+        column_name: str,
+        information_schema_table_name: str,
+        table_name: str,
+        schema_name: Optional[str] = None,
+    ):
+        and_if_needed = (
+            f"AND table_schema = '{schema_name}'" if schema_name is not None else ""
+        )
+        return f"""
+            SELECT {column_name}
+            FROM information_schema.{information_schema_table_name}
+            WHERE table_name = '{table_name}'
+            {and_if_needed}
+        """
 
     @property
     def _core_replacements(self) -> list[tuple[str, str]]:

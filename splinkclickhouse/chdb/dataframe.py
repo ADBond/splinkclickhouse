@@ -20,11 +20,9 @@ class ChDBDataFrame(ClickhouseDataFrame):
 
     @property
     def columns(self) -> list[InputColumn]:
-        sql = f"""
-        SELECT column_name
-        FROM information_schema.columns
-        WHERE table_name = '{self.physical_name}';
-        """
+        sql = self.db_api._information_schema_query(
+            "column_name", "columns", self.physical_name
+        )
 
         cursor = self.db_api._get_cursor()
         try:
