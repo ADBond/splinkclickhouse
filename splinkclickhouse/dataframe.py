@@ -5,7 +5,6 @@ from splink.internals.splink_dataframe import SplinkDataFrame
 
 
 class ClickhouseDataFrame(SplinkDataFrame):
-
     @property
     def columns(self) -> list[InputColumn]:
         sql = self.db_api._information_schema_query(
@@ -17,6 +16,9 @@ class ClickhouseDataFrame(SplinkDataFrame):
 
         return [InputColumn(c, sqlglot_dialect_str="clickhouse") for c in cols]
 
+    def validate(self):
+        if not self.db_api.table_exists_in_database(self.physical_name):
+            raise ValueError(f"{self.physical_name} does not exist in the db provided.")
 
     def _drop_table_from_database(self, force_non_splink_table=False):
         self._check_drop_table_created_by_splink(force_non_splink_table)
