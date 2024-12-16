@@ -2,17 +2,15 @@ import logging
 
 import pandas as pd
 from clickhouse_connect.driver.client import Client
-from splink.internals.database_api import DatabaseAPI
 
 from ..custom_sql import days_since_epoch_sql
-from ..dialect import ClickhouseDialect
+from ..database_api import ClickhouseAPI
 from .dataframe import ClickhouseDataFrame
 
 logger = logging.getLogger(__name__)
 
 
-class ClickhouseServerAPI(DatabaseAPI[None]):
-    sql_dialect = ClickhouseDialect()
+class ClickhouseServerAPI(ClickhouseAPI):
 
     def __init__(
         self,

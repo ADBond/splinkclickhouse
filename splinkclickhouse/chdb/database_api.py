@@ -2,17 +2,15 @@ import logging
 
 import chdb.dbapi as chdb_dbapi
 import pandas as pd
-from splink.internals.database_api import DatabaseAPI
 
 from ..custom_sql import days_since_epoch_sql
-from ..dialect import ClickhouseDialect
+from ..database_api import ClickhouseAPI
 from .dataframe import ChDBDataFrame
 
 logger = logging.getLogger(__name__)
 
 
-class ChDBAPI(DatabaseAPI[None]):
-    sql_dialect = ClickhouseDialect()
+class ChDBAPI(ClickhouseAPI):
 
     def __init__(
         self,
