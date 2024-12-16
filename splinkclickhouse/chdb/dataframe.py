@@ -21,7 +21,7 @@ class ChDBDataFrame(ClickhouseDataFrame):
     @property
     def columns(self) -> list[InputColumn]:
         sql = self.db_api._information_schema_query(
-            "column_name", "columns", self.physical_name
+            "column_name", "columns", self.physical_name, self.db_api.database
         )
 
         cursor = self.db_api._get_cursor()

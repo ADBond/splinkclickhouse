@@ -9,6 +9,10 @@ from .dialect import ClickhouseDialect
 class ClickhouseAPI(DatabaseAPI[None]):
     sql_dialect = ClickhouseDialect()
 
+    @property
+    def database(self) -> Optional[str]:
+        return None
+
     def _information_schema_query(
         self,
         column_name: str,

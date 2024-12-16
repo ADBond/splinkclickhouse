@@ -47,7 +47,9 @@ class ChDBAPI(ClickhouseAPI):
         return ChDBDataFrame(templated_name, physical_name, self)
 
     def table_exists_in_database(self, table_name):
-        sql = self._information_schema_query("table_name", "tables", table_name)
+        sql = self._information_schema_query(
+            "table_name", "tables", table_name, self.database
+        )
 
         cursor = self._get_cursor()
         try:
