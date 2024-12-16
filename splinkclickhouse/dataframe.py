@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from splink.internals.input_column import InputColumn
 from splink.internals.splink_dataframe import SplinkDataFrame
 
