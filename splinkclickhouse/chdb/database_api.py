@@ -67,28 +67,15 @@ class ChDBAPI(ClickhouseAPI):
             self._reset_cursor(cursor)
         return table_name_row is not None
 
-    def _setup_for_execute_sql(self, sql: str, physical_name: str) -> str:
-        self.delete_table_from_database(physical_name)
-        sql = sql.replace("float8", "Float64")
-        # TODO: horrible hack
-        # can't seem to set union_default_mode for some reason
-        sql = sql.replace("UNION ALL", "__tmp__ua__")
-        sql = sql.replace("UNION", "UNION DISTINCT")
-        sql = sql.replace("__tmp__ua__", "UNION ALL")
-        # workaround for https://github.com/ClickHouse/ClickHouse/issues/61004
-        sql = sql.replace("count(*)", "count()")
-        sql = sql.replace("COUNT(*)", "COUNT()")
-        # TODO: very sorry for this
-        # avoids 'double selection' issue in creating __splink__block_counts
-        sql = sql.replace(", count_l, count_r,", ",")
-        # some excessively brittle SQL replacements to hand Clickhouse name-resolution
-        sql = sql.replace(
-            "SELECT DISTINCT r.representative",
-            "SELECT DISTINCT r.representative AS representative",
-        )
-
-        sql = f"CREATE TABLE {physical_name} ORDER BY tuple() AS {sql}"
-        return sql
+    @property
+    def _specific_replacements(self) -> list[tuple[str, str]]:
+        return [
+            # TODO: horrible hack
+            # can't seem to set union_default_mode for some reason
+            ("UNION ALL", "__tmp__ua__"),
+            ("UNION", "UNION DISTINCT"),
+            ("__tmp__ua__", "UNION ALL"),
+        ]
 
     def _execute_sql_against_backend(
         self, final_sql: str, templated_name: str = None, physical_name: str = None
