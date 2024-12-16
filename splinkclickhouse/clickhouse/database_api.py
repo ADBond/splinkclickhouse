@@ -6,7 +6,6 @@ from .dataframe import ClickhouseDataFrame
 
 
 class ClickhouseServerAPI(ClickhouseAPI):
-
     def __init__(
         self,
         client: Client,

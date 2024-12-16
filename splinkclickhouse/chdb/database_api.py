@@ -6,7 +6,6 @@ from .dataframe import ChDBDataFrame
 
 
 class ChDBAPI(ClickhouseAPI):
-
     def __init__(
         self,
         con: chdb_dbapi.Connection,
