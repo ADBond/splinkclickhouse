@@ -23,7 +23,7 @@ class ClickhouseServerAPI(ClickhouseAPI):
     def _table_registration(self, input, table_name) -> None:
         if isinstance(input, pd.DataFrame):
             sql = self._create_table_sql_from_pd_frame(input, table_name)
-            self.client.query(sql)
+            self._execute_sql_against_backend(sql)
             self.client.insert_df(table_name, input)
         elif isinstance(input, str):
             sql = (
@@ -31,7 +31,7 @@ class ClickhouseServerAPI(ClickhouseAPI):
                 "ORDER BY tuple() "
                 f"AS SELECT * FROM {input}"
             )
-            self.client.query(sql)
+            self._execute_sql_against_backend(sql)
         else:
             raise TypeError(
                 "ClickhouseServerAPI currently only accepts table names (str) "

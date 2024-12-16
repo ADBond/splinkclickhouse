@@ -37,17 +37,12 @@ class ChDBAPI(ClickhouseAPI):
             input[0]
         except KeyError:
             input = input.reset_index()
-        cursor = self._get_cursor()
         sql = (
             f"CREATE OR REPLACE TABLE {self._db_schema}.{table_name} "
             "ORDER BY tuple() "
             f"AS SELECT * FROM Python(input);"
         )
-        try:
-            cursor.execute(sql)
-        finally:
-            # whatever happens, close the cursor
-            self._reset_cursor(cursor)
+        self._execute_sql_against_backend(sql)
 
     def table_to_splink_dataframe(self, templated_name, physical_name):
         return ChDBDataFrame(templated_name, physical_name, self)
