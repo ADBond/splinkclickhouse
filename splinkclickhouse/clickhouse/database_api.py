@@ -22,7 +22,7 @@ class ClickhouseServerAPI(ClickhouseAPI):
 
     def _table_registration(self, input, table_name) -> None:
         if isinstance(input, pd.DataFrame):
-            sql = self._create_table_from_pandas_frame(input, table_name)
+            sql = self._create_table_sql_from_pd_frame(input, table_name)
             self.client.query(sql)
             self.client.insert_df(table_name, input)
         elif isinstance(input, str):
@@ -85,7 +85,7 @@ class ClickhouseServerAPI(ClickhouseAPI):
     def set_union_default_mode(self) -> None:
         self._execute_sql_against_backend("SET union_default_mode = 'DISTINCT'")
 
-    def _create_table_from_pandas_frame(self, df: pd.DataFrame, table_name: str) -> str:
+    def _create_table_sql_from_pd_frame(self, df: pd.DataFrame, table_name: str) -> str:
         sql = f"CREATE OR REPLACE TABLE {table_name} ("
 
         first_col = True
