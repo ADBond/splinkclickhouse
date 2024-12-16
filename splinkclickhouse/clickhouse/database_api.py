@@ -1,13 +1,8 @@
-import logging
-
 import pandas as pd
 from clickhouse_connect.driver.client import Client
 
-from ..custom_sql import days_since_epoch_sql
 from ..database_api import ClickhouseAPI
 from .dataframe import ClickhouseDataFrame
-
-logger = logging.getLogger(__name__)
 
 
 class ClickhouseServerAPI(ClickhouseAPI):

@@ -1,13 +1,8 @@
-import logging
-
 import chdb.dbapi as chdb_dbapi
 import pandas as pd
 
-from ..custom_sql import days_since_epoch_sql
 from ..database_api import ClickhouseAPI
 from .dataframe import ChDBDataFrame
-
-logger = logging.getLogger(__name__)
 
 
 class ChDBAPI(ClickhouseAPI):
