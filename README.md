@@ -35,8 +35,18 @@ conda install conda-forge::splinkclickhouse
 
 Note that the `conda` version will only be able to use [the Clickhouse server functionality](#clickhouse-server) as `chdb` is not currently available within `conda`.
 
+### Caveats
+
 While the package is in early development there will may be breaking changes in new versions without warning, although these _should_ only occur in new minor versions.
 Nevertheless if you depend on this package it is recommended to pin a version to avoid any disruption that this may cause.
+
+It is tested against Clickhouse server version 24.8.
+There have also been occasional tests against 24.11.
+Other versions are likely to function normally, but if you have a significantly different version, functionality may be affected.
+
+### Dev setup
+
+For dev setup see [dev.md](./dev.md).
 
 ## Use
 
