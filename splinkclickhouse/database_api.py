@@ -11,16 +11,13 @@ class ClickhouseAPI(DatabaseAPI[None]):
 
 
 
-    @abstractmethod
-    def _execute_utility_sql(self, sql: str) -> None:
-        pass
 
     # alias random -> rand. Need this function for comparison viewer
     def _create_random_function(self) -> None:
-        self._execute_utility_sql("CREATE FUNCTION IF NOT EXISTS random AS () -> rand()")
+        self._execute_sql_against_backend("CREATE FUNCTION IF NOT EXISTS random AS () -> rand()")
 
     def _register_custom_udfs(self) -> None:
-        self._execute_utility_sql(
+        self._execute_sql_against_backend(
             f"""
             CREATE FUNCTION IF NOT EXISTS
                 days_since_epoch AS

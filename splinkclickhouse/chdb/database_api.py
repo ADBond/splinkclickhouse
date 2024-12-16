@@ -112,10 +112,3 @@ class ChDBAPI(ClickhouseAPI):
         USE {self._db_schema};
         """
         self._execute_sql_against_backend(sql)
-
-    def _execute_utility_sql(self, sql: str) -> None:
-        cursor = self._get_cursor()
-        try:
-            cursor.execute(sql)
-        finally:
-            self._reset_cursor(cursor)

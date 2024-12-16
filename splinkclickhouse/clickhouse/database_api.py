@@ -80,13 +80,10 @@ class ClickhouseServerAPI(ClickhouseAPI):
     def database(self) -> str:
         return self.client.database or "default"
 
-    def _execute_utility_sql(self, sql: str) -> None:
-        self.client.query(sql)
-
     # Clickhouse can not handle a bare 'UNION' by default
     # we can set desired behaviour for the session by executing this
     def set_union_default_mode(self) -> None:
-        self._execute_utility_sql("SET union_default_mode = 'DISTINCT'")
+        self._execute_sql_against_backend("SET union_default_mode = 'DISTINCT'")
 
     def _create_table_from_pandas_frame(self, df: pd.DataFrame, table_name: str) -> str:
         sql = f"CREATE OR REPLACE TABLE {table_name} ("
