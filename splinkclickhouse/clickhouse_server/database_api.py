@@ -2,7 +2,7 @@ import pandas as pd
 from clickhouse_connect.driver.client import Client
 
 from ..database_api import ClickhouseAPI
-from .dataframe import ClickhouseDataFrame
+from .dataframe import ClickhouseServerDataFrame
 
 
 class ClickhouseServerAPI(ClickhouseAPI):
@@ -39,7 +39,7 @@ class ClickhouseServerAPI(ClickhouseAPI):
             )
 
     def table_to_splink_dataframe(self, templated_name, physical_name):
-        return ClickhouseDataFrame(templated_name, physical_name, self)
+        return ClickhouseServerDataFrame(templated_name, physical_name, self)
 
     def table_exists_in_database(self, table_name):
         sql = f"""

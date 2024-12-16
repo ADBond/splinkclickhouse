@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from .database_api import ClickhouseServerAPI
 
 
-class ClickhouseDataFrame(SplinkDataFrame):
+class ClickhouseServerDataFrame(SplinkDataFrame):
     db_api: ClickhouseServerAPI
 
     def __init__(self, df_name, physical_name, db_api):
