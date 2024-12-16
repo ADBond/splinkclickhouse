@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from typing import Optional
 
 from splink.internals.database_api import DatabaseAPI
@@ -12,6 +13,10 @@ class ClickhouseAPI(DatabaseAPI[None]):
     @property
     def database(self) -> Optional[str]:
         return None
+
+    @abstractmethod
+    def _get_results_from_backend(self, sql: str):
+        pass
 
     def _information_schema_query(
         self,

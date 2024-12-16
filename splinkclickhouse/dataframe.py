@@ -1,13 +1,21 @@
-from typing import TYPE_CHECKING
+from __future__ import annotations
 
 from splink.internals.input_column import InputColumn
 from splink.internals.splink_dataframe import SplinkDataFrame
 
-if TYPE_CHECKING:
-    from .database_api import ChDBAPI
-
 
 class ClickhouseDataFrame(SplinkDataFrame):
+
+    @property
+    def columns(self) -> list[InputColumn]:
+        sql = self.db_api._information_schema_query(
+            "column_name", "columns", self.physical_name, self.db_api.database
+        )
+        res = self.db_api._get_results_from_backend(sql)
+
+        cols = [r["column_name"] for r in res]
+
+        return [InputColumn(c, sqlglot_dialect_str="clickhouse") for c in cols]
 
 
     def _drop_table_from_database(self, force_non_splink_table=False):

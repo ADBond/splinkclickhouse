@@ -79,6 +79,15 @@ class ChDBAPI(ClickhouseAPI):
             self._reset_cursor(cursor)
         return None
 
+    def _get_results_from_backend(self, sql: str):
+        cursor = self._get_cursor()
+        try:
+            cursor.execute(sql)
+            res = cursor.fetchall()
+        finally:
+            self._reset_cursor(cursor)
+        return res
+
     def _get_cursor(self) -> chdb_dbapi.cursors.DictCursor:
         return self.con.cursor(chdb_dbapi.cursors.DictCursor)
 

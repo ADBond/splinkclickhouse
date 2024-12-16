@@ -54,6 +54,10 @@ class ClickhouseServerAPI(ClickhouseAPI):
     ):
         self.client.query(final_sql)
 
+    def _get_results_from_backend(self, sql: str):
+        res = self.client.query(sql).named_results()
+        return res
+
     @property
     def database(self) -> str:
         return self.client.database or "default"

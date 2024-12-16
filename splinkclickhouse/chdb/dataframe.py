@@ -18,21 +18,6 @@ class ChDBDataFrame(ClickhouseDataFrame):
         super().__init__(df_name, physical_name, db_api)
         self._db_schema = db_api._db_schema
 
-    @property
-    def columns(self) -> list[InputColumn]:
-        sql = self.db_api._information_schema_query(
-            "column_name", "columns", self.physical_name, self.db_api.database
-        )
-
-        cursor = self.db_api._get_cursor()
-        try:
-            cursor.execute(sql)
-            res = cursor.fetchall()
-        finally:
-            self.db_api._reset_cursor(cursor)
-        cols = [r["column_name"] for r in res]
-
-        return [InputColumn(c, sqlglot_dialect_str="clickhouse") for c in cols]
 
     def validate(self):
         if not self.db_api.table_exists_in_database(self.physical_name):
