@@ -45,11 +45,55 @@ jobs:
       - name: Run tests
         run: |
           uv run pytest -vm ${{ matrix.test-set }} --cov=splinkclickhouse --cov-branch tests
-          mv .coverage .coverage_${{ matrix.test-set }}
+          mv .coverage .coverage.${{ matrix.test-set }}
+
+      - name: Check directory contents
+        run: ls -alhR .
 
       - uses: actions/upload-artifact@v4
         with:
           name: coverage_${{ matrix.test-set }}
-          path: .coverage_${{ matrix.test-set }}
+          path: .coverage.${{ matrix.test-set }}
           if-no-files-found: error
+          include-hidden-files: true
   
+  combine-and-upload-coverage:
+    runs-on: ubuntu-latest
+    needs: test
+    name: Combine coverage data and upload to Codecov
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install Python 3.10
+        run: uv python install 3.10
+  
+      - name: Install dependencies
+        run: uv sync -p 3.10
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: './coverage'
+          pattern: 'coverage_*'
+          merge-multiple: true
+
+      - name: Check directory contents
+        run: ls -alhR ./coverage
+      
+      - name: Combine coverage data and create report
+        run: |
+          uv run coverage combine ./coverage
+          uv run coverage xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+    
