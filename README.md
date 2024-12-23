@@ -35,20 +35,30 @@ conda install conda-forge::splinkclickhouse
 
 Note that the `conda` version will only be able to use [the Clickhouse server functionality](#clickhouse-server) as `chdb` is not currently available within `conda`.
 
+### Caveats
+
 While the package is in early development there will may be breaking changes in new versions without warning, although these _should_ only occur in new minor versions.
 Nevertheless if you depend on this package it is recommended to pin a version to avoid any disruption that this may cause.
+
+It is tested against Clickhouse server version 24.8.
+There have also been occasional tests against 24.11.
+Other versions are likely to function normally, but if you have a significantly different version, functionality may be affected.
+
+### Dev setup
+
+For dev setup see [dev.md](./dev.md).
 
 ## Use
 
 ### Clickhouse server
 
-Import `ClickhouseAPI`, which accepts a `clickhouse_connect` client, configured with attributes relevant for your connection:
+Import `ClickhouseServerAPI`, which accepts a `clickhouse_connect` client, configured with attributes relevant for your connection:
 ```python
 import clickhouse_connect
 import splink.comparison_library as cl
 from splink import Linker, SettingsCreator, block_on, splink_datasets
 
-from splinkclickhouse import ClickhouseAPI
+from splinkclickhouse import ClickhouseServerAPI
 
 df = splink_datasets.fake_1000
 
@@ -68,7 +78,7 @@ client = clickhouse_connect.get_client(
     database=db_name,
 )
 
-db_api = ClickhouseAPI(client)
+db_api = ClickhouseServerAPI(client)
 
 # can have at most one tf-adjusted comparison, see caveats below
 settings = SettingsCreator(
@@ -238,8 +248,8 @@ import splink.comparison_level as cl
 first_name_comparison = cl.DamerauLevenshteinAtThresholds("NULLIF(first_name, '')")
 ```
 
-### `ClickhouseAPI` pandas registration
+### `ClickhouseServerAPI` pandas registration
 
-`ClickhouseAPI` will allow registration of pandas dataframes, by inferring the types of columns. It currently only does this for string, integer, and float columns, and will always make them `Nullable`.
+`ClickhouseServerAPI` will allow registration of pandas dataframes, by inferring the types of columns. It currently only does this for string, integer, and float columns, and will always make them `Nullable`.
 
 If you require other data types, or more fine-grained control, it is recommended to import the data into Clickhouse yourself, and then pass the table name (as a string) to the `Linker` instead.

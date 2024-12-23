@@ -1,19 +1,11 @@
-import logging
-
 import chdb.dbapi as chdb_dbapi
 import pandas as pd
-from splink.internals.database_api import DatabaseAPI
 
-from ..custom_sql import days_since_epoch_sql
-from ..dialect import ClickhouseDialect
+from ..database_api import ClickhouseAPI
 from .dataframe import ChDBDataFrame
 
-logger = logging.getLogger(__name__)
 
-
-class ChDBAPI(DatabaseAPI[None]):
-    sql_dialect = ClickhouseDialect()
-
+class ChDBAPI(ClickhouseAPI):
     def __init__(
         self,
         con: chdb_dbapi.Connection,
@@ -44,27 +36,20 @@ class ChDBAPI(DatabaseAPI[None]):
             input[0]
         except KeyError:
             input = input.reset_index()
-        cursor = self._get_cursor()
         sql = (
             f"CREATE OR REPLACE TABLE {self._db_schema}.{table_name} "
             "ORDER BY tuple() "
             f"AS SELECT * FROM Python(input);"
         )
-        try:
-            cursor.execute(sql)
-        finally:
-            # whatever happens, close the cursor
-            self._reset_cursor(cursor)
+        self._execute_sql_against_backend(sql)
 
     def table_to_splink_dataframe(self, templated_name, physical_name):
         return ChDBDataFrame(templated_name, physical_name, self)
 
     def table_exists_in_database(self, table_name):
-        sql = f"""
-        SELECT table_name
-        FROM information_schema.tables
-        WHERE table_name = '{table_name}';
-        """
+        sql = self._information_schema_query(
+            "table_name", "tables", table_name, self.database
+        )
 
         cursor = self._get_cursor()
         try:
@@ -74,28 +59,15 @@ class ChDBAPI(DatabaseAPI[None]):
             self._reset_cursor(cursor)
         return table_name_row is not None
 
-    def _setup_for_execute_sql(self, sql: str, physical_name: str) -> str:
-        self.delete_table_from_database(physical_name)
-        sql = sql.replace("float8", "Float64")
-        # TODO: horrible hack
-        # can't seem to set union_default_mode for some reason
-        sql = sql.replace("UNION ALL", "__tmp__ua__")
-        sql = sql.replace("UNION", "UNION DISTINCT")
-        sql = sql.replace("__tmp__ua__", "UNION ALL")
-        # workaround for https://github.com/ClickHouse/ClickHouse/issues/61004
-        sql = sql.replace("count(*)", "count()")
-        sql = sql.replace("COUNT(*)", "COUNT()")
-        # TODO: very sorry for this
-        # avoids 'double selection' issue in creating __splink__block_counts
-        sql = sql.replace(", count_l, count_r,", ",")
-        # some excessively brittle SQL replacements to hand Clickhouse name-resolution
-        sql = sql.replace(
-            "SELECT DISTINCT r.representative",
-            "SELECT DISTINCT r.representative AS representative",
-        )
-
-        sql = f"CREATE TABLE {physical_name} ORDER BY tuple() AS {sql}"
-        return sql
+    @property
+    def _specific_replacements(self) -> list[tuple[str, str]]:
+        return [
+            # TODO: horrible hack
+            # can't seem to set union_default_mode for some reason
+            ("UNION ALL", "__tmp__ua__"),
+            ("UNION", "UNION DISTINCT"),
+            ("__tmp__ua__", "UNION ALL"),
+        ]
 
     def _execute_sql_against_backend(
         self, final_sql: str, templated_name: str = None, physical_name: str = None
@@ -106,6 +78,15 @@ class ChDBAPI(DatabaseAPI[None]):
         finally:
             self._reset_cursor(cursor)
         return None
+
+    def _get_results_from_backend(self, sql: str):
+        cursor = self._get_cursor()
+        try:
+            cursor.execute(sql)
+            res = cursor.fetchall()
+        finally:
+            self._reset_cursor(cursor)
+        return res
 
     def _get_cursor(self) -> chdb_dbapi.cursors.DictCursor:
         return self.con.cursor(chdb_dbapi.cursors.DictCursor)
@@ -119,26 +100,3 @@ class ChDBAPI(DatabaseAPI[None]):
         USE {self._db_schema};
         """
         self._execute_sql_against_backend(sql)
-
-    # alias random -> rand. Need this function for comparison viewer
-    def _create_random_function(self) -> None:
-        sql = "CREATE FUNCTION IF NOT EXISTS random AS () -> rand()"
-
-        cursor = self._get_cursor()
-        try:
-            cursor.execute(sql)
-        finally:
-            self._reset_cursor(cursor)
-
-    def _register_custom_udfs(self) -> None:
-        sql = f"""
-        CREATE FUNCTION IF NOT EXISTS
-            days_since_epoch AS
-            (date_string) -> {days_since_epoch_sql}
-        """
-
-        cursor = self._get_cursor()
-        try:
-            cursor.execute(sql)
-        finally:
-            self._reset_cursor(cursor)

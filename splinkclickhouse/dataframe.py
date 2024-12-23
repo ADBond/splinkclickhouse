@@ -1,34 +1,18 @@
-from __future__ import annotations
-
-import logging
-from typing import TYPE_CHECKING
-
 from splink.internals.input_column import InputColumn
 from splink.internals.splink_dataframe import SplinkDataFrame
 
-logger = logging.getLogger(__name__)
-if TYPE_CHECKING:
-    from .database_api import ClickhouseAPI
-
 
 class ClickhouseDataFrame(SplinkDataFrame):
-    db_api: ClickhouseAPI
-
     def __init__(self, df_name, physical_name, db_api):
         super().__init__(df_name, physical_name, db_api)
 
     @property
     def columns(self) -> list[InputColumn]:
-        client = self.db_api.client
+        sql = self.db_api._information_schema_query(
+            "column_name", "columns", self.physical_name, self.db_api.database
+        )
+        res = self.db_api._get_results_from_backend(sql)
 
-        sql = f"""
-        SELECT column_name
-        FROM information_schema.columns
-        WHERE table_name = '{self.physical_name}'
-        AND table_schema = '{self.db_api.database}'
-        """
-
-        res = client.query(sql).named_results()
         cols = [r["column_name"] for r in res]
 
         return [InputColumn(c, sqlglot_dialect_str="clickhouse") for c in cols]
@@ -48,7 +32,6 @@ class ClickhouseDataFrame(SplinkDataFrame):
         """
         if limit:
             sql += f" LIMIT {limit}"
-        sql += ";"
 
-        res = self.db_api.client.query(sql)
-        return list(res.named_results())
+        res = self.db_api._get_results_from_backend(sql)
+        return list(res)

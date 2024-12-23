@@ -6,7 +6,7 @@ from chdb import dbapi
 from pytest import fixture, mark, param
 from splink import ColumnExpression, SettingsCreator, block_on, splink_datasets
 
-from splinkclickhouse import ChDBAPI, ClickhouseAPI
+from splinkclickhouse import ChDBAPI, ClickhouseServerAPI
 
 df = splink_datasets.fake_1000
 
@@ -73,7 +73,7 @@ def clickhouse_api_factory():
             database=db_name,
         )
 
-        yield lambda: ClickhouseAPI(client)
+        yield lambda: ClickhouseServerAPI(client)
         client.close()
         default_client.command(f"DROP DATABASE {db_name}")
         default_client.close()

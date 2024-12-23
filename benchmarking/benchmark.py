@@ -11,7 +11,7 @@ from splink.blocking_analysis import (
 )
 from utils.timer import MultiTimer, Timer
 
-from splinkclickhouse import ChDBAPI, ClickhouseAPI
+from splinkclickhouse import ChDBAPI, ClickhouseServerAPI
 
 # settings for something fake_1000-shaped
 config_fake_1000 = {
@@ -101,7 +101,7 @@ def timed_full_run(data: str, config: dict, backend_to_use: str) -> Timer:
             username="splinkognito",
             password="splink123!",
         )
-        db_api = ClickhouseAPI(client)
+        db_api = ClickhouseServerAPI(client)
     elif backend_to_use == "duckdb":
         db_api = DuckDBAPI()
     else:

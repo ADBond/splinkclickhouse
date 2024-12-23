@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING
 from ..dataframe import ClickhouseDataFrame
 
 if TYPE_CHECKING:
-    from .database_api import ChDBAPI
+    from .database_api import ClickhouseServerAPI
 
 
-class ChDBDataFrame(ClickhouseDataFrame):
-    db_api: ChDBAPI
+class ClickhouseServerDataFrame(ClickhouseDataFrame):
+    db_api: ClickhouseServerAPI
