@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2024-12-23
+
 ### Changed
 
 - Renamed `ClickhouseAPI` and `ClickhouseDataFrame` to `ClickhouseServerAPI` and `ClickhouseServerDataFrame` respectively, and `splinkclickhouse.clickhouse` to `splinkclickhouse.clickhouse_server` [#54](https://github.com/ADBond/splinkclickhouse/pull/54).
@@ -116,7 +118,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Basic working version of package with api for `chdb`
 
-[Unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.4...HEAD
+[Unreleased]: https://github.com/ADBond/splinkclickhouse/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.4...v0.4.0
 [0.3.4]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/ADBond/splinkclickhouse/compare/v0.3.1...v0.3.2
