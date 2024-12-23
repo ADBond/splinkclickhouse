@@ -1,4 +1,4 @@
-name: Run tests - Clickhouse
+name: Run tests
 on:
   pull_request:
     branches:
@@ -24,7 +24,8 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
-    name: Run tests with Python ${{ matrix.python-version }}
+        test-set: ["core", "chdb_no_core", "clickhouse_no_core"]
+    name: Run ${{ matrix.test-set }} tests with Python ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v4
 
@@ -41,5 +42,14 @@ jobs:
       - name: Install dependencies
         run: uv sync -p ${{ matrix.python-version }}
 
-      - name: Run chdb tests
-        run: uv run pytest -vm clickhouse_no_core tests/
+      - name: Run tests
+        run: |
+          uv run pytest -vm ${{ matrix.test-set }} --cov=splinkclickhouse --cov-branch tests
+          mv .coverage .coverage_${{ matrix.test-set }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage_${{ matrix.test-set }}
+          path: .coverage_${{ matrix.test-set }}
+          if-no-files-found: error
+  
