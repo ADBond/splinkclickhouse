@@ -1,4 +1,8 @@
 site_name: Splinkclickhouse Documentation
 nav:
   - Home: index.md
+  - API:
+    - Comparison Library: api/comparison_library.md
 theme: readthedocs
+plugins:
+  - mkdocstrings
