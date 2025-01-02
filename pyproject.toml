@@ -59,13 +59,14 @@ dev-dependencies = [
     "mypy == 1.11.2",
 
     "pytest == 8.3.3",
-    "pytest-cov>=6.0.0",
-
-    # probably not ideal having this doubled here,
-    # but saves having to pass --all_extras for 'uv run'
-    "chdb >= 2.0.1",
 ]
 package = true
+
+[dependency-groups]
+chdb = [
+    "chdb>=2.0.1",
+]
+
 
 [tool.hatch.build.targets.sdist]
 # opt-in to build
