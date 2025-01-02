@@ -213,3 +213,19 @@ def input_nodes_with_name_arrays():
             ),
         }
     )
+
+
+@fixture
+def input_nodes_with_epoch_datetype_dobs():
+    n_rows = 1000
+    dob_range = np.random.randint(low=-150, high=200, size=n_rows)
+    return pd.DataFrame(
+        {
+            "unique_id": range(n_rows),
+            "name": np.random.choice(
+                _NAMES,
+                size=n_rows,
+            ),
+            "dob_days_since_epoch": np.random.choice(dob_range, n_rows),
+        }
+    )
