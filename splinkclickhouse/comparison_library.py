@@ -291,20 +291,18 @@ class DateOfBirthComparison(SplinkDateOfBirthComparison):
             ).configure(label_for_charts="DamerauLevenshtein distance <= 1")
         )
 
-        if self.datetime_thresholds:
-            for threshold, metric in zip(
-                self.datetime_thresholds, self.datetime_metrics
-            ):
-                levels.append(
-                    cll_ch.AbsoluteDateDifferenceLevel(
-                        self.col_expression,
-                        threshold=threshold,
-                        metric=metric,
-                        input_is_string=self.input_is_string,
-                    ).configure(
-                        label_for_charts=f"Abs date difference <= {threshold} {metric}"
-                    )
+        # we always have at least one threshold+metric, fixed in super().__init__
+        for threshold, metric in zip(self.datetime_thresholds, self.datetime_metrics):
+            levels.append(
+                cll_ch.AbsoluteDateDifferenceLevel(
+                    self.col_expression,
+                    threshold=threshold,
+                    metric=metric,
+                    input_is_string=self.input_is_string,
+                ).configure(
+                    label_for_charts=f"Abs date difference <= {threshold} {metric}"
                 )
+            )
 
         levels.append(cll.ElseLevel())
         return levels
