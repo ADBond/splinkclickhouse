@@ -50,7 +50,7 @@ jobs:
       - name: Check directory contents
         run: ls -alhR .
 
-      - if: ${{ matrix.python-version }} == '3.12'
+      - if: ${{ matrix.python-version  == '3.12' }}
         uses: actions/upload-artifact@v4
         with:
           name: coverage_${{ matrix.test-set }}
