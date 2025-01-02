@@ -116,7 +116,6 @@ class ExactMatchAtSubstringSizes(ComparisonCreator):
 
         Args:
             col_name (str): The name of the column to compare.
-            long_col (str): The name of the longitude column to compare
             substring_size_or_sizes (iterable[int] | int): The size(s) of the substrings
                 to compare, taken from the start of the string.
                 Default [4, 3, 2]
@@ -219,7 +218,6 @@ class DateOfBirthComparison(SplinkDateOfBirthComparison):
             "year",
             "year",
         ),
-        datetime_format: str = None,
         invalid_dates_as_null: bool = True,
     ):
         """
@@ -239,8 +237,6 @@ class DateOfBirthComparison(SplinkDateOfBirthComparison):
                 Numeric thresholds for date differences. Defaults to [1, 1, 10].
             datetime_metrics (Union[DateMetricType, List[DateMetricType]], optional):
                 Metrics for date differences. Defaults to ["month", "year", "year"].
-            term_frequency_adjustments (bool, optional): Whether to apply term frequency
-                adjustments. Defaults to False.
             invalid_dates_as_null (bool, optional): If True, treat invalid dates as null
                 as opposed to allowing e.g. an exact or levenshtein match where one side
                 or both are an invalid date.  Only used if input is a string.  Defaults
