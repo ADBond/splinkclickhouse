@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from typing import Optional
 
+import pandas as pd
 from splink.internals.database_api import DatabaseAPI
 
 from .custom_sql import days_since_epoch_sql
@@ -17,6 +18,13 @@ class ClickhouseAPI(DatabaseAPI[None]):
     @abstractmethod
     def _get_results_from_backend(self, sql: str):
         pass
+
+    def _coerce_input_to_pd_if_needed(self, input):
+        if isinstance(input, dict):
+            input = pd.DataFrame(input)
+        elif isinstance(input, list):
+            input = pd.DataFrame.from_records(input)
+        return input
 
     def _information_schema_query(
         self,

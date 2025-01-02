@@ -1,5 +1,4 @@
 import chdb.dbapi as chdb_dbapi
-import pandas as pd
 
 from ..database_api import ClickhouseAPI
 from .dataframe import ChDBDataFrame
@@ -23,10 +22,7 @@ class ChDBAPI(ClickhouseAPI):
             self._register_custom_udfs()
 
     def _table_registration(self, input, table_name):
-        if isinstance(input, dict):
-            input = pd.DataFrame(input)
-        elif isinstance(input, list):
-            input = pd.DataFrame.from_records(input)
+        input = self._coerce_input_to_pd_if_needed(input)
 
         # chdb currently needs pandas indices to start at 0
         # see https://github.com/chdb-io/chdb/issues/282

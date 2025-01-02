@@ -20,6 +20,8 @@ class ClickhouseServerAPI(ClickhouseAPI):
             self._register_custom_udfs()
 
     def _table_registration(self, input, table_name) -> None:
+        input = self._coerce_input_to_pd_if_needed(input)
+
         if isinstance(input, pd.DataFrame):
             sql = self._create_table_sql_from_pd_frame(input, table_name)
             self._execute_sql_against_backend(sql)
