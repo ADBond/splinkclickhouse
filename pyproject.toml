@@ -52,7 +52,11 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv]
-dev-dependencies = [
+package = true
+default-groups = ["dev", "chdb"]
+
+[dependency-groups]
+dev = [
     "pyarrow >= 17.0.0",
 
     "ruff == 0.6.4",
@@ -60,9 +64,6 @@ dev-dependencies = [
 
     "pytest == 8.3.3",
 ]
-package = true
-
-[dependency-groups]
 chdb = [
     "chdb>=2.0.1",
 ]
