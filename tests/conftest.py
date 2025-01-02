@@ -93,6 +93,7 @@ def clickhouse_api_factory():
     except ModuleNotFoundError:
         yield None
 
+
 @fixture(
     params=[
         param("chdb", marks=[mark.chdb, mark.chdb_no_core]),
