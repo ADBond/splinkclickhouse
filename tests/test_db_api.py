@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-def test_register_pandas_types(api_info, fake_1000, fake_1000_settings_factory):
+def test_register_pandas_types(api_info):
     db_api = api_info["db_api_factory"]()
     df = pd.DataFrame(
         {
@@ -18,4 +18,27 @@ def test_register_pandas_types(api_info, fake_1000, fake_1000_settings_factory):
             "date_int": [-1_242, 765, 3_912],
         }
     )
-    db_api.register_table(df, "my_input_table")
+    db_api.register_table(df, "my_pandas_input_table")
+
+
+def test_register_records_list(api_info):
+    db_api = api_info["db_api_factory"]()
+
+    records_list = [
+        {"id": 1, "name": "one"},
+        {"id": 2, "name": "two"},
+        {"id": 3, "name": "three"},
+    ]
+
+    db_api.register_table(records_list, "my_list_input_table")
+
+
+def test_register_data_dict(api_info):
+    db_api = api_info["db_api_factory"]()
+
+    records_dict = {
+        "id": [1, 2, 3],
+        "name": ["a", "b", "c"],
+    }
+
+    db_api.register_table(records_dict, "my_dict_input_table")
