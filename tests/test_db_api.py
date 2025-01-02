@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-import splink.comparison_library as cl
-from splink import Linker, SettingsCreator
 
 
 def test_register_pandas_types(api_info, fake_1000, fake_1000_settings_factory):
@@ -20,10 +18,4 @@ def test_register_pandas_types(api_info, fake_1000, fake_1000_settings_factory):
             "date_int": [-1_242, 765, 3_912],
         }
     )
-    settings = SettingsCreator(
-        link_type="dedupe_only",
-        comparisons=[
-            cl.ExactMatch("name"),
-        ],
-    )
-    Linker(df, settings, db_api)
+    db_api.register_table(df, "my_input_table")
