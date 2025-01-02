@@ -1,6 +1,7 @@
 site_name: Splinkclickhouse Documentation
 nav:
   - Home: index.md
+  - Quickstart: quickstart.md
   - API:
     - Comparison and Comparison Level Library: api/libraries.md
 theme: readthedocs
@@ -14,6 +15,4 @@ plugins:
             show_root_toc_entry: false
             show_bases: false
             merge_init_into_class: true
-            parameter_headings: true
             show_source: false
-
