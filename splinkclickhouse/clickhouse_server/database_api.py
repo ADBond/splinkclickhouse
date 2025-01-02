@@ -86,6 +86,8 @@ class ClickhouseServerAPI(ClickhouseAPI):
                 sql += f"{column_name} Array(String)"
             elif pd.api.types.is_string_dtype(col_type):
                 sql += f"{column_name} Nullable(String)"
+            elif pd.api.types.is_datetime64_dtype(col_type):
+                sql += f"{column_name} Nullable(DateTime64)"
             else:
                 raise ValueError(f"Unknown data type {col_type}")
 
