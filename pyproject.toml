@@ -68,6 +68,9 @@ dev = [
 chdb = [
     "chdb>=2.0.1",
 ]
+docs = [
+    "mkdocs>=1.6.1",
+]
 
 
 [tool.hatch.build.targets.sdist]
