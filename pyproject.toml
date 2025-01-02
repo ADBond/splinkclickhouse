@@ -53,10 +53,14 @@ build-backend = "hatchling.build"
 
 [tool.uv]
 dev-dependencies = [
+    "pyarrow >= 17.0.0",
+
     "ruff == 0.6.4",
     "mypy == 1.11.2",
+
     "pytest == 8.3.3",
-    "pyarrow >= 17.0.0",
+    "pytest-cov>=6.0.0",
+
     # probably not ideal having this doubled here,
     # but saves having to pass --all_extras for 'uv run'
     "chdb >= 2.0.1",
