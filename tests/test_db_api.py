@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from pytest import raises
 
 
 def test_register_pandas_types(api_info):
@@ -42,3 +43,9 @@ def test_register_data_dict(api_info):
     }
 
     db_api.register_table(records_dict, "my_dict_input_table")
+
+
+def test_nice_error_bad_register_type(api_info):
+    db_api = api_info["db_api_factory"]()
+    with raises(TypeError):
+        db_api.register_table(3, "the_number_three")
