@@ -113,6 +113,26 @@ def test_clickhouse_date_of_birth_comparison(api_info, fake_1000):
     linker.inference.predict()
 
 
+def test_clickhouse_date_of_birth_comparison_preprocessed_dob(
+    api_info, input_nodes_with_epoch_datetype_dobs
+):
+    db_api = api_info["db_api_factory"]()
+
+    settings = SettingsCreator(
+        link_type="dedupe_only",
+        comparisons=[
+            cl.ExactMatch("name"),
+            cl_ch.DateOfBirthComparison(
+                "dob_days_since_epoch",
+                input_is_string=False,
+            ),
+        ],
+    )
+
+    linker = Linker(input_nodes_with_epoch_datetype_dobs, settings, db_api)
+    linker.inference.predict()
+
+
 # TODO: for now there's not a straightforward way (afaik) to get an array column
 # into chdb. So for the time being we test only clickhouse server version
 @mark.clickhouse
