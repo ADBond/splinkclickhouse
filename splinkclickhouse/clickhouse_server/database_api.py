@@ -26,13 +26,6 @@ class ClickhouseServerAPI(ClickhouseAPI):
             sql = self._create_table_sql_from_pd_frame(input, table_name)
             self._execute_sql_against_backend(sql)
             self.client.insert_df(table_name, input)
-        elif isinstance(input, str):
-            sql = (
-                f"CREATE OR REPLACE TABLE {table_name} "
-                "ORDER BY tuple() "
-                f"AS SELECT * FROM {input}"
-            )
-            self._execute_sql_against_backend(sql)
         else:
             raise TypeError(
                 "ClickhouseServerAPI currently only accepts table names (str) "
