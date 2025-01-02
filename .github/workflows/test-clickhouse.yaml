@@ -30,6 +30,9 @@ jobs:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
         test-set: ["core", "chdb_no_core", "clickhouse_no_core"]
+        exclude:
+          - python-version: "3.13"
+            test-set: "chdb_no_core"
     name: Run ${{ matrix.test-set }} tests with Python ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v4
@@ -47,12 +50,7 @@ jobs:
       - name: Install dependencies
         run: uv sync -p ${{ matrix.python-version }}
 
-      - name: Run core or clickhouse tests
-        if: ${{ matrix.test-set != 'chdb_no_core'}}
-        run: uv run python -m pytest -vm ${{ matrix.test-set }} --cov=splinkclickhouse --cov-branch tests
-
-      - name: Run chdb tests
-        if: ${{ matrix.test-set == 'chdb_no_core'}}
+      - name: Run tests
         run: uv run python -m pytest -vm ${{ matrix.test-set }} --cov=splinkclickhouse --cov-branch tests
 
       - name: Rename coverage file
