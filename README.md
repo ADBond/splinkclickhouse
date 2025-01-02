@@ -1,5 +1,6 @@
 [![pypi](https://img.shields.io/github/v/release/adbond/splinkclickhouse?include_prereleases)](https://pypi.org/project/splinkclickhouse/#history)
 [![Downloads](https://static.pepy.tech/badge/splinkclickhouse)](https://pepy.tech/project/splinkclickhouse)
+[![codecov](https://codecov.io/github/adbond/splinkclickhouse/graph/badge.svg?token=NUHM8IPJL4)](https://codecov.io/github/adbond/splinkclickhouse)
 
 # `splinkclickhouse`
 
