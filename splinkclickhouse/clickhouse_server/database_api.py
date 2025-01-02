@@ -78,8 +78,10 @@ class ClickhouseServerAPI(ClickhouseAPI):
             col_type = column.dtype
             first_col = False
 
-            if pd.api.types.is_integer_dtype(col_type):
+            if pd.api.types.is_unsigned_integer_dtype(col_type):
                 sql += f"{column_name} Nullable(UInt32)"
+            elif pd.api.types.is_integer_dtype(col_type):
+                sql += f"{column_name} Nullable(Int32)"
             elif pd.api.types.is_float_dtype(col_type):
                 sql += f"{column_name} Nullable(Float64)"
             elif pd.api.types.is_list_like(column[0]):
