@@ -2,7 +2,18 @@ site_name: Splinkclickhouse Documentation
 nav:
   - Home: index.md
   - API:
-    - Comparison Library: api/comparison_library.md
+    - Comparison and Comparison Level Library: api/libraries.md
 theme: readthedocs
 plugins:
-  - mkdocstrings
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            heading_level: 3
+            show_root_toc_entry: false
+            show_bases: false
+            merge_init_into_class: true
+            parameter_headings: true
+            show_source: false
+
