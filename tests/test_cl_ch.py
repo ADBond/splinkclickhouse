@@ -54,14 +54,20 @@ def test_cant_use_distance_in_km_level_with_other_dialect(input_nodes_with_lat_l
         Linker(input_nodes_with_lat_longs, settings, db_api)
 
 
-def test_exact_match_substring_at_sizes(api_info, input_nodes_with_lat_longs):
+@mark.parametrize("include_full_exact_match", [True, False])
+def test_exact_match_substring_at_sizes(
+    api_info, input_nodes_with_lat_longs, include_full_exact_match
+):
     db_api = api_info["db_api_factory"]()
 
     settings = SettingsCreator(
         link_type="dedupe_only",
         comparisons=[
             cl.ExactMatch("name"),
-            cl_ch.ExactMatchAtSubstringSizes("geohashEncode(longitude, latitude)"),
+            cl_ch.ExactMatchAtSubstringSizes(
+                "geohashEncode(longitude, latitude)",
+                include_full_exact_match=include_full_exact_match,
+            ),
         ],
     )
 
