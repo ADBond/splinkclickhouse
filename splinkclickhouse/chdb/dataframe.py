@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from ..dataframe import ClickhouseDataFrame
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from .database_api import ChDBAPI
 
 

@@ -7,8 +7,15 @@ import splinkclickhouse.comparison_level_library as cll_ch
 from splinkclickhouse.column_expression import ColumnExpression
 
 
-def test_distance_in_km_level(api_info, input_nodes_with_lat_longs):
+@mark.parametrize("not_null", [True, False])
+def test_distance_in_km_level(api_info, input_nodes_with_lat_longs, not_null):
     db_api = api_info["db_api_factory"]()
+
+    null_level_list = (
+        []
+        if not_null
+        else [cll.Or(cll.NullLevel("latitude"), cll.NullLevel("longitude"))]
+    )
 
     settings = SettingsCreator(
         link_type="dedupe_only",
@@ -16,12 +23,22 @@ def test_distance_in_km_level(api_info, input_nodes_with_lat_longs):
             cl.ExactMatch("name"),
             cl.CustomComparison(
                 comparison_levels=[
-                    cll.Or(cll.NullLevel("latitude"), cll.NullLevel("longitude")),
-                    cll_ch.DistanceInKMLevel("latitude", "longitude", 10),
-                    cll_ch.DistanceInKMLevel("latitude", "longitude", 50),
-                    cll_ch.DistanceInKMLevel("latitude", "longitude", 100),
-                    cll_ch.DistanceInKMLevel("latitude", "longitude", 200),
-                    cll_ch.DistanceInKMLevel("latitude", "longitude", 500),
+                    *null_level_list,
+                    cll_ch.DistanceInKMLevel(
+                        "latitude", "longitude", 10, not_null=not_null
+                    ),
+                    cll_ch.DistanceInKMLevel(
+                        "latitude", "longitude", 50, not_null=not_null
+                    ),
+                    cll_ch.DistanceInKMLevel(
+                        "latitude", "longitude", 100, not_null=not_null
+                    ),
+                    cll_ch.DistanceInKMLevel(
+                        "latitude", "longitude", 200, not_null=not_null
+                    ),
+                    cll_ch.DistanceInKMLevel(
+                        "latitude", "longitude", 500, not_null=not_null
+                    ),
                     cll.ElseLevel(),
                 ],
                 output_column_name="latlong",

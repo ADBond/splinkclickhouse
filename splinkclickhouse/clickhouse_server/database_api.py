@@ -20,17 +20,12 @@ class ClickhouseServerAPI(ClickhouseAPI):
             self._register_custom_udfs()
 
     def _table_registration(self, input, table_name) -> None:
+        input = self._coerce_input_to_pd_if_needed(input)
+
         if isinstance(input, pd.DataFrame):
             sql = self._create_table_sql_from_pd_frame(input, table_name)
             self._execute_sql_against_backend(sql)
             self.client.insert_df(table_name, input)
-        elif isinstance(input, str):
-            sql = (
-                f"CREATE OR REPLACE TABLE {table_name} "
-                "ORDER BY tuple() "
-                f"AS SELECT * FROM {input}"
-            )
-            self._execute_sql_against_backend(sql)
         else:
             raise TypeError(
                 "ClickhouseServerAPI currently only accepts table names (str) "
@@ -78,14 +73,18 @@ class ClickhouseServerAPI(ClickhouseAPI):
             col_type = column.dtype
             first_col = False
 
-            if pd.api.types.is_integer_dtype(col_type):
+            if pd.api.types.is_unsigned_integer_dtype(col_type):
                 sql += f"{column_name} Nullable(UInt32)"
+            elif pd.api.types.is_integer_dtype(col_type):
+                sql += f"{column_name} Nullable(Int32)"
             elif pd.api.types.is_float_dtype(col_type):
                 sql += f"{column_name} Nullable(Float64)"
             elif pd.api.types.is_list_like(column[0]):
                 sql += f"{column_name} Array(String)"
             elif pd.api.types.is_string_dtype(col_type):
                 sql += f"{column_name} Nullable(String)"
+            elif pd.api.types.is_datetime64_dtype(col_type):
+                sql += f"{column_name} Nullable(DateTime64)"
             else:
                 raise ValueError(f"Unknown data type {col_type}")
 

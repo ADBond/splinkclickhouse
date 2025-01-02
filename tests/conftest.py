@@ -184,6 +184,13 @@ def input_nodes_with_lat_longs():
     n_rows = 1_000
     lats = np.random.uniform(low=lat_low, high=lat_high, size=n_rows)
     longs = np.random.uniform(low=long_low, high=long_high, size=n_rows)
+
+    # introduce a few nulls to check they do not interfere
+    lats[10] = None
+    lats[45] = None
+    longs[45] = None
+    longs[30] = None
+
     # also include some names so we have a second comparison
     names = np.random.choice(
         _NAMES,
@@ -211,5 +218,21 @@ def input_nodes_with_name_arrays():
                 _NAMES,
                 size=n_rows,
             ),
+        }
+    )
+
+
+@fixture
+def input_nodes_with_epoch_datetype_dobs():
+    n_rows = 1000
+    dob_range = np.random.randint(low=-150, high=200, size=n_rows)
+    return pd.DataFrame(
+        {
+            "unique_id": range(n_rows),
+            "name": np.random.choice(
+                _NAMES,
+                size=n_rows,
+            ),
+            "dob_days_since_epoch": np.random.choice(dob_range, n_rows),
         }
     )
