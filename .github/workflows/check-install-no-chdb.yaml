@@ -28,4 +28,4 @@ jobs:
         run: uv python install 3.9
 
       - name: Check package imports if we don't have dev dependencies
-        run: uv run --no-dev --isolated python -c "import splinkclickhouse"
+        run: uv run --no-group chdb --isolated python -c "import splinkclickhouse"

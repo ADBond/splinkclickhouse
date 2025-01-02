@@ -42,10 +42,16 @@ jobs:
       - name: Install dependencies
         run: uv sync -p ${{ matrix.python-version }}
 
-      - name: Run tests
-        run: |
-          uv run pytest -vm ${{ matrix.test-set }} --cov=splinkclickhouse --cov-branch tests
-          mv .coverage .coverage.${{ matrix.test-set }}
+      - name: Run core or clickhouse tests
+        if: ${{ matrix.test-set != 'chdb_no_core'}}
+        run: uv run python -m pytest -vm ${{ matrix.test-set }} --cov=splinkclickhouse --cov-branch tests
+
+      - name: Run chdb tests
+        if: ${{ matrix.test-set == 'chdb_no_core'}}
+        run: uv run python -m pytest -vm ${{ matrix.test-set }} --cov=splinkclickhouse --cov-branch tests
+
+      - name: Rename coverage file
+        run: mv .coverage .coverage.${{ matrix.test-set }}
 
       - name: Check directory contents
         run: ls -alhR .
