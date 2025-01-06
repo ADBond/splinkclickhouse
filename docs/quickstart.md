@@ -1,5 +1,20 @@
 # Quickstart
 
+## Install
+
+You can install `splinkclickhouse` from [PyPI](https://pypi.org/project/splinkclickhouse/) using `pip`:
+```bash
+pip install splinkclickhouse
+```
+
+or from `conda` on the `conda-forge` channel:
+```bash
+conda install conda-forge::splinkclickhouse
+```
+
+## Run some code
+
+To try out `splinkclickhouse` you can use the following - adjusting the database configuration information to point to your running Clickhouse instance:
 ```python title="getting_started.py"
 import clickhouse_connect
 import splink.comparison_library as cl
@@ -18,6 +33,9 @@ client = clickhouse_connect.get_client(
 )
 # api for Splink to talk to Clickhouse
 db_api = ClickhouseServerAPI(client)
+
+# from this point on, all code is standard Splink code,
+# not specific to splinkclickhouse
 
 # data, and model settings
 df = splink_datasets.fake_1000
