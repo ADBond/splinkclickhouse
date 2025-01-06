@@ -3,6 +3,11 @@ site_name: Splinkclickhouse Documentation
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
+  - Clickhouse Server:
+    - Home: clickhouse_server/index.md
+    - Advanced usage: clickhouse_server/advanced.md
+  - chdb:
+    - Home: chdb/index.md
   - API:
     - Comparison and Comparison Level Library: api/libraries.md
 
