@@ -9,6 +9,7 @@ nav:
   - chdb:
     - Home: chdb/index.md
   - API:
+    - Home: api/index.md
     - Comparison and Comparison Level Library: api/libraries.md
 
 theme:
