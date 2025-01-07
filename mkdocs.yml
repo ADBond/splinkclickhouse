@@ -17,20 +17,20 @@ theme:
   name: "material"
   palette:
     - scheme: default
-      primary: custom
+      primary: green
+      accent: deep orange
       toggle:
         icon: material/toggle-switch
         name: Switch to dark mode
     - scheme: slate
-      primary: custom
+      primary: green
+      accent: amber
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to light mode
   features:
     - content.code.copy
     - content.code.select
-extra_css:
-  - stylesheets/extra.css
 
 markdown_extensions:
   - pymdownx.highlight:
