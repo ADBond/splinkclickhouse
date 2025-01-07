@@ -52,3 +52,17 @@ db_api.register_table(df, "fake_1000_people")
 ```
 
 ::: splinkclickhouse.clickhouse_server.database_api.ClickhouseServerAPI
+
+## ChDBAPI
+
+Set up a `ChDBAPI` by providing a connexion:
+```python
+from chdb import dbapi
+
+from splinkclickhouse import ChDBAPI
+
+con = dbapi.connect()
+db_api = ChDBAPI(con)
+```
+
+::: splinkclickhouse.chdb.database_api.ChDBAPI
