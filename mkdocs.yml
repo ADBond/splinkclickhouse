@@ -5,9 +5,9 @@ nav:
   - Quickstart: quickstart.md
   - Clickhouse Server:
     - Home: clickhouse_server/index.md
-    - Advanced usage: clickhouse_server/advanced.md
   - chdb:
     - Home: chdb/index.md
+  - Advanced usage: advanced.md
   - API:
     - Home: api/index.md
     - Comparison and Comparison Level Library: api/libraries.md

@@ -24,4 +24,8 @@ client = clickhouse_connect.get_client(
 db_api = ClickhouseServerAPI(client)
 ```
 
-From this point onwards your code should generally be the same as that appearing in [the Splink docs](https://moj-analytical-services.github.io/splink/demos/examples/examples_index.html). The exceptions will be if you want to take advantage of [Clickhouse-specific comparisons](../api/libraries.md) or need [advanced usage](./advanced.md).
+From this point onwards your code should generally be the same as that appearing in [the Splink docs](https://moj-analytical-services.github.io/splink/demos/examples/examples_index.html). The exceptions will be if you want to take advantage of [Clickhouse-specific comparisons](../api/libraries.md) or need [advanced usage](../advanced.md).
+
+## Dates
+
+If you are working with dates, particularly those before 1900, you may wish to read [the guide on working with dates](../advanced.md#working-with-dates).
