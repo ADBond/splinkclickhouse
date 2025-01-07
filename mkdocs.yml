@@ -3,10 +3,9 @@ site_name: Splinkclickhouse Documentation
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
-  - Clickhouse Server:
-    - Home: clickhouse_server/index.md
-  - chdb:
-    - Home: chdb/index.md
+  - Engines:
+    - Clickhouse server: engines/clickhouse_server.md
+    - chdb: engines/chdb.md
   - Advanced usage: advanced.md
   - API:
     - Home: api/index.md
