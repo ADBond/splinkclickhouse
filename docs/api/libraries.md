@@ -22,7 +22,13 @@ import splinkclickhouse.comparison_library as cl_ch
 import splinkclickhouse.comparison_level_library as cll_ch
 ```
 
-Use just as in Splink - either pre-made comparisons:
+There are:
+
+* versions of Splink's library functions for working with distances between latitude/longitude pairs using built-in Clickhouse functions (rather than Splink's custom SQL),
+* versions of Splink's library functions for working with dates stored in an integer column representing days since the Unix epoch (see [working with dates](../advanced.md#working-with-dates)),
+* a totally new comparison `ExactMatchAtSubstringSizes` suitable for working with hierarchical string data, such as the output of [Clickhouse's `geohashEncode`](https://clickhouse.com/docs/en/sql-reference/functions/geo/geohash#geohashencode)
+
+Use these just as in Splink - either pre-made comparisons:
 ```python
 import splink.comparison_library as cl
 from splink import SettingsCreator

@@ -6,7 +6,7 @@ The primary way to use `splinkclickhouse` is with data in a running Clickhouse s
 
 To use Clickhouse with Splink you will need to connect to your Clickhouse instance with [clickhouse-connect](https://github.com/ClickHouse/clickhouse-connect).
 
-You will need to configure a client to your running version, and use this to create a [Splink DatabaseAPI]
+You will need to configure a client to your running version, and use this to create a Splink DatabaseAPI:
 
 ```python
 import clickhouse_connect
