@@ -22,14 +22,60 @@ import splinkclickhouse.comparison_library as cl_ch
 import splinkclickhouse.comparison_level_library as cll_ch
 ```
 
-## `splinkclickhouse.comparison_library`
+Use just as in Splink - either pre-made comparisons:
+```python
+import splink.comparison_library as cl
+from splink import SettingsCreator
 
-The following Clickhouse-specific comparisons are available in the `splinkclickhouse` comparison library.
+import splinkclickhouse.comparison_library as cl_ch
 
-All others can be found in the ordinary Splink comparison library.
+...
+settings = SettingsCreator(
+    link_type="dedupe_only",
+    comparisons=[
+        cl.ExactMatch("name"),
+        cl_ch.DistanceInKMAtThresholds(
+            "latitude",
+            "longitude",
+            [10, 50, 100, 200, 500],
+        ),
+    ],
+)
+```
 
-::: splinkclickhouse.comparison_library
+or customise individual levels to construct custom comparisons:
 
+```python
+import splink.comparison_level_library as cll
+import splink.comparison_library as cl
+from splink import SettingsCreator
+
+import splinkclickhouse.comparison_level_library as cll_ch
+
+...
+settings = SettingsCreator(
+    link_type="dedupe_only",
+    comparisons=[
+        cl.ExactMatch("name"),
+        cl.CustomComparison(
+            comparison_levels = [
+                cll.And(
+                    cll.NullLevel("city"),
+                    cll.NullLevel("postcode"),
+                    cll.Or(cll.NullLevel("latitude"), cll.NullLevel("longitude"))
+                ),
+                cll.ExactMatch("postcode"),
+                cll_ch.DistanceInKMLevel("latitude", "longitude", 5),
+                cll_ch.DistanceInKMLevel("latitude", "longitude", 10),
+                cll.ExactMatch("city"),
+                cll_ch.DistanceInKMLevel("latitude", "longitude", 50),
+                cll.ElseLevel(),
+            ],
+            output_column_name="location",
+        ),
+    ],
+)
+```
 
 ## `splinkclickhouse.comparison_level_library`
 
@@ -38,3 +84,11 @@ The following Clickhouse-specific comparisons are available in the `splinkclickh
 All others can be found in the ordinary Splink comparison level library.
 
 ::: splinkclickhouse.comparison_level_library
+
+## `splinkclickhouse.comparison_library`
+
+The following Clickhouse-specific comparisons are available in the `splinkclickhouse` comparison library.
+
+All others can be found in the ordinary Splink comparison library.
+
+::: splinkclickhouse.comparison_library
