@@ -11,6 +11,7 @@ nav:
     - Home: api/index.md
     - Comparison and Comparison Level Library: api/libraries.md
     - DatabaseAPI: api/database_api.md
+  - Contributing: contributing.md
 
 theme:
   name: "material"
