@@ -2,7 +2,7 @@
 
 A Splink `DatabaseAPI` is the object that allows Splink to communicate with a SQL backend.
 
-`splinkclickhouse` has two versions available, depending on which mode you are working in.
+`splinkclickhouse` has two versions available, depending on which mode you are working in. Both inherit from `splinkclickhouse.database_api.ClickhouseAPI`, which implements most of the core functionality.
 
 ## ClickhouseServerAPI
 

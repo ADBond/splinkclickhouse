@@ -16,7 +16,7 @@ Ideally this will be done beforehand to derive a new column with the converted t
 
 #### DateTime64
 
-If you use built-in Splink functions (rather than writing custom SQL) this will use the largest type [DateTime64](https://clickhouse.com/docs/en/sql-reference/data-types/datetime64) via the function [parseDateTime64BestEffortOrNull](https://clickhouse.com/docs/en/sql-reference/functions/type-conversion-functions#parsedatetime64besteffortornull). This function is chosen as:
+If you use built-in Splink functions (rather than writing custom SQL) this will use the largest type [`DateTime64`](https://clickhouse.com/docs/en/sql-reference/data-types/datetime64) via the function [`parseDateTime64BestEffortOrNull`](https://clickhouse.com/docs/en/sql-reference/functions/type-conversion-functions#parsedatetime64besteffortornull). This function is chosen as:
 
 * the 32-bit [`DateTime`](https://clickhouse.com/docs/en/sql-reference/data-types/datetime) type only goes back to 1970 so is unsuitable for many use-cases (where dates-of-birth are commonly used)
 * in most cases we wish for invalid dates to evaluate to `NULL` for this purpose, and this is the only way to do so with `DateTime64` - there is no comparable function where you can specify arbitrary formats
@@ -36,4 +36,26 @@ You can also use the function `days_since_epoch` in custom SQL, or use the [`Col
 
 ## `ColumnExpression`
 
+`splinkclickhouse` provides an extended version of [Splink's `ColumnExpression`](https://moj-analytical-services.github.io/splink/api_docs/column_expression.html), which includes one additional transformation `parse_date_to_int`.
+
+This might be useful if you wish to transform a string column to a date-int, particularly if you needed to combine this with other column transformations:
+
+```python
+import splinkclickhouse.comparison_library as cl_ch
+
+from splinkclickhouse.column_expression import ColumnExpression
+
+dateint_column = ColumnExpression("date_string").substr(1, 10).parse_date_to_int()
+
+...
+dob_comparison = cl_ch.DateOfBirthComparison(dateint_column, input_is_string=False)
+```
+
 ## `ClickhouseDialect`
+
+The configuration of Splink to dialect-specific features is done via `splinkclickhouse.dialect.ClickhouseDialect`.
+This is accessed from [a ClickhouseAPI](./api/database_api.md) as `ClickhouseAPI.sql_dialect`.
+
+If for some reason you need to adjust any of this behaviour you can modify this attribute at runtime, either with a runtime-modified version, or a custom-implemented `SplinkDialect` by inheriting from `ClickhouseDialect` and overwriting methods/properties as needed.
+
+This could be useful for example if you wanted to use as default a parsing function other than `parseDateTime64BestEffortOrNull` [see above](#datetime64), but still enjoy the custom pre-built library comparisons and comparison levels.
