@@ -76,7 +76,7 @@ updated_readme_text = re.sub(
 updated_dev_text = re.sub(
     dev_build_version_template.format(version_literal=version_regex_group),
     dev_build_version_template.format(version_literal=new_version),
-    dev_text
+    dev_text,
 )
 
 with open(package_file, "w+") as f:
