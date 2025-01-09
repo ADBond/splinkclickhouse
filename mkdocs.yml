@@ -20,7 +20,7 @@ nav:
   - Version history: CHANGELOG.md
 
 hooks:
-  - docs/hooks/on_files.py
+  - docs/hooks/hooks.py
 exclude_docs: "hooks/*"
 
 theme:
