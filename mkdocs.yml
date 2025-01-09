@@ -1,4 +1,9 @@
 site_name: Splinkclickhouse Documentation
+site_url: https://adbond.github.io/splinkclickhouse
+site_description: Documentation site for splinkclickhouse, the python package for powering the data-linking package Splink with the OLAP SQL engine Clickhouse
+repo_name: splinkclickhouse
+repo_url: https://github.com/ADBond/splinkclickhouse
+edit_uri: blob/main/docs/
 
 nav:
   - Home: index.md
@@ -12,6 +17,11 @@ nav:
     - Comparison and Comparison Level Library: api/libraries.md
     - DatabaseAPI: api/database_api.md
   - Contributing: contributing.md
+  - Version history: CHANGELOG.md
+
+hooks:
+  - docs/hooks/on_files.py
+exclude_docs: "hooks/*"
 
 theme:
   name: "material"
