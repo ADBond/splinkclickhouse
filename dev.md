@@ -1,62 +1,32 @@
 # Dev guide
 
-## Using
-
-### ChDB
-
-Import the relevant api:
-
-```python
-from splinkclickhouse import ChDBAPI
-```
-
-See [getting started script](./scripts/getting_started_chdb.py) for example of use:
-
-```sh
-uv run python scripts/getting_started_chdb.py
-```
-
-### Clickhouse instance
-
-Import the relevant api:
-
-```python
-from splinkclickhouse import ClickhouseServerAPI
-```
-
-You can run a local instance in docker with provided docker-compose file:
-
-```sh
-docker-compose -f scripts/docker-compose.yaml up
-```
-
-See [getting started script](./scripts/getting_started_clickhouse.py) for example of use:
-
-```sh
-uv run python scripts/getting_started_clickhouse.py
-```
-
 ## Dev setup
 
-Get dependencies
+You will need to install [uv](https://docs.astral.sh/uv/).
+
+Install dev dependencies
 
 ```sh
 uv sync
 ```
 
-Update dev dependencies (although this happens automatically)
+By default these come with the group `chdb` also, but not the `docs` group - to install with these use the `--group` flag.
+
+Manually update dev dependency versions with:
 
 ```sh
 uv lock
 ```
 
-Check package (with `ruff` and `mypy`)
+Check package (with `ruff` and `mypy`):
 
 ```sh
 ./scripts/check_package.sh
 ```
 
-Run all pytest tests
+### Testing
+
+Run all pytest tests:
 
 ```sh
 uv run python -m pytest -vx tests
@@ -99,15 +69,5 @@ Inspect package contents:
 
 ```sh
 # replace version as appropriate
-mkdir -p tmp && tar -xzvf dist/splinkclickhouse-0.2.3.tar.gz -C tmp/
+mkdir -p tmp && tar -xzvf dist/splinkclickhouse-0.4.0.tar.gz -C tmp/
 ```
-
-### Manual publish
-
-Set `TWINE_PASSWORD` as an appropriate API token. This is to TestPyPI - remove option for the real thing.
-
-```sh
-TWINE_USERNAME=__token__ uvx twine upload -r testpypi dist/*
-```
-
-See [twine docs](https://twine.readthedocs.io/en/stable/) for more info.
