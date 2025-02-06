@@ -1,6 +1,7 @@
 [![pypi](https://img.shields.io/github/v/release/adbond/splinkclickhouse?include_prereleases)](https://pypi.org/project/splinkclickhouse/#history)
 [![Downloads](https://static.pepy.tech/badge/splinkclickhouse)](https://pepy.tech/project/splinkclickhouse)
 [![codecov](https://codecov.io/github/adbond/splinkclickhouse/graph/badge.svg?token=NUHM8IPJL4)](https://codecov.io/github/adbond/splinkclickhouse)
+[![Docs](https://img.shields.io/badge/documentation-purple?style=flat)](https://adbond.github.io/splinkclickhouse/)
 
 # `splinkclickhouse`
 
@@ -35,6 +36,10 @@ conda install conda-forge::splinkclickhouse
 ```
 
 Note that the `conda` version will only be able to use [the Clickhouse server functionality](#clickhouse-server) as `chdb` is not currently available within `conda`.
+
+## Documentation
+
+Head over to [the docs site](https://adbond.github.io/splinkclickhouse/) for details on using the package. 
 
 ### Caveats
 

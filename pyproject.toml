@@ -37,7 +37,7 @@ dependencies = [
 ]
 [project.urls]
 Homepage = "https://github.com/ADBond/splinkclickhouse"
-Documentation = "https://github.com/ADBond/splinkclickhouse/blob/main/README.md"
+Documentation = "https://adbond.github.io/splinkclickhouse/"
 Repository = "https://github.com/ADBond/splinkclickhouse.git"
 Issues = "https://github.com/ADBond/splinkclickhouse/issues"
 Changelog = "https://github.com/ADBond/splinkclickhouse/blob/main/CHANGELOG.md"
