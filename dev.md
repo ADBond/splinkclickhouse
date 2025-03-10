@@ -69,5 +69,5 @@ Inspect package contents:
 
 ```sh
 # replace version as appropriate
-mkdir -p tmp && tar -xzvf dist/splinkclickhouse-0.4.0.tar.gz -C tmp/
+mkdir -p tmp && tar -xzvf dist/splinkclickhouse-0.4.1.tar.gz -C tmp/
 ```
