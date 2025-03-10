@@ -54,10 +54,6 @@ Other versions are likely to function normally, but if you have a significantly 
 
 For dev setup see [dev.md](./dev.md).
 
-## Use
-
-See the docs [TODO](TODO).
-
 ## Support
 
 If you have difficulties with the package you can [open an issue](https://github.com/ADBond/splinkclickhouse/issues).
