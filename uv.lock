@@ -1,7 +1,8 @@
 version = 1
 requires-python = ">=3.9"
 resolution-markers = [
-    "python_full_version >= '3.12'",
+    "python_full_version >= '3.13'",
+    "python_full_version == '3.12.*'",
     "python_full_version == '3.11.*'",
     "python_full_version == '3.10.*'",
     "python_full_version < '3.10'",
@@ -647,7 +648,8 @@ name = "numpy"
 version = "2.2.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.12'",
+    "python_full_version >= '3.13'",
+    "python_full_version == '3.12.*'",
     "python_full_version == '3.11.*'",
     "python_full_version == '3.10.*'",
 ]
@@ -1053,20 +1055,48 @@ wheels = [
 name = "splink"
 version = "4.0.6"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version == '3.12.*'",
+    "python_full_version == '3.11.*'",
+    "python_full_version == '3.10.*'",
+    "python_full_version < '3.10'",
+]
 dependencies = [
-    { name = "altair" },
-    { name = "duckdb" },
-    { name = "igraph" },
-    { name = "jinja2" },
-    { name = "jsonschema" },
+    { name = "altair", marker = "python_full_version < '3.13'" },
+    { name = "duckdb", marker = "python_full_version < '3.13'" },
+    { name = "igraph", marker = "python_full_version < '3.13'" },
+    { name = "jinja2", marker = "python_full_version < '3.13'" },
+    { name = "jsonschema", marker = "python_full_version < '3.13'" },
     { name = "numpy", version = "2.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "numpy", version = "2.2.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "pandas" },
-    { name = "sqlglot" },
+    { name = "numpy", version = "2.2.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10' and python_full_version < '3.13'" },
+    { name = "pandas", marker = "python_full_version < '3.13'" },
+    { name = "sqlglot", marker = "python_full_version < '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/f0/86/23c722b0742b77c0762a2bbe627227faa7ff812d740c08ac7df20c3f5961/splink-4.0.6.tar.gz", hash = "sha256:1b2c860edb5c7eae3649706c1e8e98247c9d051a3109341951ee883d424bf6ca", size = 3658160 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9f/5a/8b28279da9947884fc46bafbeba06f41b9f9a43126e87397668aa2527bf7/splink-4.0.6-py3-none-any.whl", hash = "sha256:697377c5a401368e58ce11e3b8d4b28cfe9452625e81d19994709cad37621830", size = 3721667 },
+]
+
+[[package]]
+name = "splink"
+version = "4.0.7"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.13'",
+]
+dependencies = [
+    { name = "altair", marker = "python_full_version >= '3.13'" },
+    { name = "duckdb", marker = "python_full_version >= '3.13'" },
+    { name = "igraph", marker = "python_full_version >= '3.13'" },
+    { name = "jinja2", marker = "python_full_version >= '3.13'" },
+    { name = "jsonschema", marker = "python_full_version >= '3.13'" },
+    { name = "numpy", version = "2.2.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13'" },
+    { name = "pandas", marker = "python_full_version >= '3.13'" },
+    { name = "sqlglot", marker = "python_full_version >= '3.13'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/68/d0/b8e4bf9a2b1beb1cc41f083901791c3f5668217c0e2f70cfaa604eb790b6/splink-4.0.7.tar.gz", hash = "sha256:939404d239323308832bc5ebd0d5244fb82fb04e3bfb3d1b592ac38cbfa87c4d", size = 3657016 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/53/5d/2da96b1d6af0803b342fdcbb959ba6b32c0684f4af92ad83b6a6f3690357/splink-4.0.7-py3-none-any.whl", hash = "sha256:320d0c70d02992ebc3bfa33903d35f073f4edaafea5344bc3f871ccb8b0abadb", size = 3726158 },
 ]
 
 [[package]]
@@ -1075,7 +1105,8 @@ version = "0.4.0"
 source = { editable = "." }
 dependencies = [
     { name = "clickhouse-connect" },
-    { name = "splink" },
+    { name = "splink", version = "4.0.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13'" },
+    { name = "splink", version = "4.0.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13'" },
 ]
 
 [package.optional-dependencies]
@@ -1099,7 +1130,8 @@ dev = [
 requires-dist = [
     { name = "chdb", marker = "extra == 'chdb'", specifier = ">=2.0.1" },
     { name = "clickhouse-connect", specifier = ">=0.7.0" },
-    { name = "splink", specifier = ">=4.0.6" },
+    { name = "splink", marker = "python_full_version < '3.13'", specifier = ">=4.0.6" },
+    { name = "splink", marker = "python_full_version >= '3.13'", specifier = ">=4.0.7" },
 ]
 
 [package.metadata.requires-dev]
