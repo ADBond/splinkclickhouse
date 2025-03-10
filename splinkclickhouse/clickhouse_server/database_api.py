@@ -60,6 +60,21 @@ class ClickhouseServerAPI(ClickhouseAPI):
     # Clickhouse can not handle a bare 'UNION' by default
     # we can set desired behaviour for the session by executing this
     def set_union_default_mode(self) -> None:
+        """
+        Set `union_default_mode` to 'DISTINCT'
+
+        Splink uses SQL involving bare 'UNION's in order to combine rows _without_
+        removing duplicates.
+        Clickhouse requires this to be explicitly set, so this function changes the
+        server setting so that this is the default behaviour.
+        See [the Clickhouse docs](https://clickhouse.com/docs/en/sql-reference/statements/select/union).
+
+        This happens automatically on creation of `ClickhouseServerAPI`.
+        However, this setting is tied to a session, so if this expires then this
+        configuration value will be forgotten, and you may receive errors such as
+        `Expected ALL or DISTINCT in SelectWithUnion query`.
+        In this case you will need to manually call this function.
+        """  # noqa: E501 (line too long)
         self._execute_sql_against_backend("SET union_default_mode = 'DISTINCT'")
 
     def _create_table_sql_from_pd_frame(self, df: pd.DataFrame, table_name: str) -> str:

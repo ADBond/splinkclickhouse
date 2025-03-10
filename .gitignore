@@ -8,6 +8,8 @@ dist/
 
 tmp*
 
+site/
+
 *.html
 
 *.csv

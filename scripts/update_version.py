@@ -22,6 +22,7 @@ package_file = Path("splinkclickhouse") / "__init__.py"
 pyproject_file = Path(".") / "pyproject.toml"
 readme_file = Path(".") / "README.md"
 changelog_file = Path(".") / "CHANGELOG.md"
+dev_file = Path(".") / "dev.md"
 
 with open(package_file, "r") as f:
     init_text = f.read()
@@ -32,9 +33,13 @@ with open(pyproject_file, "r") as f:
 with open(readme_file, "r") as f:
     readme_text = f.read()
 
+with open(dev_file, "r") as f:
+    dev_text = f.read()
+
 init_version_template = '__version__ = "{version_literal}"'
 pyproject_version_template = 'version = "{version_literal}"'
 readme_version_template = "splinkclickhouse.git@v{version_literal}"
+dev_build_version_template = "splinkclickhouse-{version_literal}.tar.gz"
 
 version_regex_group = f"({version_format})"
 
@@ -68,6 +73,11 @@ updated_readme_text = re.sub(
     readme_version_template.format(version_literal=new_version),
     readme_text,
 )
+updated_dev_text = re.sub(
+    dev_build_version_template.format(version_literal=version_regex_group),
+    dev_build_version_template.format(version_literal=new_version),
+    dev_text,
+)
 
 with open(package_file, "w+") as f:
     f.write(updated_init_text)
@@ -77,6 +87,9 @@ with open(pyproject_file, "w+") as f:
 
 with open(readme_file, "w+") as f:
     f.write(updated_readme_text)
+
+with open(dev_file, "w+") as f:
+    f.write(updated_dev_text)
 
 # update changelog - takes a different format from the others
 release_date = datetime.today().strftime("%Y-%m-%d")

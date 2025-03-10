@@ -73,7 +73,7 @@ class DistanceInKMLevel(ComparisonLevelCreator):
         self.calculation_method = calculation_method
 
     def create_sql(self, sql_dialect: SplinkDialect) -> str:
-        if sql_dialect is not ClickhouseDialect():
+        if not isinstance(sql_dialect, ClickhouseDialect):
             raise ValueError(
                 "This version of `DistanceInKMLevel` is designed only for use "
                 "with the Clickhouse dialect of SQL.\n"

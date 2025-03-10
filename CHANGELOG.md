@@ -72,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.4] - 2024-09-19
 
-## Added
+### Added
 
 - Extended `ClickhouseAPI` pandas table registration to support float columns [#24](https://github.com/ADBond/splinkclickhouse/pull/24).
 - Added Clickhouse-specific library comparisons/levels - `cll_ch.DistanceInKMLevel`, `cl_ch.DistanceInKMAtThresholds`, and `cl_ch.ExactMatchAtSubstringSizes` [#24](https://github.com/ADBond/splinkclickhouse/pull/24).
