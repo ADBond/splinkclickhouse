@@ -26,7 +26,7 @@ or you can install the package directly from github:
 
 ```sh
 # Replace with any version you want, or specify a branch after '@'
-pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.4.0
+pip install git+https://github.com/ADBond/splinkclickhouse.git@v0.4.1
 ```
 
 If instead you are using `conda`, `splinkclickhouse` is available on [conda-forge](https://conda-forge.org/):
