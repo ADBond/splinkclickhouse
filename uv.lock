@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.9"
 resolution-markers = [
     "python_full_version >= '3.13'",
@@ -1111,12 +1112,12 @@ dependencies = [
 
 [package.optional-dependencies]
 chdb = [
-    { name = "chdb" },
+    { name = "chdb", marker = "python_full_version < '3.13'" },
 ]
 
 [package.dev-dependencies]
 chdb = [
-    { name = "chdb" },
+    { name = "chdb", marker = "python_full_version < '3.13'" },
 ]
 dev = [
     { name = "mypy" },
@@ -1128,14 +1129,15 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "chdb", marker = "extra == 'chdb'", specifier = ">=2.0.1" },
+    { name = "chdb", marker = "python_full_version < '3.13' and extra == 'chdb'", specifier = ">=2.0.1" },
     { name = "clickhouse-connect", specifier = ">=0.7.0" },
     { name = "splink", marker = "python_full_version < '3.13'", specifier = ">=4.0.6" },
     { name = "splink", marker = "python_full_version >= '3.13'", specifier = ">=4.0.7" },
 ]
+provides-extras = ["chdb"]
 
 [package.metadata.requires-dev]
-chdb = [{ name = "chdb", specifier = ">=2.0.1" }]
+chdb = [{ name = "chdb", marker = "python_full_version < '3.13'", specifier = ">=2.0.1" }]
 dev = [
     { name = "mypy", specifier = "==1.11.2" },
     { name = "pyarrow", specifier = ">=17.0.0" },
