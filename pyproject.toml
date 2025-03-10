@@ -32,7 +32,11 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 dependencies = [
-    "splink >= 4.0.6",
+    # earlier splink versions probably work with 3.13, but require more constraints on dependencies
+    # in order to resolve correctly (which are imposed for 4.0.7+).
+    # Not worth the effort here unless someone comes up with a very good reason it'd be needed
+    "splink >= 4.0.6; python_version < '3.13'",
+    "splink >= 4.0.7; python_version >= '3.13'",
     "clickhouse_connect >= 0.7.0",
 ]
 [project.urls]
@@ -44,7 +48,7 @@ Changelog = "https://github.com/ADBond/splinkclickhouse/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 chdb = [
-    "chdb >= 2.0.1",
+    "chdb >= 2.0.1; python_version < '3.13'",
 ]
 
 [build-system]
@@ -66,7 +70,7 @@ dev = [
     "pytest-cov>=6.0.0",
 ]
 chdb = [
-    "chdb>=2.0.1",
+    "chdb>=2.0.1; python_version < '3.13'",
 ]
 docs = [
     "mkdocs>=1.6.1",
