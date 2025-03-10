@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `ClickhouseServerAPI` can register `pandas` tables with datetime columns, and allows integers to be signed [#61](https://github.com/ADBond/splinkclickhouse/pull/61).
 - `ClickhouseServerAPI` will now register `dict` or `list` via `pandas` [#61](https://github.com/ADBond/splinkclickhouse/pull/61).
+- Easier dependency resolution for python 3.13 [#67](https://github.com/ADBond/splinkclickhouse/pull/67).
 
 ## [0.4.0] - 2024-12-23
 
